@@ -1,29 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact Us</title>
-  <link rel="stylesheet" href="style.css">
+    <title>Contact Us</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: grid;
+            justify-content: center;
+            align-content: center;
+            font-family: 'Montserrat', sans-serif;
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            font-size: 1.2em;
+        }
+    </style>
 </head>
 <body>
-  <header class="header-grid">
-    <h1 class="header-text">Contact Us</h1>
-  </header>
-  <div class="form-grid">
-    <form id="contact-form">
-      <label for="name">Full Name:</label>
-      <input type="text" id="name" name="name" required>
-      <label for="email">Email Address:</label>
-      <input type="email" id="email" name="email" required>
-      <label for="message">Message:</label>
-      <textarea id="message" name="message" required></textarea>
-      <button type="submit">Send Message</button>
+    <h1>Contact Us</h1>
+    <form id="contactForm">
+        <label for="name">Full Name:</label><br>
+        <input type="text" id="name" name="name"><br>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email"><br>
+        <label for="message">Message:</label><br>
+        <textarea id="message" name="message"></textarea><br>
+        <input type="submit" value="Submit">
     </form>
-  </div>
-  <div class="button-grid">
-    <button class="home-button">Home</button>
-  </div>
-  <script src="script.js"></script>
+    <button onclick="window.location.href = 'index.html';">Back to Home</button>
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var name = document.getElementById('name').value;
+            var email = document.getElementById('email').value;
+            var message = document.getElementById('message').value;
+            var emailTo = 'bellamy_thomas@outlook.com';
+            var subject = 'New Contact Form Submission';
+            var body = 'From: ' + name + '\nEmail: ' + email + '\nMessage: ' + message;
+            window.location.href = 'mailto:' + emailTo + '?subject=' + subject + '&body=' + body;
+            alert('Message sent!');
+        });
+    </script>
 </body>
 </html>
