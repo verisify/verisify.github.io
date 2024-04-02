@@ -1,34 +1,123 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>About Us</title>
-    <style>
-        body {
-            display: grid;
-            justify-content: center;
-            align-content: center;
-            font-family: Arial, sans-serif;
-        }
-        header {
-            text-align: center;
-        }
-        body-text {
-            text-align: left;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us</title>
+  <style>
+    /* Global Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Home Page Styles */
+    .grid-container {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      height: 100vh;
+    }
+
+    .header {
+      background-color: #b5b5b5;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      color: black;
+      margin: 0;
+    }
+
+    .body-text {
+      padding: 20px;
+      text-align: left;
+    }
+
+    .body-text h5 {
+      margin-top: 0;
+    }
+
+    .redirect-button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* Contact Page Styles */
+    .contact-form {
+      padding: 20px;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 5px;
+    }
+
+    .contact-form button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>About Us</h1>
-    </header>
-    <body-text>
-        <h5>At Verisify, we are committed to helping businesses and consumers protect themselves from the growing problem of counterfeit and fraudulent products. In today's global marketplace, it is more important than ever to be able to trust the authenticity of the products you buy and sell. That's where we come in.</h5>
-        <h5>Our innovative QR code authentication and verification service allows you to quickly and easily confirm the authenticity of a product, giving you peace of mind and protecting your investment. Our system uses advanced algorithms and QR code technology to ensure the highest level of accuracy and reliability, so you can be confident that the products you are buying or selling are genuine.</h5>
-        <h5>What sets Verisify apart is our state-of-the-art technology that no longer requires heavy and expensive machines to generate QR codes for products. With Verisify, all you need is a phone or laptop to create and scan QR codes, making it easier and more convenient than ever to authenticate and verify products. This not only saves you time and money, but it also allows you to authenticate products on the go, wherever you are.</h5>
-        <h5>Our team of experts has years of experience in the field of product authentication and verification, and we have developed a system that is trusted by businesses and consumers around the world. We understand the importance of protecting your brand and reputation, and we are dedicated to providing the highest level of service and support to our clients.</h5>
-        <h5>Whether you are a business looking to protect your brand and reputation, or a consumer who wants to be sure you are getting the real deal, Verisify has you covered. Our easy-to-use service is available 24/7, and our dedicated support team is always here to help if you have any questions or concerns.</h5>
-        <h5>Thank you for considering Verisify for your product authentication and verification needs. We look forward to serving you!</h5>
-    </body-text>
-    <button onclick="window.location.href = 'contact.html';">Contact Us</button>
+  <!-- Home Page -->
+  <div class="grid-container">
+    <div class="header">
+      <h1>About Us</h1>
+    </div>
+    <div class="body-text">
+      <h5>At Verisify, we are committed to helping businesses and consumers protect themselves from the growing problem of counterfeit and fraudulent products. In today's global marketplace, it is more important than ever to be able to trust the authenticity of the products you buy and sell. That's where we come in.</h5>
+      <h5>Our innovative QR code authentication and verification service allows you to quickly and easily confirm the authenticity of a product, giving you peace of mind and protecting your investment. Our system uses advanced algorithms and QR code technology to ensure the highest level of accuracy and reliability, so you can be confident that the products you are buying or selling are genuine.</h5>
+      <h5>What sets Verisify apart is our state-of-the-art technology that no longer requires heavy and expensive machines to generate QR codes for products. With Verisify, all you need is a phone or laptop to create and scan QR codes, making it easier and more convenient than ever to authenticate and verify products. This not only saves you time and money, but it also allows you to authenticate products on the go, wherever you are.</h5>
+      <h5>Our team of experts has years of experience in the field of product authentication and verification, and we have developed a system that is trusted by businesses and consumers around the world. We understand the importance of protecting your brand and reputation, and we are dedicated to providing the highest level of service and support to our clients.</h5>
+      <h5>Whether you are a business looking to protect your brand and reputation, or a consumer who wants to be sure you are getting the real deal, Verisify has you covered. Our easy-to-use service is available 24/7, and our dedicated support team is always here to help if you have any questions or concerns.</h5>
+      <h5>Thank you for considering Verisify for your product authentication and verification needs. We look forward to serving you!</h5>
+      <button class="redirect-button" onclick="window.location.href='contact.html'">Contact Us</button>
+    </div>
+  </div>
+
+  <!-- Contact Page -->
+  <div class="grid-container">
+    <div class="header">
+      <h1>Contact Us</h1>
+    </div>
+    <div class="contact-form">
+      <input type="text" placeholder="Full Name" id="name">
+      <input type="email" placeholder="Email Address" id="email">
+      <textarea placeholder="Message" id="message"></textarea>
+      <button onclick="sendMessage()">Send Message</button>
+      <button class="redirect-button" onclick="window.location.href='index.html'">Back to Home</button>
+    </div>
+  </div>
+
+  <script>
+    function sendMessage() {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+
+      // Send the message to the specified email address
+      window.location.href = `mailto:bellamy_thomas@outlook.com?subject=Message from ${name}&body=${message}`;
+
+      // Display a dialogue to indicate the message has been sent
+      alert('Message sent!');
+    }
+  </script>
 </body>
 </html>
