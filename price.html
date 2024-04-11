@@ -1,138 +1,125 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Internet Subscription Packages</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-  <!-- Custom CSS -->
-  <style>
-    .carousel {
-      scroll-behavior: smooth;
-    }
-    .carousel-inner {
-      display: flex;
-      justify-content: center;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-    }
-    .carousel-item {
-      flex: 0 0 auto;
-      width: 300px;
-      margin: 0 1rem;
-      scroll-snap-align: center;
-      transition: transform 0.5s ease-in-out;
-    }
-    .carousel-item:hover {
-      transform: scale(1.05);
-    }
-    .card {
-      width: 100%;
-      height: 400px;
-      border: none;
-      border-radius: 15px;
-    }
-    .card-img-top {
-      height: 200px;
-      object-fit: cover;
-      border-radius: 15px 15px 0 0;
-    }
-    .card-body {
-      padding: 1.5rem;
-    }
-    .card-title {
-      font-weight: bold;
-    }
-    .card-text {
-      font-size: 0.9rem;
-    }
-    .card-1 {
-      background-color: #f8d7da;
-    }
-    .card-2 {
-      background-color: #f0e68c;
-    }
-    .card-3 {
-      background-color: #d2b48c;
-    }
-    .card-4 {
-      background-color: #b0bec5;
-    }
-    .card-5 {
-      background-color: #87ceeb;
-    }
-  </style>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Verisify Navbar</title>
+
+  <!-- Bootstrap CSS CDN -->
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" integrity="sha384-yQkwKuiZiV7hqFLKxL+hXQGtaYoN8AU+xThkKQuJbQVvpNvgvjDPC/Y/OG+rYwQmk4=" crossorigin="anonymous">
+
+  <!-- Custom CSS -->
+
+  <style>
+
+    .navbar {
+
+      background-color: #333;
+
+    }
+
+
+    .navbar-brand {
+
+      display: flex;
+
+      align-items: center;
+
+    }
+
+
+    .navbar-brand img {
+
+      height: 36px;
+
+      width: 36px;
+
+      margin-right: 10px;
+
+    }
+
+
+    .navbar-brand h2 {
+
+      color: white;
+
+      font-weight: bold;
+
+      margin-bottom: 0;
+
+    }
+
+
+    .contact-btn {
+
+      width: 24px;
+
+      height: 24px;
+
+      padding: 0;
+
+      border: none;
+
+      background-color: transparent;
+
+      cursor: pointer;
+
+    }
+
+  </style>
+
 </head>
+
 <body>
-  <div class="container">
-    <h1 class="text-center mb-5">Internet Subscription Packages</h1>
-    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <div class="card card-1">
-            <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">Basic Package</h5>
-              <p class="card-text">This is a basic package with limited data and speed.</p>
-              <a href="#" class="btn btn-primary">Subscribe</a>
-            </div>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <div class="card card-2">
-            <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">Standard Package</h5>
-              <p class="card-text">This is a standard package with more data and faster speed.</p>
-              <a href="#" class="btn btn-primary">Subscribe</a>
-            </div>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <div class="card card-3">
-            <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">Premium Package</h5>
-              <p class="card-text">This is a premium package with unlimited data and the fastest speed.</p>
-              <a href="#" class="btn btn-primary">Subscribe</a>
-            </div>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <div class="card card-4">
-            <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">Ultimate Package</h5>
-              <p class="card-text">This is an ultimate package with extra features and benefits.</p>
-              <a href="#" class="btn btn-primary">Subscribe</a>
-            </div>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <div class="card card-5">
-            <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">Enterprise Package</h5>
-              <p class="card-text">This is an enterprise package with custom solutions and dedicated support.</p>
-              <a href="#" class="btn btn-primary">Subscribe</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </div>
-  </div>
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybBud7l5eOAowJfajhczvt/8VEvNsS4Uog+gNQxa5LmSz4Q" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy" crossorigin="anonymous"></script>
+
+  <nav class="navbar navbar-expand-lg navbar-dark">
+
+    <div class="container-fluid">
+
+      <a class="navbar-brand" href="#">
+
+        <img src="verisify-logo.png" alt="Verisify Logo">
+
+        <h2>Verisify</h2>
+
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+
+        <span class="navbar-toggler-icon"></span>
+
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+
+        <ul class="navbar-nav ms-auto">
+
+          <li class="nav-item">
+
+            <button class="contact-btn btn btn-outline-light">Contact Us</button>
+
+          </li>
+
+        </ul>
+
+      </div>
+
+    </div>
+
+  </nav>
+
+
+  <!-- Bootstrap JS CDN -->
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtRS5 KippurUUWCl KFjVAQhPmW2ocq" crossorigin="anonymous"></script>
+
 </body>
+
 </html>
+
