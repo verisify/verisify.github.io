@@ -1,125 +1,277 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <title>Verisify Top Navigation Bar with Carousel</title>
+    <style>
+        .carousel-caption {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            bottom: initial;
+            text-align: left;
+            padding-left: 5%;
+        }
 
-  <meta charset="UTF-8">
+        .what-we-do-carousel .carousel-indicators {
+            position: relative;
+            margin-top: 10px;
+        }
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        .what-we-do-carousel .carousel-indicators li {
+            width: 10px;
+            height: 10px;
+            border-radius: 100%;
+            background-color: #3498db;
+        }
 
-  <title>Verisify Navbar</title>
+        .container.customer-testimonies,
+        .container.price-packages {
+            padding-top: 1rem;
+        }
 
-  <!-- Bootstrap CSS CDN -->
+        .customer-testimonies {
+            margin-top: 10px;
+        }
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" integrity="sha384-yQkwKuiZiV7hqFLKxL+hXQGtaYoN8AU+xThkKQuJbQVvpNvgvjDPC/Y/OG+rYwQmk4=" crossorigin="anonymous">
+        .customer-testimony-card {
+            text-align: center;
+            width: 250px;
+            height: 350px;
+            position: relative;
+            transform: rotate(0deg);
+        }
 
-  <!-- Custom CSS -->
+        .customer-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+            overflow: hidden;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
 
-  <style>
+        .customer-image img {
+            width: 100%;
+            height: auto;
+        }
 
-    .navbar {
+        .customer-name {
+            margin-top: 10px;
+        }
 
-      background-color: #333;
+        .price-packages {
+            margin-top: 50px;
+        }
 
-    }
+        .price-package-card {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 250px;
+            height: 350px;
+            margin: 1rem;
+        }
 
+        .price-package-card.active {
+            background-color: #f9f9f9;
+        }
 
-    .navbar-brand {
+        .price-package-icon {
+            font-size: 36px;
+            color: #3498db;
+        }
 
-      display: flex;
+        @media (max-width: 768px) {
+            .customer-testimony-card {
+                margin: auto;
+            }
 
-      align-items: center;
-
-    }
-
-
-    .navbar-brand img {
-
-      height: 36px;
-
-      width: 36px;
-
-      margin-right: 10px;
-
-    }
-
-
-    .navbar-brand h2 {
-
-      color: white;
-
-      font-weight: bold;
-
-      margin-bottom: 0;
-
-    }
-
-
-    .contact-btn {
-
-      width: 24px;
-
-      height: 24px;
-
-      padding: 0;
-
-      border: none;
-
-      background-color: transparent;
-
-      cursor: pointer;
-
-    }
-
-  </style>
-
+            .price-package-card {
+                margin: auto;
+                padding: 20px 10px;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-heart-fill me-2"></i>
+                <strong>Verisify</strong>
+            </a>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact Us</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div id="whatWeDoCarousel" class="carousel slide what-we-do-carousel" data-bs-ride="carousel">
+        <!-- Carousel content (slides, indicators, controls) -->
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://picsum.photos/1200/400?random=1" class="d-block w-100" alt="Slide 1">
+                <div class="carousel-caption d-none d-md-block">
+                    <h3>Slide 1</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://picsum.photos/1200/400?random=2" class="d-block w-100" alt="Slide 2">
+                <div class="carousel-caption d-none d-md-block">
+                    <h3>Slide 2</h3>
+                    <p>Mauris tincidunt, sapien sed convallis elementum, nunc est viverra elit.</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://picsum.photos/1200/400?random=3" class="d-block w-100" alt="Slide 3">
+                <div class="carousel-caption d-none d-md-block">
+                    <h3>Slide 3</h3>
+                    <p>Suspendisse potenti. Vestibulum eget dolor id tortor cursus vestibulum.</p>
+                </div>
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#whatWeDoCarousel" role="button" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#whatWeDoCarousel" role="button" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </a>
+        <ol class="carousel-indicators">
+            <li data-bs-target="#whatWeDoCarousel" data-bs-slide-to="0" class="active"></li>
+            <li data-bs-target="#whatWeDoCarousel" data-bs-slide-to="1"></li>
+            <li data-bs-target="#whatWeDoCarousel" data-bs-slide-to="2"></li>
+        </ol>
+    </div>
 
-    <div class="container-fluid">
+    <div class="container customer-testimonies">
+        <div class="row justify-content-around">
+            <!-- Customer testimonies cards -->
+            <div class="col-md-4">
+                <div class="card customer-testimony-card">
+                    <img src="https://picsum.photos/200/200?random=1" alt="Customer 1" class="customer-image">
+                    <div class="card-body">
+                        <h4 class="customer-name">Customer 1</h4>
+                        <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec pretium mi. Vivamus venenatis porta nisl."</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card customer-testimony-card">
+                    <img src="https://picsum.photos/200/200?random=2" alt="Customer 2" class="customer-image">
+                    <div class="card-body">
+                        <h4 class="customer-name">Customer 2</h4>
+                        <p>"Mauris tincidunt, sapien sed convallis elementum, nunc est viverra elit. Sed ac nisi non odio finibus interdum."</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card customer-testimony-card">
+                    <img src="https://picsum.photos/200/200?random=3" alt="Customer 3" class="customer-image">
+                    <div class="card-body">
+                        <h4 class="customer-name">Customer 3</h4>
+                        <p>"Suspendisse potenti. Vestibulum eget dolor id tortor cursus vestibulum. Sed ut eleifend nisi."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-      <a class="navbar-brand" href="#">
+    <div class="container price-packages">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card price-package-card" data-package="personal">
+                    <div class="card-body">
+                        <div class="price-package-icon">
+                            <i class="bi bi-person-circle"></i>
+                        </div>
+                        <h4 class="card-title">Personal</h4>
+                        <p><strong>Price:</strong> $9.99/month</p>
+                        <p><strong>Features:</strong></p>
+                        <ul>
+                            <li>"This is feature one"</li>
+                            <li>"This is feature two"</li>
+                            <li>"This is feature three"</li>
+                            <li>"This is feature four"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card price-package-card" data-package="team">
+                    <div class="card-body">
+                        <div class="price-package-icon">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                        <h4 class="card-title">Team</h4>
+                        <p><strong>Price:</strong> $19.99/month</p>
+                        <p><strong>Features:</strong></p>
+                        <ul>
+                            <li>"This is feature one"</li>
+                            <li>"This is feature two"</li>
+                            <li>"This is feature three"</li>
+                            <li>"This is feature four"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card price-package-card" data-package="enterprise">
+                    <div class="card-body">
+                        <div class="price-package-icon">
+                            <i class="bi bi-house-fill"></i>
+                        </div>
+                        <h4 class="card-title">Enterprise</h4>
+                        <p><strong>Price:</strong> Custom</p>
+                        <p><strong>Features:</strong></p>
+                        <ul>
+                            <li>"This is feature one"</li>
+                            <li>"This is feature two"</li>
+                            <li>"This is feature three"</li>
+                            <li>"This is feature four"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <img src="verisify-logo.png" alt="Verisify Logo">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Carousel initialization
+        var whatWeDoCarousel = new bootstrap.Carousel(document.getElementById('whatWeDoCarousel'), {
+            interval: 5000,
+            wrap: true,
+            keyboard: true,
+            touch: true
+        });
 
-        <h2>Verisify</h2>
-
-      </a>
-
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-
-        <span class="navbar-toggler-icon"></span>
-
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarNav">
-
-        <ul class="navbar-nav ms-auto">
-
-          <li class="nav-item">
-
-            <button class="contact-btn btn btn-outline-light">Contact Us</button>
-
-          </li>
-
-        </ul>
-
-      </div>
-
-    </div>
-
-  </nav>
-
-
-  <!-- Bootstrap JS CDN -->
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtRS5 KippurUUWCl KFjVAQhPmW2ocq" crossorigin="anonymous"></script>
-
+        // Handle price package card clicks
+        var pricePackageCards = document.querySelectorAll('.price-package-card');
+        pricePackageCards.forEach(function(card) {
+            card.addEventListener('click', function() {
+                pricePackageCards.forEach(function(card) {
+                    card.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+    </script>
 </body>
 
-</html>
-
+  </html>
