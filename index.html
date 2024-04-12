@@ -3,275 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Generator Solutions</title>
+    <title>Hero Section with Gradient</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3jDv" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <style>
-        :root {
-            --cohere-blue: #005CF7;
-            --cohere-purple: #7F00FF;
-            --cohere-pink: #FF0087;
-            --cohere-yellow: #FFCD1E;
-            --cohere-green: #00D646;
-            --dark-gray: #333;
-            --light-gray: #f9f9f9;
-        }
-
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: var(--light-gray);
             margin: 0;
             padding: 0;
+            font-family: 'Arial', sans-serif;
         }
 
-        nav.navbar {
-            background-color: var(--cohere-blue);
+        .hero-section {
+            position: relative;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://unsplash.com/photos/black-and-white-remote-control--qUp3bejuzs');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
         }
 
-        .cohere-btn {
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .cohere-btn-blue {
-            background-color: var(--cohere-blue);
+        .hero-content {
             color: #fff;
+            padding-left: 50px;
         }
 
-        .cohere-btn-purple {
-            background-color: var(--cohere-purple);
-            color: #fff;
-        }
-
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-
-        .testimonial-card {
-            background-color: #fff;
-            text-align: center;
-            color: var(--dark-gray);
-        }
-
-        .testimonial-card i {
-            color: var(--cohere-green);
+        .hero-content h3 {
+            font-weight: bold;
             font-size: 36px;
-            margin-bottom: 20px;
         }
 
-        .price-package-card {
-            background-color: #fff;
-            text-align: center;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin: 20px;
-        }
-
-        .price-package-card h3 {
-            color: var(--cohere-purple);
-        }
-
-        .price-package-card h1 {
-            color: var(--cohere-blue);
-        }
-
-        .contact-form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Media queries for responsiveness */
-        @media (max-width: 768px) {
-            .price-package-card {
-                margin: 20px 0;
-            }
+        /* Gradient overlay */
+        .gradient-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <section class="hero-section">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">QR Solutions</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Features</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Pricing</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <section id="hero" class="pt-5 pb-5">
-        <div class="container">
             <div class="row">
-                <div class="col-md-6">
-                    <h1>State-of-the-art QR Code Generator</h1>
-                    <p>We offer innovative software solutions to empower your business with dynamic QR codes.</p>
-                    <a href="#" class="cohere-btn cohere-btn-blue">Get Started</a>
-                </div>
-                <div class="col-md-6 text-center">
-                    <img src="https://placehold.co/400x400" alt="QR Code">
+                <div class="col-md-6 hero-content">
+                    <h3>Verisify</h3>
                 </div>
             </div>
         </div>
+        <!-- Gradient overlay -->
+        <div class="gradient-overlay"></div>
     </section>
 
-    <section id="testimonials" class="pt-5 pb-5 bg-light">
-        <div class="container">
-            <div class="row">
-                <div class="col text-center">
-                    <h2>What Our Customers Say</h2>
-                    <p>Don't just take our word for it. See what our customers have to say about our QR code generator.</p>
-                </div>
-            </div>
-            <div class="row mt-5 justify-content-center">
-                <div class="col-md-4">
-                    <div class="testimonial-card card">
-                        <i class="bi bi-chat-left-text"></i>
-                        <p>"This QR code generator is a game-changer! It has helped us streamline our marketing campaigns and connect with our customers in a whole new way."</p>
-                        <h5>— Jane Smith, Marketing Manager</h5>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="testimonial-card card">
-                        <i class="bi bi-chat-left-text"></i>
-                        <p>"We've seen a significant increase in customer engagement since implementing their QR code solutions. Highly recommend!"</p>
-                        <h5>— John Doe, Business Owner</h5>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="testimonial-card card">
-                        <i class="bi bi-chat-left-text"></i>
-                        <p>"Their dynamic QR codes are so versatile and easy to use. Our team loves the flexibility and the analytics are top-notch."</p>
-                        <h5>— Alice Johnson, Project Lead</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="pricing" class="pt-5 pb-5">
-        <div class="container">
-            <div class="row">
-                <div class="col text-center">
-                    <h2>Choose Your Plan</h2>
-                    <p>Select the package that best suits your needs.</p>
-                </div>
-            </div>
-            <div class="row mt-5 justify-content-center">
-                <div class="col-md-4">
-                    <div class="price-package-card card">
-                        <h3>Personal</h3>
-                        <h1>$19<span>/mo</span></h1>
-                        <hr>
-                        <ul>
-                            <li>1 User</li>
-                            <li>10 QR Codes</li>
-                            <li>Basic Analytics</li>
-                            <li>Email Support</li>
-                        </ul>
-                        <a href="#" class="cohere-btn cohere-btn-purple">Choose Plan</a>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="price-package-card card">
-                        <h3>Team</h3>
-                        <h1>$49<span>/mo</span></h1>
-                        <hr>
-                        <ul>
-                            <li>5 Users</li>
-                            <li>50 QR Codes</li>
-                            <li>Advanced Analytics</li>
-                            <li>Priority Support</li>
-                        </ul>
-                        <a href="#" class="cohere-btn cohere-btn-purple">Choose Plan</a>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="price-package-card card">
-                        <h3>Enterprise</h3>
-                        <h1>$99<span>/mo</span></h1>
-                        <hr>
-                        <ul>
-                            <li>Unlimited Users</li>
-                            <li>Unlimited QR Codes</li>
-                            <li>Custom Analytics</li>
-                            <li>24/7 Premium Support</li>
-                        </ul>
-                        <a href="#" class="cohere-btn cohere-btn-purple">Choose Plan</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="contact" class="pt-5 pb-5 bg-light">
-        <div class="container">
-            <div class="row">
-                <div class="col text-center">
-                    <h2>Get in Touch</h2>
-                    <p>Have questions or need more information? Contact us and we'll get back to you shortly.</p>
-                </div>
-            </div>
-            <div class="row mt-5 justify-content-center">
-                <div class="col-md-8">
-                    <form action="https://formspree.io/f/bellamy_thomas@outlook.com" method="POST" class="contact-form">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="name">Name</label>
-                                    <input type="text" name="name" id="name" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="email">Email</label>
-                                    <input type="email" name="email" id="email" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="mb-3">
-                                    <label for="message">Message</label>
-                                    <textarea name="message" id="message" rows="4" class="form-control"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-12 text-center">
-                                <button type="submit" class="cohere-btn cohere-btn-blue">Send Message</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Bootstrap JS and Formspree for form submission -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
-    <script src="https://formspree.io/js/formbutton-v1.min.js"></script>
 </body>
 </html>
