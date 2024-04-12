@@ -8,18 +8,19 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3jDv" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <style>
-        /* Cohere color palette and custom styles */
         :root {
             --cohere-blue: #005CF7;
             --cohere-purple: #7F00FF;
             --cohere-pink: #FF0087;
             --cohere-yellow: #FFCD1E;
             --cohere-green: #00D646;
+            --dark-gray: #333;
+            --light-gray: #f9f9f9;
         }
 
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f9f9f9;
+            background-color: var(--light-gray);
             margin: 0;
             padding: 0;
         }
@@ -30,7 +31,7 @@
 
         .cohere-btn {
             border: none;
-            padding: 10px 20px;
+            padding: 12px 24px;
             font-size: 16px;
             border-radius: 4px;
             cursor: pointer;
@@ -50,21 +51,36 @@
             border: none;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
         }
 
         .testimonial-card {
             background-color: #fff;
-            padding: 20px;
             text-align: center;
-            color: #333;
+            color: var(--dark-gray);
+        }
+
+        .testimonial-card i {
+            color: var(--cohere-green);
+            font-size: 36px;
+            margin-bottom: 20px;
         }
 
         .price-package-card {
             background-color: #fff;
-            padding: 20px;
             text-align: center;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px;
+        }
+
+        .price-package-card h3 {
+            color: var(--cohere-purple);
+        }
+
+        .price-package-card h1 {
+            color: var(--cohere-blue);
         }
 
         .contact-form {
@@ -72,6 +88,15 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Media queries for responsiveness */
+        @media (max-width: 768px) {
+            .price-package-card {
+                margin: 20px 0;
+            }
         }
     </style>
 </head>
@@ -124,22 +149,25 @@
                     <p>Don't just take our word for it. See what our customers have to say about our QR code generator.</p>
                 </div>
             </div>
-            <div class="row mt-5">
+            <div class="row mt-5 justify-content-center">
                 <div class="col-md-4">
                     <div class="testimonial-card card">
-                        <p><i class="bi bi-chat-left-text"></i> "This QR code generator is a game-changer! It has helped us streamline our marketing campaigns and connect with our customers in a whole new way."</p>
+                        <i class="bi bi-chat-left-text"></i>
+                        <p>"This QR code generator is a game-changer! It has helped us streamline our marketing campaigns and connect with our customers in a whole new way."</p>
                         <h5>— Jane Smith, Marketing Manager</h5>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="testimonial-card card">
-                        <p><i class="bi bi-chat-left-text"></i> "We've seen a significant increase in customer engagement since implementing their QR code solutions. Highly recommend!"</p>
+                        <i class="bi bi-chat-left-text"></i>
+                        <p>"We've seen a significant increase in customer engagement since implementing their QR code solutions. Highly recommend!"</p>
                         <h5>— John Doe, Business Owner</h5>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="testimonial-card card">
-                        <p><i class="bi bi-chat-left-text"></i> "Their dynamic QR codes are so versatile and easy to use. Our team loves the flexibility and the analytics are top-notch."</p>
+                        <i class="bi bi-chat-left-text"></i>
+                        <p>"Their dynamic QR codes are so versatile and easy to use. Our team loves the flexibility and the analytics are top-notch."</p>
                         <h5>— Alice Johnson, Project Lead</h5>
                     </div>
                 </div>
@@ -155,7 +183,7 @@
                     <p>Select the package that best suits your needs.</p>
                 </div>
             </div>
-            <div class="row mt-5">
+            <div class="row mt-5 justify-content-center">
                 <div class="col-md-4">
                     <div class="price-package-card card">
                         <h3>Personal</h3>
@@ -210,8 +238,8 @@
                     <p>Have questions or need more information? Contact us and we'll get back to you shortly.</p>
                 </div>
             </div>
-            <div class="row mt-5">
-                <div class="col-md-8 offset-md-2">
+            <div class="row mt-5 justify-content-center">
+                <div class="col-md-8">
                     <form action="https://formspree.io/f/bellamy_thomas@outlook.com" method="POST" class="contact-form">
                         <div class="row">
                             <div class="col-md-6">
