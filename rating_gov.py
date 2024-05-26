@@ -25,16 +25,16 @@ SPECTRUM_COLORS = {
 
 # Define the leaderboard data
 governors = [
-    {"name": "Babajide Sanwo-Olu", "education": 80, "health": 75, "security": 85},
-    {"name": "Nyesom Wike", "education": 85, "health": 80, "security": 75},
-    {"name": "Seyi Makinde", "education": 75, "health": 85, "security": 70},
-    {"name": "Ifeanyi Okowa", "education": 80, "health": 75, "security": 80},
-    {"name": "Abdullahi Ganduje", "education": 75, "health": 70, "security": 85},
-    {"name": "Aminu Masari", "education": 70, "health": 80, "security": 75},
-    {"name": "Nasir El-Rufai", "education": 85, "health": 75, "security": 80},
-    {"name": "Rotimi Akeredolu", "education": 75, "health": 80, "security": 75},
-    {"name": "Udom Emmanuel", "education": 80, "health": 75, "security": 70},
-    {"name": "Bala Mohammed", "education": 75, "health": 70, "security": 80},
+    {"name": "Babajide Sanwo-Olu", "profile_url": "babajide_sanwo_olu", "education": 80, "health": 75, "security": 85},
+    {"name": "Nyesom Wike", "profile_url": "nyesom_wike", "education": 85, "health": 80, "security": 75},
+    {"name": "Seyi Makinde", "profile_url": "seyi_makinde", "education": 75, "health": 85, "security": 70},
+    {"name": "Ifeanyi Okowa", "profile_url": "ifeanyi_okowa", "education": 80, "health": 75, "security": 80},
+    {"name": "Abdullahi Ganduje", "profile_url": "abdullahi_ganduje", "education": 75, "health": 70, "security": 85},
+    {"name": "Aminu Masari", "profile_url": "aminu_masari", "education": 70, "health": 80, "security": 75},
+    {"name": "Nasir El-Rufai", "profile_url": "nasir_el_rufai", "education": 85, "health": 75, "security": 80},
+    {"name": "Rotimi Akeredolu", "profile_url": "rotimi_akeredolu", "education": 75, "health": 80, "security": 75},
+    {"name": "Udom Emmanuel", "profile_url": "udom_emmanuel", "education": 80, "health": 75, "security": 70},
+    {"name": "Bala Mohammed", "profile_url": "bala_mohammed", "education": 75, "health": 70, "security": 80},
 ]
 
 # Set the Streamlit page configuration
@@ -43,7 +43,22 @@ st.set_page_config(
     page_icon=":trophy:",
     layout="wide",
     initial_sidebar_state="expanded",
+    page_background_color=SPECTRUM_COLORS["gray-900"],
 )
+
+# Define the governor profile pages
+def governor_profile(profile_url):
+    st.set_page_config(
+        page_title=f"{profile_url.replace('_', ' ').title()} Profile",
+        page_icon=":bust_in_silhouette:",
+        layout="centered",
+        initial_sidebar_state="collapsed",
+        page_background_color=SPECTRUM_COLORS["gray-900"],
+    )
+
+    st.title(f"{profile_url.replace('_', ' ').title()} Profile")
+    # Add content for the governor's profile page
+    st.write("This is the profile page for the selected governor.")
 
 # Define the Streamlit app
 def app():
@@ -71,10 +86,10 @@ def app():
                 unsafe_allow_html=True,
             )
 
-        # Governor name
+        # Governor name (clickable)
         with col3:
             st.markdown(
-                f"<p style='font-size: 16px; font-weight: bold; color: {SPECTRUM_COLORS['gray-800']};'>{governor['name']}</p>",
+                f"<a href='/governor/{governor['profile_url']}' style='font-size: 16px; font-weight: bold; color: {SPECTRUM_COLORS['white']}; text-decoration: none;'>{governor['name']}</a>",
                 unsafe_allow_html=True,
             )
 
@@ -100,6 +115,10 @@ def app():
             )
 
         st.markdown("<hr>", unsafe_allow_html=True)
+
+    # Define the routes for the governor profile pages
+    for governor in governors:
+        st.route(f"/governor/{governor['profile_url']}")(lambda profile_url=governor['profile_url']: governor_profile(profile_url))
 
 if __name__ == "__main__":
     app()
