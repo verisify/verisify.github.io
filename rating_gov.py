@@ -1,6 +1,5 @@
 import streamlit as st
 from PIL import Image
-import random
 
 # Define the Adobe Spectrum design system
 SPECTRUM_COLORS = {
@@ -26,16 +25,16 @@ SPECTRUM_COLORS = {
 
 # Define the leaderboard data
 governors = [
-    {"name": "Babajide Sanwo-Olu", "image": "governor1.jpg", "education": 80, "health": 75, "security": 85},
-    {"name": "Nyesom Wike", "image": "governor2.jpg", "education": 85, "health": 80, "security": 75},
-    {"name": "Seyi Makinde", "image": "governor3.jpg", "education": 75, "health": 85, "security": 70},
-    {"name": "Ifeanyi Okowa", "image": "governor4.jpg", "education": 80, "health": 75, "security": 80},
-    {"name": "Abdullahi Ganduje", "image": "governor5.jpg", "education": 75, "health": 70, "security": 85},
-    {"name": "Aminu Masari", "image": "governor6.jpg", "education": 70, "health": 80, "security": 75},
-    {"name": "Nasir El-Rufai", "image": "governor7.jpg", "education": 85, "health": 75, "security": 80},
-    {"name": "Rotimi Akeredolu", "image": "governor8.jpg", "education": 75, "health": 80, "security": 75},
-    {"name": "Udom Emmanuel", "image": "governor9.jpg", "education": 80, "health": 75, "security": 70},
-    {"name": "Bala Mohammed", "image": "governor10.jpg", "education": 75, "health": 70, "security": 80},
+    {"name": "Babajide Sanwo-Olu", "education": 80, "health": 75, "security": 85},
+    {"name": "Nyesom Wike", "education": 85, "health": 80, "security": 75},
+    {"name": "Seyi Makinde", "education": 75, "health": 85, "security": 70},
+    {"name": "Ifeanyi Okowa", "education": 80, "health": 75, "security": 80},
+    {"name": "Abdullahi Ganduje", "education": 75, "health": 70, "security": 85},
+    {"name": "Aminu Masari", "education": 70, "health": 80, "security": 75},
+    {"name": "Nasir El-Rufai", "education": 85, "health": 75, "security": 80},
+    {"name": "Rotimi Akeredolu", "education": 75, "health": 80, "security": 75},
+    {"name": "Udom Emmanuel", "education": 80, "health": 75, "security": 70},
+    {"name": "Bala Mohammed", "education": 75, "health": 70, "security": 80},
 ]
 
 # Set the Streamlit page configuration
@@ -65,10 +64,12 @@ def app():
                 unsafe_allow_html=True,
             )
 
-        # Governor image
+        # Governor image placeholder
         with col2:
-            image = Image.open(f"images/{governor['image']}")
-            st.image(image, width=36)
+            st.markdown(
+                f"<div style='width: 36px; height: 36px; background-color: {SPECTRUM_COLORS['gray-200']}; border-radius: 50%;'></div>",
+                unsafe_allow_html=True,
+            )
 
         # Governor name
         with col3:
