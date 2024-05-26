@@ -43,7 +43,6 @@ st.set_page_config(
     page_icon=":trophy:",
     layout="wide",
     initial_sidebar_state="expanded",
-    page_background_color=SPECTRUM_COLORS["gray-900"],
 )
 
 # Define the governor profile pages
@@ -53,7 +52,6 @@ def governor_profile(profile_url):
         page_icon=":bust_in_silhouette:",
         layout="centered",
         initial_sidebar_state="collapsed",
-        page_background_color=SPECTRUM_COLORS["gray-900"],
     )
 
     st.title(f"{profile_url.replace('_', ' ').title()} Profile")
