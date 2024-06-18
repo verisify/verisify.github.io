@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Load your HTML content
-with open("alert.html", "r") as file:
+with open("my_streamlit_app/alert.html", "r") as file:
     html_content = file.read()
 
 # Use an iframe to display the HTML content
