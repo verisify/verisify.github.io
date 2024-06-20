@@ -1,71 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Week Selection Date Picker</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
-    <link href="https://unpkg.com/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-    <script src="https://unpkg.com/flatpickr"></script>
-    <style>
-        .input-group input {
-            padding-left: 40px; /* Adjust as needed to fit the icon */
-        }
-        .input-group .calendar-icon {
-            position: absolute;
-            left: 10px; /* Adjust as needed to align the icon */
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 10;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/3.4.4/tailwind.min.css" />
+  <style>
+    body {
+      background-color: #111827;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <script>
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyALc7_O7VJzigqOaVLYjcl5yCCysnmyOG0",
+      authDomain: "rateniggov-419a4.firebaseapp.com",
+      projectId: "rateniggov-419a4",
+      storageBucket: "rateniggov-419a4.appspot.com",
+      messagingSenderId: "293215706435",
+      appId: "1:293215706435:web:bbf1190e97208185caa3f6",
+      measurementId: "G-C2KSLESE2D"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
 </head>
 <body>
-
-<div class="container mt-5">
-    <div class="input-group mb-3">
-        <input type="text" id="weekPicker" class="form-control" placeholder="Select a week">
-        <i class="bi bi-calendar-date calendar-icon"></i>
+  <div class="container">
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <table id="leaderboard" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="p-4">Rank</th>
+            <th scope="col" class="px-6 py-3">Name</th>
+            <th scope="col" class="px-6 py-3">Infrastructure</th>
+            <th scope="col" class="px-6 py-3">Security</th>
+            <th scope="col" class="px-6 py-3">Education</th>
+            <th scope="col" class="px-6 py-3">Healthcare</th>
+            <th scope="col" class="px-6 py-3">Jobs</th>
+          </tr>
+        </thead>
+        <tbody id="governor-rows"> <!-- Governor rows will be populated here --> </tbody>
+      </table>
     </div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var today = new Date();
-    var weekStart = new Date(today);
-    weekStart.setDate(weekStart.getDate() - weekStart.getDay()); // Adjust to Sunday
-    var weekEnd = new Date(weekStart.getTime() + 6 * 24 * 60 * 60 * 1000); // Advance to Saturday
-
-    flatpickr("#weekPicker", {
-        mode: "range",
-        dateFormat: "l, F j",
-        defaultDate: [weekStart, weekEnd],
-        enableTime: false,
-        locale: {
-            firstDayOfWeek: 0
-        },
-        maxDate: weekEnd, // Restrict date selection to current week and earlier
-        onChange: function(selectedDates, dateStr, instance) {
-            if (selectedDates.length > 0) {
-                var selectedDate = selectedDates[0];
-                var weekStart = new Date(selectedDate);
-                weekStart.setDate(weekStart.getDate() - weekStart.getDay()); // Adjust to Sunday
-                var weekEnd = new Date(weekStart.getTime() + 6 * 24 * 60 * 60 * 1000); // Advance to Saturday
-                instance.setDate([weekStart, weekEnd]);
-            }
-        },
-        onClose: function(selectedDates, dateStr, instance) {
-            if (selectedDates.length !== 2 || selectedDates[0].getDay() !== 0 || selectedDates[1].getDay() !== 6) {
-                alert("Please select a full week starting from Sunday.");
-                instance.clear();
-            }
-        }
-    });
-});
-</script>
-
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/3.4.4/tailwind.min.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
