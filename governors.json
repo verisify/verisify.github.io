@@ -1,260 +1,556 @@
-[
+[    
     {
-        "rank": 1,
-        "name": "Alex Otti",
-        "state": "Abia",
-        "avatar": "path/to/image1.jpg"
+        rank: 1,
+        name: "Alex Otti",
+        state: "Abia",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
     },
 
     {
-        "rank": 2,
-        "name": "Ahmadu Fintiri",
-        "state": "Adamawa",
-        "avatar": "path/to/image2.jpg"
+        rank: 2,
+        name: "Ahmadu Fintiri",
+        state: "Adamawa",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
     },
 
     {
-        "rank": 3,
-        "name": "Umo Eno",
-        "state": "Akwa Ibom",
-        "avatar": "path/to/image3.jpg"
+        rank: 3,
+        name: "Umo Eno",
+        state: "Akwa Ibom",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
     },
 
     {
-        "rank": 4,
-        "name": "Charles Chukwuma Soludo",
-        "state": "Anambra",
-        "avatar": "path/to/image4.jpg"
+        rank: 4,
+        name: "Charles Chukwuma Soludo",
+        state: "Anambra",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
     },
 
     {
-        "rank": 5,
-        "name": "Bala Mohammed",
-        "state": "Bauchi",
-        "avatar": "path/to/image5.jpg"
+        rank: 5,
+        name: "Bala Mohammed",
+        state: "Bauchi",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
     },
 
     {
-        "rank": 6,
-        "name": "Douye Diri",
-        "state": "Bayelsa",
-        "avatar": "path/to/image6.jpg"
+        rank: 6,
+        name: "Douye Diri",
+        state: "Bayelsa",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 7,
+        name: "Hyacinth Alia",
+        state: "Benue",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 8,
+        name: "Babagana Zulum",
+        state: "Borno",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 9,
+        name: "Bassey Otu",
+        state: "Cross River",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 10,
+        name: "Oborevwori Sheriff",
+        state: "Delta",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 11,
+        name: "Francis Nwifuru",
+        state: "Ebonyi",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 12,
+        name: "Godwin Obaseki",
+        state: "Edo",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 13,
+        name: "Biodun Oyebanji",
+        state: "Ekiti",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 14,
+        name: "Peter Mbah",
+        state: "Enugu",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 15,
+        name: "Nyesom Wike",
+        state: "FCT",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 16,
+        name: "Inuwa Yahaya",
+        state: "Gombe",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 17,
+        name: "Hope Uzodinma",
+        state: "Imo",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 18,
+        name: "Agbu Kefas",
+        state: "Jalingo",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 19,
+        name: "Umar Nanmadi",
+        state: "Jigawa",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 20,
+        name: "Uba Sani",
+        state: "Kaduna",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 21,
+        name: "Abba Kabir Yusuf",
+        state: "Kano",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 22,
+        name: "Dikko Radda",
+        state: "Katsina",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 23,
+        name: "Nasiru Idris",
+        state: "Kebbi",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 24,
+        name: "Ahmed Usman Ododo",
+        state: "Kogi",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 25,
+        name: "Abdulrahman Abdulrazaq",
+        state: "Kwara",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 26,
+        name: "Babajide Sanwo Olu",
+        state: "Lagos",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 27,
+        name: "Abdullahi Sule",
+        state: "Nasarawa",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 28,
+        name: "Umar Bago",
+        state: "Niger",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 29,
+        name: "Dapo Abiodun",
+        state: "Ogun",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
+    },
+
+    {
+        rank: 30,
+        name: "Lucky Aiyedatiwa",
+        state: "Ondo",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
     },
 
         {
-        "rank": 7,
-        "name": "Hyacinth Alia",
-        "state": "Benue",
-        "avatar": "path/to/image7.jpg"
-    },
-
-    {
-        "rank": 8,
-        "name": "Babagana Zulum",
-        "state": "Borno",
-        "avatar": "path/to/image8.jpg"
-    },
-
-    {
-        "rank": 9,
-        "name": "Bassey Otu",
-        "state": "Cross River",
-        "avatar": "path/to/image9.jpg"
-    },
-
-    {
-        "rank": 10,
-        "name": "Oborevwori Sheriff",
-        "state": "Delta",
-        "avatar": "path/to/image10.jpg"
-    },
-
+        rank: 31,
+        name: "Seyi Makinde",
+        state: "Oyo",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
         {
-        "rank": 11,
-        "name": "Francis Nwifuru",
-        "state": "Ebonyi",
-        "avatar": "path/to/image11.jpg"
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
     },
 
     {
-        "rank": 12,
-        "name": "Godwin Obaseki",
-        "state": "Edo",
-        "avatar": "path/to/image12.jpg"
-    },
-
-    {
-        "rank": 13,
-        "name": "Biodun Oyebanji",
-        "state": "Ekiti",
-        "avatar": "path/to/image13.jpg"
-    },
-
-    {
-        "rank": 14,
-        "name": "Peter Mbah",
-        "state": "Enugu",
-        "avatar": "path/to/image14.jpg"
-    },
-
-    {
-        "rank": 15,
-        "name": "Nyesom Wike",
-        "state": "FCT",
-        "avatar": "path/to/image15.jpg"
-    },
-
-    {
-        "rank": 16,
-        "name": "Inuwa Yahaya",
-        "state": "Gombe",
-        "avatar": "path/to/image16.jpg"
-    },
-
+        rank: 32,
+        name: "Caleb Mutfwang",
+        state: "Plateau",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
         {
-        "rank": 17,
-        "name": "Hope Uzodinma",
-        "state": "Imo",
-        "avatar": "path/to/image17.jpg"
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
     },
 
     {
-        "rank": 18,
-        "name": "Agbu Kefas",
-        "state": "Jalingo",
-        "avatar": "path/to/image18.jpg"
-    },
-
-    {
-        "rank": 19,
-        "name": "Umar Nanmadi",
-        "state": "Jigawa",
-        "avatar": "path/to/image19.jpg"
-    },
-
-    {
-        "rank": 20,
-        "name": "Uba Sani",
-        "state": "Kaduna",
-        "avatar": "path/to/image20.jpg"
-    },
-
+        rank: 33,
+        name: "Siminalayi Fubara",
+        state: "Rivers",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
         {
-        "rank": 21,
-        "name": "Abba Kabir Yusuf",
-        "state": "Kano",
-        "avatar": "path/to/image21.jpg"
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
     },
 
     {
-        "rank": 22,
-        "name": "Dikko Radda",
-        "state": "Katsina",
-        "avatar": "path/to/image22.jpg"
-    },
-
-    {
-        "rank": 23,
-        "name": "Nasiru Idris",
-        "state": "Kebbi",
-        "avatar": "path/to/image23.jpg"
-    },
-
-    {
-        "rank": 24,
-        "name": "Ahmed Usman Ododo",
-        "state": "Kogi",
-        "avatar": "path/to/image24.jpg"
-    },
-
-    {
-        "rank": 25,
-        "name": "Abdulrahman Abdulrazaq",
-        "state": "Kwara",
-        "avatar": "path/to/image25.jpg"
-    },
-
-    {
-        "rank": 26,
-        "name": "Babajide Sanwo Olu",
-        "state": "lagos",
-        "avatar": "path/to/image26.jpg"
-    },
-
+        rank: 34,
+        name: "Ahmed Aliyu",
+        state: "Sokoto",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
         {
-        "rank": 27,
-        "name": "Abdullahi Sule",
-        "state": "Nasarawa",
-        "avatar": "path/to/image27.jpg"
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
     },
 
     {
-        "rank": 28,
-        "name": "Umar Bago",
-        "state": "Niger",
-        "avatar": "path/to/image28.jpg"
-    },
-
-    {
-        "rank": 29,
-        "name": "Dapo Abiodun",
-        "state": "Ogun",
-        "avatar": "path/to/image29.jpg"
-    },
-
-    {
-        "rank": 30,
-        "name": "Lucky Aiyedatiwa",
-        "state": "Ondo",
-        "avatar": "path/to/image30.jpg"
-    },
-
+        rank: 35,
+        name: "Kefas Agbu",
+        state: "Taraba",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
         {
-        "rank": 31,
-        "name": "Seyi Makinde",
-        "state": "Oyo",
-        "avatar": "path/to/image31.jpg"
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
     },
 
     {
-        "rank": 32,
-        "name": "Caleb Mutfwang",
-        "state": "Plateau",
-        "avatar": "path/to/image32.jpg"
+        rank: 36,
+        name: "Mai Mala Buni",
+        state: "Yobe",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
     },
 
     {
-        "rank": 33,
-        "name": "Siminalayi Fubara",
-        "state": "Rivers",
-        "avatar": "path/to/image33.jpg"
+        rank: 37,
+        name: "Dauda Lawal",
+        state: "Zamfara",
+        avatar: "avatar/Abia_Alex-Otti.jpg",
+        categories: 
+        {
+            infrastructure: 0,
+            security: 0,
+            education: 0,
+            healthcare: 0,
+            jobs: 0,
+        }
     },
-
-    {
-        "rank": 34,
-        "name": "Ahmed Aliyu",
-        "state": "Sokoto",
-        "avatar": "path/to/image34.jpg"
-    },
-
-    {
-        "rank": 35,
-        "name": "Kefas Agbu",
-        "state": "Taraba",
-        "avatar": "path/to/image35.jpg"
-    },
-
-    {
-        "rank": 36,
-        "name": "Mai Mala Buni",
-        "state": "Yobe",
-        "avatar": "path/to/image36.jpg"
-    },
-
-    {
-        "rank": 37,
-        "name": "Dauda Lawal",
-        "state": "Zamfara",
-        "avatar": "path/to/image37.jpg"
-    }
 ]
