@@ -1,9 +1,9 @@
 class Governor {
-    constructor(rank, name, image, email) {
+    constructor(rank, name, image, state) {
         this.rank = rank;
         this.name = name;
         this.image = image;
-        this.email = email;
+        this.state = state;
         this.categories = {
             infrastructure: { votes: 0, userVote: null },
             security: { votes: 0, userVote: null },
@@ -90,45 +90,102 @@ class Governor {
                     <img class="w-10 h-10 rounded-full" src="${this.image}" alt="${this.name} image">
                     <div class="ps-3">
                         <div class="text-base font-semibold">${this.name}</div>
-                        <div class="font-normal text-gray-500">${this.email}</div>
-                    </div>
-                </th>
-                ${createVoteSection('infrastructure')}
-                ${createVoteSection('security')}
-                ${createVoteSection('education')}
-                ${createVoteSection('healthcare')}
-                ${createVoteSection('jobs')}
-            </tr>
-        `;
+                                            <div class="font-normal text-gray-500">${this.state}</div>
+                </div>
+            </th>
+            ${createVoteSection('infrastructure')}
+            ${createVoteSection('security')}
+            ${createVoteSection('education')}
+            ${createVoteSection('healthcare')}
+            ${createVoteSection('jobs')}
+        </tr>`;
     }
 }
 
+// Initialize governors array with placeholder data
 const governors = [
-    new Governor(1, "Governor 1", "/path/to/image1.jpg", "governor1@example.com"),
-    new Governor(2, "Governor 2", "/path/to/image2.jpg", "governor2@example.com"),
-    // Add more governors here
+    new Governor(1, "Governor A", "https://via.placeholder.com/40", "State A"),
+    new Governor(2, "Governor B", "https://via.placeholder.com/40", "State B"),
+    // Add more governors as needed
 ];
 
-document.addEventListener('DOMContentLoaded', () => {
-    const governorRows = document.getElementById('governor-rows');
+// Function to render governors
+const renderGovernors = () => {
+    const governorRows = document.querySelector('#governor-rows');
+    governorRows.innerHTML = governors.map(governor => governor.render()).join('');
     
-    governors.forEach(governor => {
-        governorRows.insertAdjacentHTML('beforeend', governor.render());
-    });
-
     document.querySelectorAll('.upvote-btn').forEach(button => {
-        button.addEventListener('click', (event) => {
-            const rank = event.currentTarget.getAttribute('data-id');
-            const category = event.currentTarget.getAttribute('data-category');
-            governors[rank - 1].vote(category, 'upvote');
-        });
+        button.addEventListener('click', handleVote);
     });
 
     document.querySelectorAll('.downvote-btn').forEach(button => {
-        button.addEventListener('click', (event) => {
-            const rank = event.currentTarget.getAttribute('data-id');
-            const category = event.currentTarget.getAttribute('data-category');
-            governors[rank - 1].vote(category, 'downvote');
-        });
+        button.addEventListener('click', handleVote);
     });
-});
+};
+
+// Function to handle votes
+const handleVote = (event) => {
+    const button = event.target.closest('button');
+    const governorRank = button.getAttribute('data-id');
+    const category = button.getAttribute('data-category');
+    const type = button.classList.contains('upvote-btn') ? 'upvote' : 'downvote';
+
+    const governor = governors.find(gov => gov.rank == governorRank);
+    if (governor) {
+        governor.vote(category, type);
+        saveVoteToFirestore(governor, category, type);
+    }
+};
+
+// Function to save vote to Firestore
+const saveVoteToFirestore = async (governor, category, type) => {
+    try {
+        const docRef = db.collection('governors').doc(`governor-${governor.rank}`);
+        const doc = await docRef.get();
+
+        if (doc.exists) {
+            const data = doc.data();
+            const currentVotes = data.categories[category].votes;
+            const updatedVotes = type === 'upvote' ? currentVotes + 1 : currentVotes - 1;
+
+            await docRef.update({
+                [`categories.${category}.votes`]: updatedVotes,
+                [`categories.${category}.userVote`]: type === 'upvote' ? 'upvoted' : 'downvoted'
+            });
+        } else {
+            await docRef.set({
+                rank: governor.rank,
+                name: governor.name,
+                image: governor.image,
+                state: governor.state,
+                categories: governor.categories
+            });
+        }
+    } catch (error) {
+        console.error("Error saving vote to Firestore: ", error);
+    }
+};
+
+// Function to load governors from Firestore
+const loadGovernorsFromFirestore = async () => {
+    try {
+        const snapshot = await db.collection('governors').get();
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const governor = governors.find(gov => gov.rank == data.rank);
+            if (governor) {
+                governor.categories = data.categories;
+            }
+        });
+        renderGovernors();
+    } catch (error) {
+        console.error("Error loading governors from Firestore: ", error);
+    }
+};
+
+// Initial rendering of governors
+renderGovernors();
+
+// Load governors from Firestore
+loadGovernorsFromFirestore();
+
