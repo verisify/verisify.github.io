@@ -6,36 +6,20 @@
   <title>Leaderboard</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/3.4.4/tailwind.min.css" />
+  <script defer src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+  <script defer src="script.js"></script>
   <style>
     body {
       background-color: #111827;
       font-family: 'Montserrat', sans-serif;
     }
-
     .container {
       max-width: 1200px;
       margin: 40px auto;
       padding: 20px;
     }
   </style>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-  <script>
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyALc7_O7VJzigqOaVLYjcl5yCCysnmyOG0",
-      authDomain: "rateniggov-419a4.firebaseapp.com",
-      projectId: "rateniggov-419a4",
-      storageBucket: "rateniggov-419a4.appspot.com",
-      messagingSenderId: "293215706435",
-      appId: "1:293215706435:web:bbf1190e97208185caa3f6",
-      measurementId: "G-C2KSLESE2D"
-    };
-
-    // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-  </script>
 </head>
 <body>
   <div class="container">
@@ -52,12 +36,9 @@
             <th scope="col" class="px-6 py-3">Jobs</th>
           </tr>
         </thead>
-        <tbody id="governor-rows"> <!-- Governor rows will be populated here --> </tbody>
+        <tbody id="governor-rows"></tbody>
       </table>
     </div>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/3.4.4/tailwind.min.js"></script>
-  <script src="script.js"></script>
 </body>
-</html>
+              </html>
