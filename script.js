@@ -1,3 +1,6 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+
 // Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyALc7_O7VJzigqOaVLYjcl5yCCysnmyOG0",
@@ -10,8 +13,8 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 class Governor {
     constructor(rank, name, image, state, infrastructure, security, education, healthcare, jobs) {
@@ -119,40 +122,38 @@ class Governor {
 }
 
 const renderGovernors = async () => {
-    const governorsRef = db.collection('governors');
+    const governorsRef = collection(db, 'governors');
     const governorRows = document.getElementById('governor-rows');
 
-    const snapshot = await governorsRef.get();
-    const governors = [];
+    try {
+        const snapshot = await getDocs(governorsRef);
+        const governors = [];
 
-    snapshot.forEach(doc => {
-        const data = doc.data();
-        const governor = new Governor(
-            data.rank, data.name, data.avatar, data.state, data.infrastructure, 
-            data.security, data.education, data.healthcare, data.jobs
-        );
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const governor = new Governor(
+                data.rank, data.name, data.avatar, data.state, data.infrastructure, 
+                data.security, data.education, data.healthcare, data.jobs
+            );
 
-        governors.push(governor);
-        governorRows.innerHTML += governor.render();
-    });
-
-    document.querySelectorAll('.upvote-btn').forEach(button => {
-        button.addEventListener('click', () => {
-            const rank = button.dataset.id;
-            const category = button.dataset.category;
-            const governor = governors.find(g => g.rank == rank);
-            governor.vote(category, 'upvote');
+            governors.push(governor);
+            governorRows.innerHTML += governor.render();
         });
-    });
 
-    document.querySelectorAll('.downvote-btn').forEach(button => {
-        button.addEventListener('click', () => {
-            const rank = button.dataset.id;
-            const category = button.dataset.category;
-            const governor = governors.find(g => g.rank == rank);
-            governor.vote(category, 'downvote');
+        // Add event listeners for voting buttons
+        document.querySelectorAll('.upvote-btn, .downvote-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const rank = button.dataset.id;
+                const category = button.dataset.category;
+                const type = button.classList.contains('upvote-btn') ? 'upvote' : 'downvote';
+                const governor = governors.find(g => g.rank == rank);
+                governor.vote(category, type);
+            });
         });
-    });
+    } catch (error) {
+        console.error("Error fetching governors:", error);
+    }
 };
 
+// Call the function to render governors
 renderGovernors();
