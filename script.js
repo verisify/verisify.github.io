@@ -71,34 +71,26 @@ class Governor {
     updateVotesDisplay(category) {
         const categoryData = this.categories[category];
         document.querySelector(`#votes-${category}-${this.rank}`).textContent = categoryData.votes;
-    
+
         const upvoteBtn = document.querySelector(`#upvote-${category}-${this.rank}`);
         const downvoteBtn = document.querySelector(`#downvote-${category}-${this.rank}`);
-    
-        if (categoryData.userVote === 'upvoted') {
-            upvoteBtn.style.color = 'blue';
-            downvoteBtn.style.color = '';
-        } else if (categoryData.userVote === 'downvoted') {
-            downvoteBtn.style.color = 'red';
-            upvoteBtn.style.color = '';
-        } else {
-            upvoteBtn.style.color = '';
-            downvoteBtn.style.color = '';
-        }
+
+        upvoteBtn.style.color = categoryData.userVote === 'upvoted' ? 'blue' : '';
+        downvoteBtn.style.color = categoryData.userVote === 'downvoted' ? 'red' : '';
     }
 
     render() {
         const createVoteSection = (category) => `
             <td class="px-6 py-4">
                 <div class="flex items-center">
-                    <button id="downvote-${category}-${this.rank}" class="downvote-btn inline-flex items-center justify-center p-1 me-3 text-sm font-medium h-6 w-6 text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 transition-colors duration-200" data-id="${this.rank}" data-category="${category}" type="button">
+                    <button id="downvote-${category}-${this.rank}" class="vote-btn downvote-btn inline-flex items-center justify-center p-1 me-3 text-sm font-medium h-6 w-6 text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" data-id="${this.rank}" data-category="${category}" type="button">
                         <span class="sr-only">Downvote</span>
                         <svg class="w-[46px] h-[46px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                             <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm5.757-1a1 1 0 1 0 0 2h8.486a1 1 0 1 0 0-2H7.757Z" clip-rule="evenodd"/>
                         </svg>
                     </button>
                     <span id="votes-${category}-${this.rank}" class="votes-count">${this.categories[category].votes}</span>
-                    <button id="upvote-${category}-${this.rank}" class="upvote-btn inline-flex items-center justify-center h-6 w-6 p-1 ms-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 transition-colors duration-200" data-id="${this.rank}" data-category="${category}" type="button">
+                    <button id="upvote-${category}-${this.rank}" class="vote-btn upvote-btn inline-flex items-center justify-center h-6 w-6 p-1 ms-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" data-id="${this.rank}" data-category="${category}" type="button">
                         <span class="sr-only">Upvote</span>
                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                             <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z" clip-rule="evenodd"/>
@@ -160,7 +152,7 @@ const renderGovernors = async (sortType = 'alphabetical') => {
         });
 
         // Add event listeners for voting buttons
-        document.querySelectorAll('.upvote-btn, .downvote-btn').forEach(button => {
+        document.querySelectorAll('.vote-btn').forEach(button => {
             button.addEventListener('click', async () => {
                 const rank = button.dataset.id;
                 const category = button.dataset.category;
@@ -218,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 let sortType;
                 if (currentDay >= 1 && currentDay <= 2) { // Monday to Tuesday
                     sortType = 'alphabetical';
-                } else if (currentDay >= 3 && currentDay <= 0) { // Wednesday to Sunday (0 is Sunday)
+                } else if (currentDay >= 3 || currentDay === 0) { // Wednesday to Sunday (0 is Sunday)
                     sortType = 'votes';
                 }
 
