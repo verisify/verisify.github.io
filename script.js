@@ -71,19 +71,19 @@ class Governor {
     updateVotesDisplay(category) {
         const categoryData = this.categories[category];
         document.querySelector(`#votes-${category}-${this.rank}`).textContent = categoryData.votes;
-
+    
         const upvoteBtn = document.querySelector(`#upvote-${category}-${this.rank}`);
         const downvoteBtn = document.querySelector(`#downvote-${category}-${this.rank}`);
-
+    
         if (categoryData.userVote === 'upvoted') {
-            upvoteBtn.classList.add('text-blue-500');
-            downvoteBtn.classList.remove('text-red-500');
+            upvoteBtn.style.color = 'blue';
+            downvoteBtn.style.color = '';
         } else if (categoryData.userVote === 'downvoted') {
-            downvoteBtn.classList.add('text-red-500');
-            upvoteBtn.classList.remove('text-blue-500');
+            downvoteBtn.style.color = 'red';
+            upvoteBtn.style.color = '';
         } else {
-            upvoteBtn.classList.remove('text-blue-500');
-            downvoteBtn.classList.remove('text-red-500');
+            upvoteBtn.style.color = '';
+            downvoteBtn.style.color = '';
         }
     }
 
