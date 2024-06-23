@@ -90,8 +90,8 @@ class Governor {
                             <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm5.757-1a1 1 0 1 0 0 2h8.486a1 1 0 1 0 0-2H7.757Z" clip-rule="evenodd"/>
                         </svg>
                     </button>
-                    <span id="votes-${category}-${this.rank}" class="votes-count">${this.categories[category].votes}</span>
-                    <button id="upvote-${category}-${this.rank}" class="upvote-btn inline-flex items-center justify-center h-6 w-6 p-1 ms-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" data-id="${this.rank}" data-category="${category}" type="button">
+                    <span id="votes-${category}-${this.rank}" class="font-semibold text-lg text-gray-800 dark:text-white">${this.categories[category].votes}</span>
+                    <button id="upvote-${category}-${this.rank}" class="upvote-btn inline-flex items-center justify-center p-1 ms-3 text-sm font-medium text-gray-500 h-6 w-6 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" data-id="${this.rank}" data-category="${category}" type="button">
                         <span class="sr-only">Upvote</span>
                         <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M18 15l-6-6-6 6"/>
@@ -167,10 +167,12 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 async function loadGovernorsData() {
+    console.log('Fetching data...');
     const querySnapshot = await getDocs(collection(db, "Governors"));
     governors = [];
     querySnapshot.forEach((doc) => {
         const data = doc.data();
+        console.log('Fetched data:', data); // Debugging line
         const governor = new Governor(
             data.rank,
             data.name,
@@ -188,6 +190,7 @@ async function loadGovernorsData() {
 }
 
 function renderGovernors() {
+    console.log('Rendering governors...', governors); // Debugging line
     const dayOfWeek = new Date().getDay();
     if (dayOfWeek >= 1 && dayOfWeek <= 2) {
         governors.sort((a, b) => a.name.localeCompare(b.name));
