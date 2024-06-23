@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -17,7 +17,8 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 class Governor {
-    constructor(rank, name, image, state, infrastructure, security, education, healthcare, jobs) {
+    constructor(id, rank, name, image, state, infrastructure, security, education, healthcare, jobs) {
+        this.id = id;
         this.rank = rank;
         this.name = name;
         this.image = image;
@@ -31,9 +32,9 @@ class Governor {
         };
     }
 
-    vote(category, type) {
+    async vote(category, type) {
         const categoryData = this.categories[category];
-
+        
         if (type === 'upvote') {
             if (categoryData.userVote === 'upvoted') {
                 categoryData.votes -= 1;
@@ -59,6 +60,12 @@ class Governor {
         }
 
         this.updateVotesDisplay(category);
+
+        // Update votes in Firestore
+        const governorRef = doc(db, 'governors', this.id);
+        await updateDoc(governorRef, {
+            [category]: categoryData.votes
+        });
     }
 
     updateVotesDisplay(category) {
@@ -84,17 +91,17 @@ class Governor {
         const createVoteSection = (category) => `
             <td class="px-6 py-4">
                 <div class="flex items-center">
-                    <button id="downvote-${category}-${this.rank}" class="downvote-btn inline-flex items-center justify-center p-1 me-3 text-sm font-medium h-6 w-6 text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" data-id="${this.rank}" data-category="${category}" type="button">
+                    <button id="downvote-${category}-${this.rank}" class="downvote-btn inline-flex items-center justify-center p-1 me-3 text-sm font-medium h-6 w-6 text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 transition-colors duration-200" data-id="${this.rank}" data-category="${category}" type="button">
                         <span class="sr-only">Downvote</span>
                         <svg class="w-[46px] h-[46px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                             <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm5.757-1a1 1 0 1 0 0 2h8.486a1 1 0 1 0 0-2H7.757Z" clip-rule="evenodd"/>
                         </svg>
                     </button>
-                    <span id="votes-${category}-${this.rank}" class="font-semibold text-lg text-gray-800 dark:text-white">${this.categories[category].votes}</span>
-                    <button id="upvote-${category}-${this.rank}" class="upvote-btn inline-flex items-center justify-center p-1 ms-3 text-sm font-medium text-gray-500 h-6 w-6 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" data-id="${this.rank}" data-category="${category}" type="button">
+                    <span id="votes-${category}-${this.rank}" class="votes-count">${this.categories[category].votes}</span>
+                    <button id="upvote-${category}-${this.rank}" class="upvote-btn inline-flex items-center justify-center h-6 w-6 p-1 ms-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 transition-colors duration-200" data-id="${this.rank}" data-category="${category}" type="button">
                         <span class="sr-only">Upvote</span>
-                        <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M18 15l-6-6-6 6"/>
+                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z" clip-rule="evenodd"/>
                         </svg>
                     </button>
                 </div>
@@ -102,15 +109,15 @@ class Governor {
         `;
 
         return `
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <td class="w-4 p-4">${this.rank}</td>
-                <td scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="p-4">${this.rank}</td>
+                <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
                     <img class="w-10 h-10 rounded-full" src="${this.image}" alt="${this.name}">
                     <div class="pl-3">
                         <div class="text-base font-semibold">${this.name}</div>
                         <div class="font-normal text-gray-500">${this.state}</div>
                     </div>
-                </td>
+                </th>
                 ${createVoteSection('infrastructure')}
                 ${createVoteSection('security')}
                 ${createVoteSection('education')}
@@ -122,37 +129,101 @@ class Governor {
 }
 
 let governors = [];
-let currentWeekStart;
-let currentWeekEnd;
 
-document.addEventListener('DOMContentLoaded', async function() {
-    const today = new Date();
-    const weekStart = new Date(today);
+const renderGovernors = async (sortType = 'alphabetical') => {
+    const governorsRef = collection(db, 'governors');
+    const governorRows = document.getElementById('governor-rows');
+
+    try {
+        const snapshot = await getDocs(governorsRef);
+        governors = [];
+
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const governor = new Governor(
+                doc.id, data.rank, data.name, data.avatar, data.state, data.infrastructure, 
+                data.security, data.education, data.healthcare, data.jobs
+            );
+            governors.push(governor);
+        });
+
+        // Sort governors based on the current day and sortType
+        sortGovernors(sortType);
+
+        // Clear existing rows
+        governorRows.innerHTML = '';
+
+        // Render sorted governors
+        governors.forEach((governor, index) => {
+            governor.rank = index + 1;
+            governorRows.innerHTML += governor.render();
+        });
+
+        // Add event listeners for voting buttons
+        document.querySelectorAll('.upvote-btn, .downvote-btn').forEach(button => {
+            button.addEventListener('click', async () => {
+                const rank = button.dataset.id;
+                const category = button.dataset.category;
+                const type = button.classList.contains('upvote-btn') ? 'upvote' : 'downvote';
+                const governor = governors.find(g => g.rank == rank);
+                await governor.vote(category, type);
+                
+                // Re-sort governors if it's Wednesday to Sunday
+                const currentDay = new Date().getDay();
+                if (currentDay >= 3 && currentDay <= 6) {
+                    sortGovernors('votes');
+                    renderGovernors('votes');
+                }
+            });
+        });
+    } catch (error) {
+        console.error("Error fetching governors:", error);
+    }
+};
+
+const sortGovernors = (sortType) => {
+    if (sortType === 'alphabetical') {
+        governors.sort((a, b) => a.state.localeCompare(b.state));
+    } else if (sortType === 'votes') {
+        governors.sort((a, b) => {
+            const totalVotesA = Object.values(a.categories).reduce((sum, category) => sum + category.votes, 0);
+            const totalVotesB = Object.values(b.categories).reduce((sum, category) => sum + category.votes, 0);
+            return totalVotesB - totalVotesA;
+        });
+    }
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    var today = new Date();
+    var weekStart = new Date(today);
     weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-    const weekEnd = new Date(weekStart.getTime() + 6 * 24 * 60 * 60 * 1000);
-
-    currentWeekStart = weekStart;
-    currentWeekEnd = weekEnd;
+    var weekEnd = new Date(weekStart.getTime() + 6 * 24 * 60 * 60 * 1000);
 
     flatpickr("#weekPicker", {
         mode: "range",
         dateFormat: "l, F j",
         defaultDate: [weekStart, weekEnd],
         enableTime: false,
-        locale: {
-            firstDayOfWeek: 0
-        },
-        maxDate: weekEnd,
+        locale: { firstDayOfWeek: 0 },
         onChange: function(selectedDates, dateStr, instance) {
             if (selectedDates.length > 0) {
-                const selectedDate = selectedDates[0];
-                const weekStart = new Date(selectedDate);
+                var selectedDate = selectedDates[0];
+                var weekStart = new Date(selectedDate);
                 weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-                const weekEnd = new Date(weekStart.getTime() + 6 * 24 * 60 * 60 * 1000);
+                var weekEnd = new Date(weekStart.getTime() + 6 * 24 * 60 * 60 * 1000);
                 instance.setDate([weekStart, weekEnd]);
-                currentWeekStart = weekStart;
-                currentWeekEnd = weekEnd;
-                loadGovernorsData();
+
+                // Determine sorting method based on the day of the week
+                const currentDay = selectedDate.getDay();
+                let sortType;
+                if (currentDay >= 1 && currentDay <= 2) { // Monday to Tuesday
+                    sortType = 'alphabetical';
+                } else if (currentDay >= 3 && currentDay <= 0) { // Wednesday to Sunday (0 is Sunday)
+                    sortType = 'votes';
+                }
+
+                // Render governors with the appropriate sorting
+                renderGovernors(sortType);
             }
         },
         onClose: function(selectedDates, dateStr, instance) {
@@ -163,65 +234,55 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     });
 
-    await loadGovernorsData();
+    // Initial render of governors
+    const currentDay = new Date().getDay();
+    let initialSortType;
+    if (currentDay >= 1 && currentDay <= 2) { // Monday to Tuesday
+        initialSortType = 'alphabetical';
+    } else if (currentDay >= 3 || currentDay === 0) { // Wednesday to Sunday (0 is Sunday)
+        initialSortType = 'votes';
+    }
+    renderGovernors(initialSortType);
 });
 
-async function loadGovernorsData() {
-    console.log('Fetching data...');
-    const querySnapshot = await getDocs(collection(db, "Governors"));
-    governors = [];
-    querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        console.log('Fetched data:', data); // Debugging line
-        const governor = new Governor(
-            data.rank,
-            data.name,
-            data.image,
-            data.state,
-            data.infrastructure,
-            data.security,
-            data.education,
-            data.healthcare,
-            data.jobs
-        );
-        governors.push(governor);
-    });
-    renderGovernors();
-}
+// Function to calculate total votes for a governor
+const calculateTotalVotes = (governor) => {
+    return Object.values(governor.categories).reduce((sum, category) => sum + category.votes, 0);
+};
 
-function renderGovernors() {
-    console.log('Rendering governors...', governors); // Debugging line
-    const dayOfWeek = new Date().getDay();
-    if (dayOfWeek >= 1 && dayOfWeek <= 2) {
-        governors.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (dayOfWeek >= 3 && dayOfWeek <= 6) {
-        governors.sort((a, b) => {
-            const totalVotesA = Object.values(a.categories).reduce((sum, cat) => sum + cat.votes, 0);
-            const totalVotesB = Object.values(b.categories).reduce((sum, cat) => sum + cat.votes, 0);
-            return totalVotesB - totalVotesA;
-        });
+// Function to update rankings based on votes
+const updateRankings = () => {
+    governors.sort((a, b) => calculateTotalVotes(b) - calculateTotalVotes(a));
+    governors.forEach((governor, index) => {
+        governor.rank = index + 1;
+    });
+};
+
+// Function to reset votes at the start of each week (Monday)
+const resetVotes = async () => {
+    const today = new Date();
+    if (today.getDay() === 1) { // Monday
+        for (let governor of governors) {
+            for (let category in governor.categories) {
+                governor.categories[category].votes = 0;
+                governor.categories[category].userVote = null;
+            }
+            // Update Firestore
+            const governorRef = doc(db, 'governors', governor.id);
+            await updateDoc(governorRef, {
+                infrastructure: 0,
+                security: 0,
+                education: 0,
+                healthcare: 0,
+                jobs: 0
+            });
+        }
+        renderGovernors('alphabetical');
     }
+};
 
-    const rowsHtml = governors.map((governor) => governor.render()).join('');
-    document.getElementById('governor-rows').innerHTML = rowsHtml;
+// Call resetVotes function daily
+setInterval(resetVotes, 24 * 60 * 60 * 1000); // Check every 24 hours
 
-    document.querySelectorAll('.upvote-btn').forEach((btn) => {
-        btn.addEventListener('click', handleVote);
-    });
-
-    document.querySelectorAll('.downvote-btn').forEach((btn) => {
-        btn.addEventListener('click', handleVote);
-    });
-}
-
-function handleVote(event) {
-    const button = event.currentTarget;
-    const id = parseInt(button.getAttribute('data-id'));
-    const category = button.getAttribute('data-category');
-    const type = button.classList.contains('upvote-btn') ? 'upvote' : 'downvote';
-
-    const governor = governors.find((gov) => gov.rank === id);
-    if (governor) {
-        governor.vote(category, type);
-    }
-}
+// Initial call to resetVotes
+resetVotes();
