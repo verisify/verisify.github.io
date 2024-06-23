@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -17,12 +17,13 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 class Governor {
-    constructor(id, rank, name, image, state, infrastructure, security, education, healthcare, jobs) {
+    constructor(id, rank, name, image, state, infrastructure, security, education, healthcare, jobs, weekStartDate) {
         this.id = id;
         this.rank = rank;
         this.name = name;
         this.image = image;
         this.state = state;
+        this.weekStartDate = weekStartDate;
         this.categories = {
             infrastructure: { votes: parseInt(infrastructure) || 0, userVote: null },
             security: { votes: parseInt(security) || 0, userVote: null },
@@ -64,7 +65,8 @@ class Governor {
         // Update votes in Firestore
         const governorRef = doc(db, 'governors', this.id);
         await updateDoc(governorRef, {
-            [category]: categoryData.votes
+            [category]: categoryData.votes,
+            weekStartDate: this.weekStartDate
         });
     }
 
@@ -77,6 +79,14 @@ class Governor {
 
         upvoteBtn.style.color = categoryData.userVote === 'upvoted' ? 'blue' : '';
         downvoteBtn.style.color = categoryData.userVote === 'downvoted' ? 'red' : '';
+
+        // Update total votes
+        const totalVotes = this.calculateTotalVotes();
+        document.querySelector(`#total-votes-${this.rank}`).textContent = totalVotes;
+    }
+
+    calculateTotalVotes() {
+        return Object.values(this.categories).reduce((sum, category) => sum + category.votes, 0);
     }
 
     render() {
@@ -109,6 +119,9 @@ class Governor {
                 ${createVoteSection('education')}
                 ${createVoteSection('healthcare')}
                 ${createVoteSection('jobs')}
+                <td class="px-6 py-4">
+                    <span id="total-votes-${this.rank}">${this.calculateTotalVotes()}</span>
+                </td>
             </tr>
         `;
     }
@@ -116,25 +129,37 @@ class Governor {
 
 let governors = [];
 
-const renderGovernors = async (sortType = 'alphabetical') => {
+const renderGovernors = async (selectedDate) => {
     const governorsRef = collection(db, 'governors');
     const governorRows = document.getElementById('governor-rows');
 
     try {
-        const snapshot = await getDocs(governorsRef);
+        let q;
+        if (selectedDate) {
+            const weekStart = new Date(selectedDate);
+            weekStart.setDate(weekStart.getDate() - weekStart.getDay()); // Get the start of the week
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekEnd.getDate() + 6); // Get the end of the week
+
+            q = query(governorsRef, where("weekStartDate", ">=", weekStart), where("weekStartDate", "<=", weekEnd));
+        } else {
+            q = query(governorsRef);
+        }
+
+        const snapshot = await getDocs(q);
         governors = [];
 
         snapshot.forEach(doc => {
             const data = doc.data();
             const governor = new Governor(
                 doc.id, data.rank, data.name, data.avatar, data.state, data.infrastructure, 
-                data.security, data.education, data.healthcare, data.jobs
+                data.security, data.education, data.healthcare, data.jobs, data.weekStartDate?.toDate()
             );
             governors.push(governor);
         });
 
-        // Sort governors based on the current day and sortType
-        sortGovernors(sortType);
+        // Sort governors based on the current day
+        sortGovernors(selectedDate || new Date());
 
         // Clear existing rows
         governorRows.innerHTML = '';
@@ -156,9 +181,9 @@ const renderGovernors = async (sortType = 'alphabetical') => {
                 
                 // Re-sort governors if it's Wednesday to Sunday
                 const currentDay = new Date().getDay();
-                if (currentDay >= 3 && currentDay <= 6) {
-                    sortGovernors('votes');
-                    renderGovernors('votes');
+                if (currentDay >= 3 || currentDay === 0) {
+                    sortGovernors(new Date());
+                    renderGovernors();
                 }
             });
         });
@@ -167,15 +192,12 @@ const renderGovernors = async (sortType = 'alphabetical') => {
     }
 };
 
-const sortGovernors = (sortType) => {
-    if (sortType === 'alphabetical') {
+const sortGovernors = (date) => {
+    const day = date.getDay();
+    if (day === 1 || day === 2) { // Monday or Tuesday
         governors.sort((a, b) => a.state.localeCompare(b.state));
-    } else if (sortType === 'votes') {
-        governors.sort((a, b) => {
-            const totalVotesA = Object.values(a.categories).reduce((sum, category) => sum + category.votes, 0);
-            const totalVotesB = Object.values(b.categories).reduce((sum, category) => sum + category.votes, 0);
-            return totalVotesB - totalVotesA;
-        });
+    } else { // Wednesday to Sunday
+        governors.sort((a, b) => b.calculateTotalVotes() - a.calculateTotalVotes());
     }
 };
 
@@ -187,29 +209,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     flatpickr("#weekPicker", {
         mode: "range",
-        dateFormat: "l, F j",
+        dateFormat: "Y-m-d",
         defaultDate: [weekStart, weekEnd],
-        enableTime: false,
-        locale: { firstDayOfWeek: 0 },
-        onChange: function(selectedDates, dateStr, instance) {
+        onChange: function(selectedDates) {
             if (selectedDates.length > 0) {
-                var selectedDate = selectedDates[0];
-                var weekStart = new Date(selectedDate);
-                weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-                var weekEnd = new Date(weekStart.getTime() + 6 * 24 * 60 * 60 * 1000);
-                instance.setDate([weekStart, weekEnd]);
-
-                // Determine sorting method based on the day of the week
-                const currentDay = selectedDate.getDay();
-                let sortType;
-                if (currentDay >= 1 && currentDay <= 2) { // Monday to Tuesday
-                    sortType = 'alphabetical';
-                } else if (currentDay >= 3 || currentDay === 0) { // Wednesday to Sunday (0 is Sunday)
-                    sortType = 'votes';
-                }
-
-                // Render governors with the appropriate sorting
-                renderGovernors(sortType);
+                renderGovernors(selectedDates[0]);
             }
         },
         onClose: function(selectedDates, dateStr, instance) {
@@ -221,33 +225,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Initial render of governors
-    const currentDay = new Date().getDay();
-    let initialSortType;
-    if (currentDay >= 1 && currentDay <= 2) { // Monday to Tuesday
-        initialSortType = 'alphabetical';
-    } else if (currentDay >= 3 || currentDay === 0) { // Wednesday to Sunday (0 is Sunday)
-        initialSortType = 'votes';
-    }
-    renderGovernors(initialSortType);
+    renderGovernors();
 });
-
-// Function to calculate total votes for a governor
-const calculateTotalVotes = (governor) => {
-    return Object.values(governor.categories).reduce((sum, category) => sum + category.votes, 0);
-};
-
-// Function to update rankings based on votes
-const updateRankings = () => {
-    governors.sort((a, b) => calculateTotalVotes(b) - calculateTotalVotes(a));
-    governors.forEach((governor, index) => {
-        governor.rank = index + 1;
-    });
-};
 
 // Function to reset votes at the start of each week (Monday)
 const resetVotes = async () => {
     const today = new Date();
     if (today.getDay() === 1) { // Monday
+        const weekStart = new Date(today);
+        weekStart.setHours(0, 0, 0, 0);
+
         for (let governor of governors) {
             for (let category in governor.categories) {
                 governor.categories[category].votes = 0;
@@ -260,10 +247,11 @@ const resetVotes = async () => {
                 security: 0,
                 education: 0,
                 healthcare: 0,
-                jobs: 0
+                jobs: 0,
+                weekStartDate: weekStart
             });
         }
-        renderGovernors('alphabetical');
+        renderGovernors();
     }
 };
 
