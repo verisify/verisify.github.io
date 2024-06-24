@@ -11,7 +11,6 @@
   <link href="https://unpkg.com/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
   <style>
     body {
-      background-color: #111827;
       font-family: 'Montserrat', sans-serif;
     }
     .container {
@@ -34,17 +33,17 @@
     }
   </style>
 </head>
-<body>
+<body class="dark bg-gray-900 text-white">
   <div class="container">
     <div class="mb-8">
       <div class="input-group mb-3">
-        <input type="text" id="weekPicker" class="form-control" placeholder="Select a week">
-        <i class="bi bi-calendar-date calendar-icon"></i>
+        <input type="text" id="weekPicker" class="form-control bg-gray-800 text-white border-gray-700" placeholder="Select a week">
+        <i class="bi bi-calendar-date calendar-icon text-gray-400"></i>
       </div>
     </div>
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <table id="leaderboard" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-gray-800">
+      <table id="leaderboard" class="w-full text-sm text-left rtl:text-right text-gray-400">
+        <thead class="text-xs text-gray-400 uppercase bg-gray-700">
           <tr>
             <th scope="col" class="p-4">Rank</th>
             <th scope="col" class="px-6 py-3">Name</th>
@@ -56,7 +55,9 @@
             <th scope="col" class="px-6 py-3">Total Votes</th>
           </tr>
         </thead>
-        <tbody id="governor-rows"></tbody>
+        <tbody id="governor-rows" class="bg-gray-800">
+          <!-- Table rows will be inserted here -->
+        </tbody>
       </table>
     </div>
   </div>
