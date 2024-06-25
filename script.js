@@ -105,7 +105,7 @@ class Governor {
         `;
 
         return `
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <td class="p-4">${this.rank}</td>
                 <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
                     <img class="w-10 h-10 rounded-full" src="${this.image}" alt="${this.name}">
@@ -222,6 +222,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 instance.clear();
             }
         }
+    });
+
+    // Add search functionality
+    const searchInput = document.getElementById('table-search');
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#governor-rows tr');
+        
+        rows.forEach(row => {
+            const name = row.querySelector('th div:first-child').textContent.toLowerCase();
+            const state = row.querySelector('th div:last-child').textContent.toLowerCase();
+            
+            if (name.includes(searchTerm) || state.includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
     });
 
     // Initial render of governors
