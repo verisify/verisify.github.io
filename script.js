@@ -105,13 +105,13 @@ class Governor {
         `;
 
         return `
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-700">
                 <td class="p-4">${this.rank}</td>
-                <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                <th scope="row" class="flex items-center px-6 py-4 text-white whitespace-nowrap">
                     <img class="w-10 h-10 rounded-full" src="${this.image}" alt="${this.name}">
                     <div class="pl-3">
                         <div class="text-base font-semibold">${this.name}</div>
-                        <div class="font-normal text-gray-500">${this.state}</div>
+                        <div class="font-normal text-gray-400">${this.state}</div>
                     </div>
                 </th>
                 ${createVoteSection('infrastructure')}
@@ -185,6 +185,14 @@ const renderGovernors = async (selectedDate) => {
                     sortGovernors(new Date());
                     renderGovernors();
                 }
+            });
+        });
+
+        // Add click event listener for row hover effect
+        document.querySelectorAll('#governor-rows tr').forEach(row => {
+            row.addEventListener('click', function() {
+                document.querySelectorAll('#governor-rows tr').forEach(r => r.classList.remove('row-clicked'));
+                this.classList.add('row-clicked');
             });
         });
     } catch (error) {
