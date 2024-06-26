@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,29 +34,32 @@
         #table-search {
             margin-top: 1rem;
         }
+        .row-clicked {
+            background-color: rgba(55, 65, 81, 0.5) !important;
+        }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
+<body class="bg-gray-900 text-white">
     <div class="container">
         <div class="mb-8">
             <div class="input-group mb-3">
-                <input type="text" id="weekPicker" class="form-control bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600" placeholder="Select a week">
-                <i class="bi bi-calendar-date calendar-icon text-gray-500 dark:text-gray-400"></i>
+                <input type="text" id="weekPicker" class="form-control bg-gray-700 text-white border-gray-600" placeholder="Select a week">
+                <i class="bi bi-calendar-date calendar-icon text-gray-400"></i>
             </div>
             
             <div class="relative mt-4">
                 <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <svg class="w-4 h-4 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                     </svg>
                 </div>
-                <input type="text" id="table-search" class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for governors or states">
+                <input type="text" id="table-search" class="block pt-2 ps-10 text-sm text-white border border-gray-600 rounded-lg w-80 bg-gray-700 focus:ring-blue-500 focus:border-blue-500" placeholder="Search for governors or states">
             </div>
         </div>
         
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table id="leaderboard" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <table id="leaderboard" class="w-full text-sm text-left rtl:text-right text-gray-400">
+                <thead class="text-xs text-gray-400 uppercase bg-gray-700">
                     <tr>
                         <th scope="col" class="p-4">Rank</th>
                         <th scope="col" class="px-6 py-3">Name</th>
@@ -68,7 +71,7 @@
                         <th scope="col" class="px-6 py-3">Total Votes</th>
                     </tr>
                 </thead>
-                <tbody id="governor-rows" class="bg-white dark:bg-gray-800">
+                <tbody id="governor-rows" class="bg-gray-800">
                     <!-- Table rows will be inserted here -->
                 </tbody>
             </table>
@@ -80,4 +83,4 @@
     <script src="https://unpkg.com/flatpickr"></script>
     <script type="module" src="script.js"></script>
 </body>
-                          </html>
+</html>
