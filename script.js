@@ -1,3 +1,4 @@
+// Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
 import { getFirestore, collection, getDocs, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
 
@@ -16,6 +17,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Governor class definition
 class Governor {
     constructor(id, rank, name, image, state, infrastructure, security, education, healthcare, jobs, weekStartDate) {
         this.id = id;
@@ -35,7 +37,6 @@ class Governor {
 
     async vote(category, type) {
         const categoryData = this.categories[category];
-        
         if (type === 'upvote') {
             if (categoryData.userVote === 'upvoted') {
                 categoryData.votes -= 1;
@@ -59,10 +60,7 @@ class Governor {
                 categoryData.userVote = 'downvoted';
             }
         }
-
         this.updateVotesDisplay(category);
-
-        // Update votes in Firestore
         const governorRef = doc(db, 'governors', this.id);
         await updateDoc(governorRef, {
             [category]: categoryData.votes,
@@ -73,14 +71,10 @@ class Governor {
     updateVotesDisplay(category) {
         const categoryData = this.categories[category];
         document.querySelector(`#votes-${category}-${this.rank}`).textContent = categoryData.votes;
-
         const upvoteBtn = document.querySelector(`#upvote-${category}-${this.rank}`);
         const downvoteBtn = document.querySelector(`#downvote-${category}-${this.rank}`);
-
         upvoteBtn.style.color = categoryData.userVote === 'upvoted' ? 'blue' : '';
         downvoteBtn.style.color = categoryData.userVote === 'downvoted' ? 'red' : '';
-
-        // Update total votes
         const totalVotes = this.calculateTotalVotes();
         document.querySelector(`#total-votes-${this.rank}`).textContent = totalVotes;
     }
@@ -127,33 +121,40 @@ class Governor {
     }
 }
 
+// Array to store governor objects
 let governors = [];
 
+// Function to render governors
 const renderGovernors = async (selectedDate) => {
     const governorsRef = collection(db, 'governors');
     const governorRows = document.getElementById('governor-rows');
-
     try {
         let q;
         if (selectedDate) {
             const weekStart = new Date(selectedDate);
-            weekStart.setDate(weekStart.getDate() - weekStart.getDay()); // Get the start of the week
+            weekStart.setDate(weekStart.getDate() - ((weekStart.getDay() + 6) % 7)); // Set to Monday
             const weekEnd = new Date(weekStart);
-            weekEnd.setDate(weekEnd.getDate() + 6); // Get the end of the week
-
+            weekEnd.setDate(weekEnd.getDate() + 6); // Set to Sunday
             q = query(governorsRef, where("weekStartDate", ">=", weekStart), where("weekStartDate", "<=", weekEnd));
         } else {
             q = query(governorsRef);
         }
-
         const snapshot = await getDocs(q);
         governors = [];
-
         snapshot.forEach(doc => {
             const data = doc.data();
             const governor = new Governor(
-                doc.id, data.rank, data.name, data.avatar, data.state, data.infrastructure, 
-                data.security, data.education, data.healthcare, data.jobs, data.weekStartDate?.toDate()
+                doc.id,
+                data.rank,
+                data.name,
+                data.avatar,
+                data.state,
+                data.infrastructure,
+                data.security,
+                data.education,
+                data.healthcare,
+                data.jobs,
+                data.weekStartDate?.toDate()
             );
             governors.push(governor);
         });
@@ -178,7 +179,7 @@ const renderGovernors = async (selectedDate) => {
                 const type = button.classList.contains('upvote-btn') ? 'upvote' : 'downvote';
                 const governor = governors.find(g => g.rank == rank);
                 await governor.vote(category, type);
-                
+
                 // Re-sort governors if it's Wednesday to Sunday
                 const currentDay = new Date().getDay();
                 if (currentDay >= 3 || currentDay === 0) {
@@ -195,64 +196,63 @@ const renderGovernors = async (selectedDate) => {
                 this.classList.add('row-clicked');
             });
         });
+
+        // Disable voting for past weeks
+        const today = new Date();
+        const currentWeekStart = new Date(today.setDate(today.getDate() - ((today.getDay() + 6) % 7)));
+        if (selectedDate < currentWeekStart) {
+            document.querySelectorAll('.vote-btn').forEach(button => {
+                button.disabled = true;
+                button.style.opacity = '0.5';
+                button.style.cursor = 'not-allowed';
+            });
+        }
     } catch (error) {
         console.error("Error fetching governors:", error);
     }
 };
 
+// Function to sort governors
 const sortGovernors = (date) => {
     const day = date.getDay();
-    if (day === 1 || day === 2) { // Monday or Tuesday
+    if (day === 1 || day === 2) {
+        // Monday or Tuesday
         governors.sort((a, b) => a.state.localeCompare(b.state));
-    } else { // Wednesday to Sunday
+    } else {
+        // Wednesday to Sunday
         governors.sort((a, b) => b.calculateTotalVotes() - a.calculateTotalVotes());
     }
 };
 
-document.addEventListener('DOMContentLoaded', function() {
-    var today = new Date();
-    var weekStart = new Date(today);
-    weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-    var weekEnd = new Date(weekStart.getTime() + 6 * 24 * 60 * 60 * 1000);
+// Function to get week range (Monday to Sunday)
+function getWeekRange(date) {
+    const start = new Date(date);
+    start.setDate(start.getDate() - ((start.getDay() + 6) % 7)); // Monday
+    const end = new Date(start);
+    end.setDate(end.getDate() + 6); // Sunday
+    return [start, end];
+}
 
-    flatpickr("#weekPicker", {
-        mode: "range",
-        dateFormat: "Y-m-d",
-        defaultDate: [weekStart, weekEnd],
-        onChange: function(selectedDates) {
-            if (selectedDates.length > 0) {
-                renderGovernors(selectedDates[0]);
-            }
-        },
-        onClose: function(selectedDates, dateStr, instance) {
-            if (selectedDates.length !== 2 || selectedDates[0].getDay() !== 0 || selectedDates[1].getDay() !== 6) {
-                alert("Please select a full week starting from Sunday.");
-                instance.clear();
-            }
+// Function to update input value with formatted date range
+function updateInputValue(start, end) {
+    const formatDate = (date) => {
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        return `${days[date.getDay()]} ${date.getDate()}${getOrdinalSuffix(date.getDate())}, ${months[date.getMonth()]}`;
+    };
+
+    const getOrdinalSuffix = (day) => {
+        if (day > 3 && day < 21) return 'th';
+        switch (day % 10) {
+            case 1:  return "st";
+            case 2:  return "nd";
+            case 3:  return "rd";
+            default: return "th";
         }
-    });
+    };
 
-    // Add search functionality
-    const searchInput = document.getElementById('table-search');
-    searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
-        const rows = document.querySelectorAll('#governor-rows tr');
-        
-        rows.forEach(row => {
-            const name = row.querySelector('th div:first-child').textContent.toLowerCase();
-            const state = row.querySelector('th div:last-child').textContent.toLowerCase();
-            
-            if (name.includes(searchTerm) || state.includes(searchTerm)) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
-    });
-
-    // Initial render of governors
-    renderGovernors();
-});
+    document.getElementById('weekPicker').value = `${formatDate(start)} to ${formatDate(end)}`;
+}
 
 // Function to reset votes at the start of each week (Monday)
 const resetVotes = async () => {
@@ -260,7 +260,6 @@ const resetVotes = async () => {
     if (today.getDay() === 1) { // Monday
         const weekStart = new Date(today);
         weekStart.setHours(0, 0, 0, 0);
-
         for (let governor of governors) {
             for (let category in governor.categories) {
                 governor.categories[category].votes = 0;
@@ -281,8 +280,87 @@ const resetVotes = async () => {
     }
 };
 
-// Call resetVotes function daily
-setInterval(resetVotes, 24 * 60 * 60 * 1000); // Check every 24 hours
+// Main function to run when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize flatpickr for week selection
+    const weekPicker = flatpickr("#weekPicker", {
+        mode: "range",
+        dateFormat: "D d, M",
+        defaultDate: [new Date(), new Date()],
+        onReady: function(selectedDates, dateStr, instance) {
+            const [start, end] = getWeekRange(new Date());
+            instance.setDate([start, end]);
+            updateInputValue(start, end);
+        },
+        onChange: function(selectedDates) {
+            if (selectedDates.length > 0) {
+                const [start, end] = getWeekRange(selectedDates[0]);
+                this.setDate([start, end]);
+                updateInputValue(start, end);
+                renderGovernors(start);
+            }
+        },
+        onClose: function(selectedDates, dateStr, instance) {
+            if (selectedDates.length === 0) {
+                // If user selected a greyed out date, populate with current week
+                const [start, end] = getWeekRange(new Date());
+                instance.setDate([start, end]);
+                updateInputValue(start, end);
+                renderGovernors(start);
+            }
+        },
+        disable: [
+            function(date) {
+                // Disable dates before the current week
+                const today = new Date();
+                const startOfWeek = new Date(today.setDate(today.getDate() - ((today.getDay() + 6) % 7)));
+                return date < startOfWeek;
+            }
+        ]
+    });
 
-// Initial call to resetVotes
-resetVotes();
+    // Add search functionality
+    const searchInput = document.getElementById('table-search');
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#governor-rows tr');
+        rows.forEach(row => {
+            const name = row.querySelector('th div:first-child').textContent.toLowerCase();
+            const state = row.querySelector('th div:last-child').textContent.toLowerCase();
+            if (name.includes(searchTerm) || state.includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+
+    // Navigation bar functionality
+    const userMenuButton = document.getElementById('user-menu-button');
+    const userDropdown = document.getElementById('user-dropdown');
+    const signInButton = document.getElementById('sign-in');
+
+    // Assuming we have a way to check if the user is signed in
+    const userSignedIn = false; // Change this based on user state
+
+    if (userSignedIn) {
+        userMenuButton.style.display = 'block';
+        signInButton.style.display = 'none';
+    } else {
+        userMenuButton.style.display = 'none';
+        signInButton.style.display = 'block';
+    }
+
+    userMenuButton.addEventListener('click', () => {
+        userDropdown.classList.toggle('hidden');
+    });
+
+    // Initial render of governors
+    renderGovernors();
+
+    // Call resetVotes function daily
+    setInterval(resetVotes, 24 * 60 * 60 * 1000); // Check every 24 hours
+
+    // Initial call to resetVotes
+    resetVotes();
+});
