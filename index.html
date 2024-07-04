@@ -6,48 +6,24 @@
     <title>RateGov - Governor Leaderboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/3.4.4/tailwind.min.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
-    <link href="https://unpkg.com/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: 'Montserrat', sans-serif;
-        }
-        .body-container {
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .left-column {
-            margin: 16px;
-            padding: 0;
-            width: 100%;
-        }
-        .right-column {
-            padding: 16px;
-            width: 100%;
-        }
-        .right-top-row, .right-bottom-row {
-            padding: 0;
-            margin: 0;
-        }
-        .right-top-row {
-            margin-bottom: 24px;
+            font-family: 'Montserrat, sans-serif';
         }
         @media (min-width: 768px) {
             .left-column {
-                width: 30%;
+                width: 40%;
             }
             .right-column {
-                width: 70%;
+                width: 60%;
             }
         }
     </style>
 </head>
 <body class="bg-gray-900 text-white">
     <!-- Navigation Bar -->
-    <nav class="bg-gray-900 border-gray-700 flex justify-between items-center p-4 w-full">
+    <nav class="bg-gray-900 border-gray-700 flex justify-between items-center p-4 w-full border-b border-gray-600>
         <div class="flex items-center space-x-3 rtl:space-x-reverse">
             <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">RateGov</span>
         </div>
@@ -75,78 +51,145 @@
         </div>
     </nav>
 
-    <div class="body-container">
+    <div class="body-container flex flex-col md:flex-row">
         <!-- Left Column -->
-        <div class="left-column w-full max-w-sm bg-gray-800 border border-gray-700 rounded-lg shadow mb-8 md:mb-0 md:mr-8">
-            <div class="flex flex-col items-center pb-10">
-                <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="/docs/images/people/profile-picture-3.jpg" alt="Governor One image"/>
-                <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">Governor One</h5>
-                <span class="text-sm text-gray-500 dark:text-gray-400">State One</span>
-                <div class="flex items-center mt-4 md:mt-6">
-                    <div class="flex items-center">
-                        <svg class="w-4 h-4 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                        </svg>
-                        <p class="ms-2 text-sm font-bold text-gray-900 dark:text-white">4.95</p>
-                        <span class="w-1 h-1 mx-1.5 bg-gray-500 rounded-full dark:bg-gray-400"></span>
-                        <a href="#" class="text-sm font-medium text-gray-900 underline hover:no-underline dark:text-white">73 reviews</a>
+        <div class="left-column w-full md:w-2/5 p-3 pl-4 pr-4 pt-4 pb-4 mb-4 md:mb-0 md:mr-4">
+            <!-- Winner Profile -->
+            <div class="max-w-sm rounded overflow-hidden border border-gray-700 rounded-lg shadow-lg">
+                <!-- Winner Profile Header -->
+                <div class="bg-gray-800 px-6 py-4">
+                    <div class="flex flex-col items-center pt-4">
+                        <img class="w-24 h-24 mb-3 rounded-full shadow-lg border border-gray-200" src="/docs/images/people/profile-picture-3.jpg" alt="Governor One image"/>
+                        <h5 class="mb-1 text-xl font-medium text-white">Governor One</h5>
+                        <span class="text-sm text-gray-300">State One</span>
+                        <div class="flex items-center mt-4 md:mt-6">
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                                </svg>
+                                <p class="ms-2 text-sm font-bold text-white">4.95</p>
+                                <span class="w-1 h-1 mx-1.5 bg-gray-300 rounded-full"></span>
+                                <a href="#" class="text-sm font-medium text-white underline hover:no-underline">73 reviews</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="w-full border-t border-gray-400 mt-4"></div>
-                <p class="mt-4 text-sm text-gray-900 dark:text-gray-400">
-                    Congratulations! Based on our weekly online Governor polls, our voters have ranked you first.
-                    <br><br>
-                    Note that we are not afflicted with Independent National Electoral Commission (INEC).
-                </p>
+                <!-- Winner Profile Footer -->
+                <div class="bg-gray-700 px-6 py-4">
+                    <p class="text-gray-400 text-sm">
+                        Congratulations! Based on our weekly online Governor polls, our voters have ranked you first.
+                        <br><br>
+                        Note that we are not afflicted with the Independent National Electoral Commission (INEC).
+                    </p>
+                </div>
+            </div>
+            <!-- Weekly Report -->
+            <div class="max-w-md p-4 bg-gray-800 border border-gray-700 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-300 mt-4 p-4 pl-5 pr-5 pt-5 pb-1">
+                <div class="flex items-center justify-between mb-4">
+                    <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Weekly Report</h5>
+                    <a href="#" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">Rating Info</a>
+                </div>
+                <div class="flow-root">
+                    <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <li class="py-3 sm:py-4">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-1.jpg" alt="Neil image">
+                                </div>
+                                <div class="flex-1 min-w-0 ms-4">
+                                    <p class="text-sm font-medium text-gray-900 truncate dark:text-white">Governor One</p>
+                                    <p class="text-sm text-gray-500 truncate dark:text-gray-400">State 1</p>
+                                </div>
+                                <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                    <h5>Highest<br>Engaged</h5>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="py-3 sm:py-4">
+                            <div class="flex items-center ">
+                                <div class="flex-shrink-0">
+                                    <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="Bonnie image">
+                                </div>
+                                <div class="flex-1 min-w-0 ms-4">
+                                    <p class="text-sm font-medium text-gray-900 truncate dark:text-white">Governor Two</p>
+                                    <p class="text-sm text-gray-500 truncate dark:text-gray-400">State 2</p>
+                                </div>
+                                <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                    <h5>Lowest<br>Engaged</h5>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="py-3 sm:py-4">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-2.jpg" alt="Michael image">
+                                </div>
+                                <div class="flex-1 min-w-0 ms-4">
+                                    <p class="text-sm font-medium text-gray-900 truncate dark:text-white">Governor Three</p>
+                                    <p class="text-sm text-gray-500 truncate dark:text-gray-400">State 3</p>
+                                </div>
+                                <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                    <h5>Highest<br>Vote<br>Count</h5>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="py-3 sm:py-4">
+                            <div class="flex items-center ">
+                                <div class="flex-shrink-0">
+                                    <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-4.jpg" alt="Lana image">
+                                </div>
+                                <div class="flex-1 min-w-0 ms-4">
+                                    <p class="text-sm font-medium text-gray-900 truncate dark:text-white">Governor Four</p>
+                                    <p class="text-sm text-gray-500 truncate dark:text-gray-400">State 4</p>
+                                </div>
+                                <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                    <h5>Lowest<br>Vote<br>Count</h5>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 
         <!-- Right Column -->
-        <div class="right-column p-4">
-            <!-- Right Top Row -->
-            <div class="right-top-row mb-8">
-                <div class="input-group mb-3">
-                    <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
-                    <input type="text" id="weekPicker" class="form-control bg-gray-700 text-white border-gray-600" placeholder="Select a week">
-                </div>
-                <div class="relative mt-4">
-                    <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                        <svg class="w-4 h-4 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                        </svg>
-                    </div>
-                    <input type="text" id="table-search" class="block pt-2 ps-10 text-sm text-white border border-gray-600 rounded-lg w-80 bg-gray-700 focus:ring-blue-500 focus:border-blue-500" placeholder="Search for governors or states">
-                </div>
+        <div class="right-column w-full md:w-3/5 p-3 pl-4 pr-4 pt-4 pb-4">
+            <!-- Datepicker and Search -->
+            <div class="mb-2">
+            <div class="relative mt-4">
+    <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+        <svg class="w-4 h-4 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+        </svg>
+    </div>
+    <input type="text" id="table-search" class="block pt-2 ps-10 text-sm text-white border border-gray-700 rounded-lg w-full bg-gray-700 focus:ring-blue-500 focus:border-blue-500" placeholder="Search for governors or states">
+</div>
             </div>
-            <!-- Right Bottom Row -->
-            <div class="right-bottom-row">
-                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                    <table id="leaderboard" class="w-full text-sm text-left rtl:text-right text-gray-400">
-                        <thead class="text-xs text-gray-400 uppercase bg-gray-700">
-                            <tr>
-                                <th scope="col" class="p-4">Rank</th>
-                                <th scope="col" class="px-6 py-3">Name</th>
-                                <th scope="col" class="px-6 py-3">Infrastructure</th>
-                                <th scope="col" class="px-6 py-3">Security</th>
-                                <th scope="col" class="px-6 py-3">Education</th>
-                                <th scope="col" class="px-6 py-3">Healthcare</th>
-                                <th scope="col" class="px-6 py-3">Jobs</th>
-                                <th scope="col" class="px-6 py-3">Total Votes</th>
-                            </tr>
-                        </thead>
-                        <tbody id="governor-rows" class="bg-gray-800">
-                            <!-- Table rows will be inserted here -->
-                        </tbody>
-                    </table>
-                </div>
+
+            <!-- Table -->
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table id="leaderboard" class="w-full text-sm text-left rtl:text-right text-gray-400">
+                    <thead class="text-xs text-gray-400 uppercase bg-gray-700">
+                        <tr>
+                            <th scope="col" class="p-4">Rank</th>
+                            <th scope="col" class="px-6 py-3">Name</th>
+                            <th scope="col" class="px-6 py-3">Infrastructure</th>
+                            <th scope="col" class="px-6 py-3">Security</th>
+                            <th scope="col" class="px-6 py-3">Education</th>
+                            <th scope="col" class="px-6 py-3">Healthcare</th>
+                            <th scope="col" class="px-6 py-3">Jobs</th>
+                            <th scope="col" class="px-6 py-3">Total Votes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="governor-rows" class="bg-gray-800">
+                        <!-- Table rows will be inserted here -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-    <script src="https://unpkg.com/flatpickr"></script>
     <script type="module" src="script.js"></script>
 </body>
-                      </html>
+      </html>
