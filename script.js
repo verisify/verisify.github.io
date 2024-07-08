@@ -1,6 +1,6 @@
 // Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -207,8 +207,15 @@ const renderGovernors = async (selectedDate) => {
                 button.style.cursor = 'not-allowed';
             });
         }
+
+        // Update weekly report
+        updateWeeklyReport();
+
+        // Update winner profile
+        updateWinnerProfile();
     } catch (error) {
         console.error("Error fetching governors:", error);
+        console.error("Detailed error:", error.message); // Add this line to get more details
     }
 };
 
@@ -251,7 +258,7 @@ function updateInputValue(start, end) {
         }
     };
 
-    document.getElementById('weekPicker').value = `${formatDate(start)} to ${formatDate(end)}`;
+    document.getElementById('weekReveal').value = `${formatDate(start)} - ${formatDate(end)}`;
 }
 
 // Function to reset votes at the start of each week (Monday)
@@ -280,44 +287,120 @@ const resetVotes = async () => {
     }
 };
 
+// Function to update weekly report
+const updateWeeklyReport = () => {
+    const day = new Date().getDay();
+    if (day >= 2 || day === 0) { // Tuesday to Sunday
+        const sortedGovernors = [...governors].sort((a, b) => b.calculateTotalVotes() - a.calculateTotalVotes());
+        
+        // Highest engaged
+        const highestEngaged = sortedGovernors[0];
+        document.querySelector('.weekly-report .image-one').src = highestEngaged.image;
+        document.querySelector('.weekly-report .governor-one').textContent = highestEngaged.name;
+        document.querySelector('.weekly-report .state-1').textContent = highestEngaged.state;
+
+        // Lowest engaged
+        const lowestEngaged = sortedGovernors[sortedGovernors.length - 1];
+        document.querySelector('.weekly-report .image-two').src = lowestEngaged.image;
+        document.querySelector('.weekly-report .governor-two').textContent = lowestEngaged.name;
+        document.querySelector('.weekly-report .state-2').textContent = lowestEngaged.state;
+
+        // Highest upvotes
+        const highestUpvotes = [...governors].sort((a, b) => 
+            b.categories.infrastructure.votes + b.categories.security.votes + b.categories.education.votes + 
+            b.categories.healthcare.votes + b.categories.jobs.votes - 
+            (a.categories.infrastructure.votes + a.categories.security.votes + a.categories.education.votes + 
+            a.categories.healthcare.votes + a.categories.jobs.votes)
+        )[0];
+        document.querySelector('.weekly-report .image-three').src = highestUpvotes.image;
+        document.querySelector('.weekly-report .governor-three').textContent = highestUpvotes.name;
+        document.querySelector('.weekly-report .state-3').textContent = highestUpvotes.state;
+
+        // Lowest upvotes
+        const lowestUpvotes = [...governors].sort((a, b) => 
+            a.categories.infrastructure.votes + a.categories.security.votes + a.categories.education.votes + 
+            a.categories.healthcare.votes + a.categories.jobs.votes - 
+            (b.categories.infrastructure.votes + b.categories.security.votes + b.categories.education.votes + 
+            b.categories.healthcare.votes + b.categories.jobs.votes)
+        )[0];
+        document.querySelector('.weekly-report .image-four').src = lowestUpvotes.image;
+        document.querySelector('.weekly-report .governor-four').textContent = lowestUpvotes.name;
+        document.querySelector('.weekly-report .state-4').textContent = lowestUpvotes.state;
+    }
+};
+
+// Function to update winner profile
+const updateWinnerProfile = async () => {
+    const today = new Date();
+    const lastWeekEnd = new Date(today.setDate(today.getDate() - today.getDay() - 1));
+    const lastWeekStart = new Date(lastWeekEnd);
+    lastWeekStart.setDate(lastWeekStart.getDate() - 6);
+
+    const q = query(collection(db, 'governors'), 
+                    where('weekStartDate', '>=', lastWeekStart), 
+                    where('weekStartDate', '<=', lastWeekEnd),
+                    orderBy('weekStartDate', 'desc'),
+                    limit(1));
+
+    try {
+        const snapshot = await getDocs(q);
+        if (!snapshot.empty) {
+            const winnerData = snapshot.docs[0].data();
+            const winner = new Governor(
+                snapshot.docs[0].id,
+                winnerData.rank,
+                winnerData.name,
+                winnerData.avatar,
+                winnerData.state,
+                winnerData.infrastructure,
+                winnerData.security,
+                winnerData.education,
+                winnerData.healthcare,
+                winnerData.jobs,
+                winnerData.weekStartDate?.toDate()
+            );
+
+            document.querySelector('.winner-profile .winner-image').src = winner.image;
+            document.querySelector('.winner-profile .governor-winner').textContent = winner.name;
+            document.querySelector('.winner-profile .state-winner').textContent = winner.state;
+            
+            const totalUpvotes = winner.calculateTotalVotes();
+            document.querySelector('.winner-profile .upvote-count').textContent = totalUpvotes;
+
+            const totalReviews = Object.values(winner.categories).reduce((sum, category) => 
+                sum + Math.abs(category.votes), 0);
+            document.querySelector('.winner-profile .total-reviews').textContent = totalReviews;
+        }
+    } catch (error) {
+        console.error("Error fetching winner profile:", error);
+    }
+};
+
+// Function to initialize date picker and week reveal
+const initializeDatePicker = () => {
+    const datePicker = document.getElementById('datePicker');
+    const weekReveal = document.getElementById('weekReveal');
+
+    // Set current date on page load
+    const today = new Date();
+    datePicker.valueAsDate = today;
+
+    // Update week reveal on page load
+    const [start, end] = getWeekRange(today);
+    updateInputValue(start, end);
+
+    // Add event listener for date picker changes
+    datePicker.addEventListener('change', (event) => {
+        const selectedDate = event.target.valueAsDate;
+        const [start, end] = getWeekRange(selectedDate);
+        updateInputValue(start, end);
+        renderGovernors(selectedDate);
+    });
+};
+
 // Main function to run when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize flatpickr for week selection
-    const weekPicker = flatpickr("#weekPicker", {
-        mode: "range",
-        dateFormat: "D d, M",
-        defaultDate: [new Date(), new Date()],
-        onReady: function(selectedDates, dateStr, instance) {
-            const [start, end] = getWeekRange(new Date());
-            instance.setDate([start, end]);
-            updateInputValue(start, end);
-        },
-        onChange: function(selectedDates) {
-            if (selectedDates.length > 0) {
-                const [start, end] = getWeekRange(selectedDates[0]);
-                this.setDate([start, end]);
-                updateInputValue(start, end);
-                renderGovernors(start);
-            }
-        },
-        onClose: function(selectedDates, dateStr, instance) {
-            if (selectedDates.length === 0) {
-                // If user selected a greyed out date, populate with current week
-                const [start, end] = getWeekRange(new Date());
-                instance.setDate([start, end]);
-                updateInputValue(start, end);
-                renderGovernors(start);
-            }
-        },
-        disable: [
-            function(date) {
-                // Disable dates before the current week
-                const today = new Date();
-                const startOfWeek = new Date(today.setDate(today.getDate() - ((today.getDay() + 6) % 7)));
-                return date < startOfWeek;
-            }
-        ]
-    });
+    initializeDatePicker();
 
     // Add search functionality
     const searchInput = document.getElementById('table-search');
