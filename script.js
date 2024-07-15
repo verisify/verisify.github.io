@@ -66,6 +66,9 @@ class Governor {
             [category]: categoryData.votes,
             weekStartDate: this.weekStartDate
         });
+
+        // Call the debounced update function after voting
+        debouncedUpdateWeeklyReport();
     }
 
     updateVotesDisplay(category) {
@@ -184,38 +187,15 @@ const renderGovernors = async (selectedDate) => {
                 const currentDay = new Date().getDay();
                 if (currentDay >= 3 || currentDay === 0) {
                     sortGovernors(new Date());
-                    renderGovernors();
+                    renderGovernors(selectedDate);
                 }
             });
         });
 
-        // Add click event listener for row hover effect
-        document.querySelectorAll('#governor-rows tr').forEach(row => {
-            row.addEventListener('click', function() {
-                document.querySelectorAll('#governor-rows tr').forEach(r => r.classList.remove('row-clicked'));
-                this.classList.add('row-clicked');
-            });
-        });
-
-        // Disable voting for past weeks
-        const today = new Date();
-        const currentWeekStart = new Date(today.setDate(today.getDate() - ((today.getDay() + 6) % 7)));
-        if (selectedDate < currentWeekStart) {
-            document.querySelectorAll('.vote-btn').forEach(button => {
-                button.disabled = true;
-                button.style.opacity = '0.5';
-                button.style.cursor = 'not-allowed';
-            });
-        }
-
-        // Update weekly report
+        // Update weekly report after rendering governors
         updateWeeklyReport();
-
-        // Update winner profile
-        updateWinnerProfile();
     } catch (error) {
         console.error("Error fetching governors:", error);
-        console.error("Detailed error:", error.message); // Add this line to get more details
     }
 };
 
@@ -287,94 +267,43 @@ const resetVotes = async () => {
     }
 };
 
+// Debounce function to limit the frequency of function calls
+function debounce(func, delay) {
+    let debounceTimer;
+    return function() {
+        const context = this;
+        const args = arguments;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+    }
+}
+
 // Function to update weekly report
 const updateWeeklyReport = () => {
-    const day = new Date().getDay();
-    if (day >= 2 || day === 0) { // Tuesday to Sunday
-        const sortedGovernors = [...governors].sort((a, b) => b.calculateTotalVotes() - a.calculateTotalVotes());
-        
-        // Highest engaged
-        const highestEngaged = sortedGovernors[0];
-        document.querySelector('.weekly-report .image-one').src = highestEngaged.image;
-        document.querySelector('.weekly-report .governor-one').textContent = highestEngaged.name;
-        document.querySelector('.weekly-report .state-1').textContent = highestEngaged.state;
+    const updateElement = (imgId, nameId, stateId, data) => {
+        const imgElement = document.getElementById(imgId);
+        if (imgElement) imgElement.src = data.image;
 
-        // Lowest engaged
-        const lowestEngaged = sortedGovernors[sortedGovernors.length - 1];
-        document.querySelector('.weekly-report .image-two').src = lowestEngaged.image;
-        document.querySelector('.weekly-report .governor-two').textContent = lowestEngaged.name;
-        document.querySelector('.weekly-report .state-2').textContent = lowestEngaged.state;
+        const nameElement = document.getElementById(nameId);
+        if (nameElement) nameElement.textContent = data.name;
 
-        // Highest upvotes
-        const highestUpvotes = [...governors].sort((a, b) => 
-            b.categories.infrastructure.votes + b.categories.security.votes + b.categories.education.votes + 
-            b.categories.healthcare.votes + b.categories.jobs.votes - 
-            (a.categories.infrastructure.votes + a.categories.security.votes + a.categories.education.votes + 
-            a.categories.healthcare.votes + a.categories.jobs.votes)
-        )[0];
-        document.querySelector('.weekly-report .image-three').src = highestUpvotes.image;
-        document.querySelector('.weekly-report .governor-three').textContent = highestUpvotes.name;
-        document.querySelector('.weekly-report .state-3').textContent = highestUpvotes.state;
+        const stateElement = document.getElementById(stateId);
+        if (stateElement) stateElement.textContent = data.state;
+    };
 
-        // Lowest upvotes
-        const lowestUpvotes = [...governors].sort((a, b) => 
-            a.categories.infrastructure.votes + a.categories.security.votes + a.categories.education.votes + 
-            a.categories.healthcare.votes + a.categories.jobs.votes - 
-            (b.categories.infrastructure.votes + b.categories.security.votes + b.categories.education.votes + 
-            b.categories.healthcare.votes + b.categories.jobs.votes)
-        )[0];
-        document.querySelector('.weekly-report .image-four').src = lowestUpvotes.image;
-        document.querySelector('.weekly-report .governor-four').textContent = lowestUpvotes.name;
-        document.querySelector('.weekly-report .state-4').textContent = lowestUpvotes.state;
-    }
+    const highestEngaged = governors.reduce((max, gov) => gov.calculateTotalVotes() > max.calculateTotalVotes() ? gov : max, governors[0]);
+    const leastEngaged = governors.reduce((min, gov) => gov.calculateTotalVotes() < min.calculateTotalVotes() ? gov : min, governors[0]);
+    const highestVoteCount = governors.reduce((max, gov) => gov.calculateTotalVotes() > max.calculateTotalVotes() ? gov : max, governors[0]);
+    const leastVoteCount = governors.reduce((min, gov) => gov.calculateTotalVotes() < min.calculateTotalVotes() ? gov : min, governors[0]);
+
+    updateElement("highest-engaged-img", "highest-engaged-name", "highest-engaged-state", highestEngaged);
+    updateElement("least-engaged-img", "least-engaged-name", "least-engaged-state", leastEngaged);
+    updateElement("highest-vote-img", "highest-vote-name", "highest-vote-state", highestVoteCount);
+    updateElement("least-vote-img", "least-vote-name", "least-vote-state", leastVoteCount);
 };
 
-// Function to update winner profile
-const updateWinnerProfile = async () => {
-    const today = new Date();
-    const lastWeekEnd = new Date(today.setDate(today.getDate() - today.getDay() - 1));
-    const lastWeekStart = new Date(lastWeekEnd);
-    lastWeekStart.setDate(lastWeekStart.getDate() - 6);
-
-    const q = query(collection(db, 'governors'), 
-                    where('weekStartDate', '>=', lastWeekStart), 
-                    where('weekStartDate', '<=', lastWeekEnd),
-                    orderBy('weekStartDate', 'desc'),
-                    limit(1));
-
-    try {
-        const snapshot = await getDocs(q);
-        if (!snapshot.empty) {
-            const winnerData = snapshot.docs[0].data();
-            const winner = new Governor(
-                snapshot.docs[0].id,
-                winnerData.rank,
-                winnerData.name,
-                winnerData.avatar,
-                winnerData.state,
-                winnerData.infrastructure,
-                winnerData.security,
-                winnerData.education,
-                winnerData.healthcare,
-                winnerData.jobs,
-                winnerData.weekStartDate?.toDate()
-            );
-
-            document.querySelector('.winner-profile .winner-image').src = winner.image;
-            document.querySelector('.winner-profile .governor-winner').textContent = winner.name;
-            document.querySelector('.winner-profile .state-winner').textContent = winner.state;
-            
-            const totalUpvotes = winner.calculateTotalVotes();
-            document.querySelector('.winner-profile .upvote-count').textContent = totalUpvotes;
-
-            const totalReviews = Object.values(winner.categories).reduce((sum, category) => 
-                sum + Math.abs(category.votes), 0);
-            document.querySelector('.winner-profile .total-reviews').textContent = totalReviews;
-        }
-    } catch (error) {
-        console.error("Error fetching winner profile:", error);
-    }
-};
+// Create a debounced version of updateWeeklyReport
+const debouncedUpdateWeeklyReport = debounce(updateWeeklyReport, 2000); // 2 seconds delay
 
 // Function to initialize date picker and week reveal
 const initializeDatePicker = () => {
@@ -408,9 +337,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const searchTerm = this.value.toLowerCase();
         const rows = document.querySelectorAll('#governor-rows tr');
         rows.forEach(row => {
-            const name = row.querySelector('th div:first-child').textContent.toLowerCase();
-            const state = row.querySelector('th div:last-child').textContent.toLowerCase();
-            if (name.includes(searchTerm) || state.includes(searchTerm)) {
+            const name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            if (name.includes(searchTerm)) {
                 row.style.display = '';
             } else {
                 row.style.display = 'none';
@@ -418,32 +346,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Navigation bar functionality
-    const userMenuButton = document.getElementById('user-menu-button');
-    const userDropdown = document.getElementById('user-dropdown');
-    const signInButton = document.getElementById('sign-in');
-
-    // Assuming we have a way to check if the user is signed in
-    const userSignedIn = false; // Change this based on user state
-
-    if (userSignedIn) {
-        userMenuButton.style.display = 'block';
-        signInButton.style.display = 'none';
-    } else {
-        userMenuButton.style.display = 'none';
-        signInButton.style.display = 'block';
-    }
-
-    userMenuButton.addEventListener('click', () => {
-        userDropdown.classList.toggle('hidden');
-    });
-
-    // Initial render of governors
+    // Handle the initial render of governors
     renderGovernors();
-
-    // Call resetVotes function daily
-    setInterval(resetVotes, 24 * 60 * 60 * 1000); // Check every 24 hours
-
-    // Initial call to resetVotes
-    resetVotes();
 });
