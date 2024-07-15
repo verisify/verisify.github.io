@@ -59,17 +59,17 @@
                 <!-- Winner Profile Header -->
                 <div class="bg-gray-800 px-6 py-4">
                     <div class="flex flex-col items-center pt-4">
-                        <img class="w-24 h-24 mb-3 rounded-full shadow-lg border border-gray-200" src="/docs/images/people/profile-picture-3.jpg" alt="image winner"/>
-                        <h5 class="mb-1 text-xl font-medium text-white">Governor Winner</h5>
-                        <span class="text-sm text-gray-300">State Winner</span>
+                        <img class="w-24 h-24 mb-3 rounded-full shadow-lg border border-gray-200" src="/docs/images/people/profile-picture-3.jpg" alt="prev image winner"/>
+                        <h5 class="mb-1 text-xl font-medium text-white">prev-governor-winner</h5>
+                        <span class="text-sm text-gray-300">prev-state-winner</span>
                         <div class="flex items-center mt-4 md:mt-6">
                             <div class="flex items-center">
                                 <svg class="w-4 h-4 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
                                     <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
                                 </svg>
-                                <p class="ms-2 text-sm font-bold text-white">1</p>
+                                <p class="ms-2 text-sm font-bold text-white">prev-vote-count</p>
                                 <span class="w-1 h-1 mx-1.5 bg-gray-300 rounded-full"></span>
-                                <a href="#" class="text-sm font-medium text-white underline hover:no-underline">000 reviews</a>
+                                <a href="#" class="text-sm font-medium text-white underline hover:no-underline">prev-no-reviews</a>
                             </div>
                         </div>
                     </div>
@@ -94,11 +94,11 @@
                         <li class="py-3 sm:py-4">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
-                                    <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-1.jpg" alt="image one">
+                                    <img id="highest-engaged-img" class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-1.jpg" alt="Highest Engaged Governor">
                                 </div>
                                 <div class="flex-1 min-w-0 ms-4">
-                                    <p class="text-sm font-medium text-gray-900 truncate dark:text-white">Governor One</p>
-                                    <p class="text-sm text-gray-500 truncate dark:text-gray-400">State 1</p>
+                                    <p id="highest-engaged-name" class="text-sm font-medium text-gray-900 truncate dark:text-white">Name One Governor</p>
+                                    <p id="highest-engaged-state" class="text-sm text-gray-500 truncate dark:text-gray-400">State One Governor</p>
                                 </div>
                                 <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
                                     <h5>Highest<br>Engaged</h5>
@@ -108,25 +108,25 @@
                         <li class="py-3 sm:py-4">
                             <div class="flex items-center ">
                                 <div class="flex-shrink-0">
-                                    <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="image two">
+                                    <img id="least-engaged-img" class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="Least Engaged Governor">
                                 </div>
                                 <div class="flex-1 min-w-0 ms-4">
-                                    <p class="text-sm font-medium text-gray-900 truncate dark:text-white">Governor Two</p>
-                                    <p class="text-sm text-gray-500 truncate dark:text-gray-400">State 2</p>
+                                    <p id="least-engaged-name" class="text-sm font-medium text-gray-900 truncate dark:text-white">Name Two Governor</p>
+                                    <p id="least-engaged-state" class="text-sm text-gray-500 truncate dark:text-gray-400">State Two Governor</p>
                                 </div>
                                 <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                    <h5>Lowest<br>Engaged</h5>
+                                    <h5>Least<br>Engaged</h5>
                                 </div>
                             </div>
                         </li>
                         <li class="py-3 sm:py-4">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
-                                    <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-2.jpg" alt="image three">
+                                    <img id="highest-vote-img" class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-2.jpg" alt="Highest Vote Count Governor">
                                 </div>
                                 <div class="flex-1 min-w-0 ms-4">
-                                    <p class="text-sm font-medium text-gray-900 truncate dark:text-white">Governor Three</p>
-                                    <p class="text-sm text-gray-500 truncate dark:text-gray-400">State 3</p>
+                                    <p id="highest-vote-name" class="text-sm font-medium text-gray-900 truncate dark:text-white">Name Three Governor</p>
+                                    <p id="highest-vote-state" class="text-sm text-gray-500 truncate dark:text-gray-400">State Three Governor</p>
                                 </div>
                                 <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
                                     <h5>Highest<br>Vote<br>Count</h5>
@@ -136,14 +136,14 @@
                         <li class="py-3 sm:py-4">
                             <div class="flex items-center ">
                                 <div class="flex-shrink-0">
-                                    <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-4.jpg" alt="image four">
+                                    <img id="least-vote-img" class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-4.jpg" alt="Least Vote Count Governor">
                                 </div>
                                 <div class="flex-1 min-w-0 ms-4">
-                                    <p class="text-sm font-medium text-gray-900 truncate dark:text-white">Governor Four</p>
-                                    <p class="text-sm text-gray-500 truncate dark:text-gray-400">State 4</p>
+                                    <p id="least-vote-name" class="text-sm font-medium text-gray-900 truncate dark:text-white">Name Four Governor</p>
+                                    <p id="least-vote-state" class="text-sm text-gray-500 truncate dark:text-gray-400">State Four Governor</p>
                                 </div>
                                 <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                    <h5>Lowest<br>Vote<br>Count</h5>
+                                    <h5>Least<br>Vote<br>Count</h5>
                                 </div>
                             </div>
                         </li>
@@ -176,7 +176,7 @@
                     <input type="text" id="weekReveal" class="mt-1 block w-full rounded-md border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-700 text-white" readonly>
                 </div>
             </div>
-
+            
             <!-- Search -->
             <div class="relative mt-4">
                 <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -214,4 +214,4 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
     <script type="module" src="script.js"></script>
 </body>
-    </html>
+                          </html>
