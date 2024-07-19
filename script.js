@@ -1,7 +1,10 @@
 // Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, updateDoc, query, where, orderBy, limit, addDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
-
+import { 
+  getFirestore, collection, getDocs, doc, updateDoc, query, where, orderBy, 
+  limit, addDoc, getDoc,setDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+  
+  
 // Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyALc7_O7VJzigqOaVLYjcl5yCCysnmyOG0",
@@ -75,7 +78,6 @@ class Governor {
             weekStartDate: this.weekStartDate
         });
 
-        // Call the debounced update function after voting
         debouncedUpdateWeeklyReport();
     }
 
@@ -132,20 +134,23 @@ let governors = [];
 
 // Function to get week range (Monday to Sunday)
 function getWeekRange(date) {
-    const start = new Date(date);
-    start.setDate(start.getDate() - ((start.getDay() + 6) % 7)); // Monday
-    const end = new Date(start);
-    end.setDate(end.getDate() + 6); // Sunday
-    return [start, end];
+  const start = new Date(date);
+  start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
+  const end = new Date(start);
+  end.setDate(end.getDate() + 6);
+  return [start, end];
 }
 
 // Function to get the previous week's date range
-function getPreviousWeekRange(date) {
-    const end = new Date(date);
-    end.setDate(end.getDate() - ((end.getDay() + 6) % 7) - 1); // Previous Sunday
-    const start = new Date(end);
-    start.setDate(start.getDate() - 6); // Previous Monday
-    return [start, end];
+function getPreviousWeekRange(today) {
+  const currentDate = new Date(today);
+  const dayOfWeek = currentDate.getDay(); // 0 (Sunday) to 6 (Saturday)
+  const diffToMonday = (dayOfWeek === 0 ? 6 : dayOfWeek - 1) + 7; // Days since last Monday
+  const lastMonday = new Date(currentDate);
+  lastMonday.setDate(currentDate.getDate() - diffToMonday);
+
+  const previousWeekStart = new Date(lastMonday); // Previous Monday
+  return previousWeekStart;
 }
 
 // Function to render governors
@@ -181,19 +186,15 @@ const renderGovernors = async (selectedDate) => {
             governors.push(governor);
         });
 
-        // Sort governors based on the current day
         sortGovernors(selectedDate || new Date());
 
-        // Clear existing rows
         governorRows.innerHTML = '';
 
-        // Render sorted governors
         governors.forEach((governor, index) => {
             governor.rank = index + 1;
             governorRows.innerHTML += governor.render();
         });
 
-        // Add event listeners for voting buttons
         document.querySelectorAll('.vote-btn').forEach(button => {
             button.addEventListener('click', async () => {
                 const rank = button.dataset.id;
@@ -202,7 +203,6 @@ const renderGovernors = async (selectedDate) => {
                 const governor = governors.find(g => g.rank == rank);
                 await governor.vote(category, type);
 
-                // Re-sort governors if it's Wednesday to Sunday
                 const currentDay = new Date().getDay();
                 if (currentDay >= 3 || currentDay === 0) {
                     sortGovernors(new Date());
@@ -211,7 +211,6 @@ const renderGovernors = async (selectedDate) => {
             });
         });
 
-        // Update weekly report after rendering governors
         updateWeeklyReport();
     } catch (error) {
         console.error("Error fetching governors:", error);
@@ -222,10 +221,8 @@ const renderGovernors = async (selectedDate) => {
 const sortGovernors = (date) => {
     const day = date.getDay();
     if (day === 1 || day === 2) {
-        // Monday or Tuesday
         governors.sort((a, b) => a.state.localeCompare(b.state));
     } else {
-        // Wednesday to Sunday
         governors.sort((a, b) => b.totalVotes - a.totalVotes);
     }
 };
@@ -253,79 +250,77 @@ function updateInputValue(start, end) {
 
 // Function to store weekly results
 async function storeWeeklyResults(weekStart, weekEnd) {
-    const governorsRef = collection(db, 'governors');
-    const weeklyResultsRef = collection(db, 'weeklyResults');
+  const governorsRef = collection(db, 'governors');
+  const weeklyResultsRef = collection(db, 'weeklyResults');
+  const governorsSnapshot = await getDocs(governorsRef);
+  
+  const weeklyResults = governorsSnapshot.docs.map(doc => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      name: data.name,
+      state: data.state,
+      avatar: data.avatar,
+      totalVotes: data.totalVotes || 0,
+      infrastructure: data.infrastructure || 0,
+      security: data.security || 0,
+      education: data.education || 0,
+      healthcare: data.healthcare || 0,
+      jobs: data.jobs || 0
+    };
+  });
 
-    // Get all governors' data for the week
-    const governorsSnapshot = await getDocs(governorsRef);
-    const weeklyResults = governorsSnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-            id: doc.id,
-            name: data.name,
-            state: data.state,
-            avatar: data.avatar,
-            totalVotes: data.totalVotes || 0,
-            infrastructure: data.infrastructure || 0,
-            security: data.security || 0,
-            education: data.education || 0,
-            healthcare: data.healthcare || 0,
-            jobs: data.jobs || 0
-        };
-    });
+  weeklyResults.sort((a, b) => b.totalVotes - a.totalVotes);
+  const winner = weeklyResults[0];
 
-    // Sort to find the winner
-    weeklyResults.sort((a, b) => b.totalVotes - a.totalVotes);
-    const winner = weeklyResults[0];
+  const docId = weekStart.toISOString().split('T')[0]; // "YYYY-MM-DD"
+  await setDoc(doc(db, 'weeklyResults', docId), {
+    weekStart: weekStart,
+    weekEnd: weekEnd,
+    results: weeklyResults,
+    winner: winner
+  });
 
-    // Store in weeklyResults collection
-    await addDoc(weeklyResultsRef, {
-        weekStart: weekStart,
-        weekEnd: weekEnd,
-        results: weeklyResults,
-        winner: winner
-    });
+  console.log("Weekly results stored successfully with document ID:", docId);
 }
 
 // Function to reset votes at the start of each week (Monday)
 const resetVotes = async () => {
-    const today = new Date();
-    if (today.getDay() === 1) { // Monday
-        const weekStart = new Date(today);
-        weekStart.setHours(0, 0, 0, 0);
+  const today = new Date();
+  if (today.getDay() === 1) { // Monday
+    const weekStart = new Date(today);
+    weekStart.setHours(0, 0, 0, 0);
+    const lastWeekStart = new Date(weekStart);
+    lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+    const lastWeekEnd = new Date(weekStart);
+    lastWeekEnd.setDate(lastWeekEnd.getDate() - 1);
+    lastWeekEnd.setHours(23, 59, 59, 999);
 
-        const lastWeekStart = new Date(weekStart);
-        lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+    await storeWeeklyResults(lastWeekStart, lastWeekEnd);
 
-        const lastWeekEnd = new Date(weekStart);
-        lastWeekEnd.setDate(lastWeekEnd.getDate() - 1);
-        lastWeekEnd.setHours(23, 59, 59, 999);
-
-        // Store last week's results
-        await storeWeeklyResults(lastWeekStart, lastWeekEnd);
-
-        for (let governor of governors) {
-            for (let category in governor.categories) {
-                governor.categories[category].votes = 0;
-                governor.categories[category].userVote = null;
-            }
-            governor.totalVotes = 0;
-            // Update Firestore
-            const governorRef = doc(db, 'governors', governor.id);
-            await updateDoc(governorRef, {
-                infrastructure: 0,
-                security: 0,
-                education: 0,
-                healthcare: 0,
-                jobs: 0,
-                totalVotes: 0,
-                weekStartDate: weekStart
-            });
-        }
-        await renderGovernors();
-        await updateWinnerProfile();
+    for (let governor of governors) {
+      for (let category in governor.categories) {
+        governor.categories[category].votes = 0;
+        governor.categories[category].userVote = null;
+      }
+      governor.totalVotes = 0;
+      const governorRef = doc(db, 'governors', governor.id);
+      await updateDoc(governorRef, {
+        infrastructure: 0,
+        security: 0,
+        education: 0,
+        healthcare: 0,
+        jobs: 0,
+        totalVotes: 0,
+        weekStartDate: weekStart
+      });
     }
+
+    await renderGovernors();
+    await updateWinnerProfile();
+  }
 };
+
 
 // Debounce function to limit the frequency of function calls
 function debounce(func, delay) {
@@ -337,8 +332,8 @@ function debounce(func, delay) {
         debounceTimer = setTimeout(() => func.apply(context, args), delay);
     }
 }
-  
-  // Function to update weekly report
+
+// Function to update weekly report
 const updateWeeklyReport = () => {
     const updateElement = (imgId, nameId, stateId, data) => {
         const imgElement = document.getElementById(imgId);
@@ -363,45 +358,92 @@ const updateWeeklyReport = () => {
 };
 
 // Create a debounced version of updateWeeklyReport
-const debouncedUpdateWeeklyReport = debounce(updateWeeklyReport, 2000); // 2 seconds delay
+const debouncedUpdateWeeklyReport = debounce(updateWeeklyReport, 2000);
 
 // Function to get the previous week's winner
 async function getPreviousWeekWinner() {
+  try {
     const today = new Date();
-    const lastWeekStart = new Date(today);
-    lastWeekStart.setDate(lastWeekStart.getDate() - 7);
-    lastWeekStart.setHours(0, 0, 0, 0);
+    const prevWeekStart = getPreviousWeekRange(today);
+    const docId = prevWeekStart.toISOString().split('T')[0]; // "YYYY-MM-DD"
 
-    const weeklyResultsRef = collection(db, 'weeklyResults');
-    const q = query(
-        weeklyResultsRef,
-        where("weekStart", "==", lastWeekStart),
-        limit(1)
-    );
+    console.log("Fetching previous week winner with document ID:", docId);
 
-    const querySnapshot = await getDocs(q);
-    if (!querySnapshot.empty) {
-        const weekData = querySnapshot.docs[0].data();
-        return weekData.winner;
+    const weeklyResultRef = doc(db, 'weeklyResults', docId);
+    const weeklyResultDoc = await getDoc(weeklyResultRef);
+    
+    if (weeklyResultDoc.exists()) {
+      const data = weeklyResultDoc.data();
+      console.log("Weekly result document data:", data);
+      return data.winner;
+    } else {
+      console.log("No previous week result found");
+      return null;
     }
+  } catch (error) {
+    console.error("Error getting previous week winner:", error);
     return null;
+  }
 }
 
 // Function to update the winner profile
 async function updateWinnerProfile() {
+  try {
+    console.log("Updating winner profile...");
+    console.log("getPreviousWeekWinner is defined:", typeof getPreviousWeekWinner === 'function');
+    console.log("db is defined:", typeof db !== 'undefined');
+
     const winner = await getPreviousWeekWinner();
+    console.log("Winner data received:", winner);
+
+    const elements = {
+      img: document.getElementById('prev-winner-img'),
+      name: document.getElementById('prev-winner-name'),
+      state: document.getElementById('prev-winner-state'),
+      voteCount: document.getElementById('prev-winner-vote-count'),
+      reviews: document.getElementById('prev-winner-reviews')
+    };
+
     if (winner) {
-        document.getElementById('prev-winner-img').src = winner.avatar;
-        document.getElementById('prev-winner-name').textContent = winner.name;
-        document.getElementById('prev-winner-state').textContent = winner.state;
-        document.getElementById('prev-winner-vote-count').textContent = winner.totalVotes;
-        
+      if (elements.img) elements.img.src = winner.avatar || '';
+      if (elements.name) elements.name.textContent = winner.name || 'Unknown';
+      if (elements.state) elements.state.textContent = winner.state || 'Unknown';
+      if (elements.voteCount) elements.voteCount.textContent = winner.totalVotes || '0';
+      if (elements.reviews) {
         const totalReviews = ['infrastructure', 'security', 'education', 'healthcare', 'jobs']
-            .reduce((sum, category) => sum + Math.abs(winner[category]), 0);
-        document.getElementById('prev-winner-reviews').textContent = `${totalReviews} reviews`;
+          .reduce((sum, category) => sum + Math.abs(winner[category] || 0), 0);
+        elements.reviews.textContent = `${totalReviews} reviews`;
+      }
+      console.log("Winner profile updated successfully");
     } else {
-        console.log("No winner found for the previous week");
+      console.log("No winner data available to update profile");
+      if (elements.img) elements.img.src = '';
+      if (elements.name) elements.name.textContent = "No winner data available";
+      if (elements.state) elements.state.textContent = "";
+      if (elements.voteCount) elements.voteCount.textContent = "0";
+      if (elements.reviews) elements.reviews.textContent = "0 reviews";
     }
+  } catch (error) {
+    console.error("Error in updateWinnerProfile:", error);
+    console.error("Error name:", error.name);
+    console.error("Error message:", error.message);
+    console.error("Error stack:", error.stack);
+    
+    // Set default values in case of error
+    const elements = {
+      img: document.getElementById('prev-winner-img'),
+      name: document.getElementById('prev-winner-name'),
+      state: document.getElementById('prev-winner-state'),
+      voteCount: document.getElementById('prev-winner-vote-count'),
+      reviews: document.getElementById('prev-winner-reviews')
+    };
+
+    if (elements.img) elements.img.src = '';
+    if (elements.name) elements.name.textContent = "Error loading winner data";
+    if (elements.state) elements.state.textContent = "";
+    if (elements.voteCount) elements.voteCount.textContent = "0";
+    if (elements.reviews) elements.reviews.textContent = "0 reviews";
+  }
 }
 
 // Function to initialize date picker and week reveal
@@ -409,15 +451,12 @@ const initializeDatePicker = () => {
     const datePicker = document.getElementById('datePicker');
     const weekReveal = document.getElementById('weekReveal');
 
-    // Set current date on page load
     const today = new Date();
     datePicker.valueAsDate = today;
 
-    // Update week reveal on page load
     const [start, end] = getWeekRange(today);
     updateInputValue(start, end);
 
-    // Add event listener for date picker changes
     datePicker.addEventListener('change', (event) => {
         const selectedDate = event.target.valueAsDate;
         const [start, end] = getWeekRange(selectedDate);
@@ -427,29 +466,27 @@ const initializeDatePicker = () => {
 };
 
 // Main function to run when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    initializeDatePicker();
-    renderGovernors();
-    updateWinnerProfile();
+document.addEventListener('DOMContentLoaded', async function() {
+  initializeDatePicker();
+  await renderGovernors();
+  await resetVotes();
+  await updateWinnerProfile();
 
-    // Add search functionality
-    const searchInput = document.getElementById('table-search');
-    searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
-        const rows = document.querySelectorAll('#governor-rows tr');
-        rows.forEach(row => {
-            const name = row.querySelector('th div.text-base').textContent.toLowerCase();
-            const state = row.querySelector('th div.font-normal').textContent.toLowerCase();
-            if (name.includes(searchTerm) || state.includes(searchTerm)) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
+  // Add search functionality
+  const searchInput = document.getElementById('table-search');
+  searchInput.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#governor-rows tr');
+    rows.forEach(row => {
+      const name = row.querySelector('th div.text-base').textContent.toLowerCase();
+      const state = row.querySelector('th div.font-normal').textContent.toLowerCase();
+      if (name.includes(searchTerm) || state.includes(searchTerm)) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
     });
-
-    // Reset votes at the start of each week
-    resetVotes();
+  });
 });
 
 // Export functions that might be needed elsewhere
