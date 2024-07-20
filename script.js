@@ -388,42 +388,41 @@ async function getPreviousWeekWinner() {
 
 // Function to update the winner profile
 async function updateWinnerProfile() {
-  try {
-    console.log("Updating winner profile...");
-    console.log("getPreviousWeekWinner is defined:", typeof getPreviousWeekWinner === 'function');
-    console.log("db is defined:", typeof db !== 'undefined');
+    try {
+        console.log("Updating winner profile...");
+        const winner = await getPreviousWeekWinner();
+        console.log("Winner data received:", winner);
 
-    const winner = await getPreviousWeekWinner();
-    console.log("Winner data received:", winner);
+        const elements = {
+            img: document.getElementById('winner-avatar'),
+            name: document.getElementById('winner-name'),
+            state: document.getElementById('winner-state'),
+            voteCount: document.getElementById('winner-votes'),
+            reviews: document.getElementById('winner-totalVotes')
+        };
 
-    const elements = {
-      img: document.getElementById('prev-winner-img'),
-      name: document.getElementById('prev-winner-name'),
-      state: document.getElementById('prev-winner-state'),
-      voteCount: document.getElementById('prev-winner-vote-count'),
-      reviews: document.getElementById('prev-winner-reviews')
-    };
-
-    if (winner) {
-      if (elements.img) elements.img.src = winner.avatar || '';
-      if (elements.name) elements.name.textContent = winner.name || 'Unknown';
-      if (elements.state) elements.state.textContent = winner.state || 'Unknown';
-      if (elements.voteCount) elements.voteCount.textContent = winner.totalVotes || '0';
-      if (elements.reviews) {
-        const totalReviews = ['infrastructure', 'security', 'education', 'healthcare', 'jobs']
-          .reduce((sum, category) => sum + Math.abs(winner[category] || 0), 0);
-        elements.reviews.textContent = `${totalReviews} reviews`;
-      }
-      console.log("Winner profile updated successfully");
-    } else {
-      console.log("No winner data available to update profile");
-      if (elements.img) elements.img.src = '';
-      if (elements.name) elements.name.textContent = "No winner data available";
-      if (elements.state) elements.state.textContent = "";
-      if (elements.voteCount) elements.voteCount.textContent = "0";
-      if (elements.reviews) elements.reviews.textContent = "0 reviews";
+        if (winner) {
+            if (elements.img) elements.img.src = winner.avatar || '';
+            if (elements.name) elements.name.textContent = winner.name || 'Unknown';
+            if (elements.state) elements.state.textContent = winner.state || 'Unknown';
+            if (elements.voteCount) elements.voteCount.textContent = winner.totalVotes || '0';
+            if (elements.reviews) {
+                const totalReviews = ['infrastructure', 'security', 'education', 'healthcare', 'jobs']
+                    .reduce((sum, category) => sum + Math.abs(winner[category] || 0), 0);
+                elements.reviews.textContent = `${totalReviews} reviews`;
+            }
+            console.log("Winner profile updated successfully");
+        } else {
+            console.log("No winner data available to update profile");
+            if (elements.img) elements.img.src = '';
+            if (elements.name) elements.name.textContent = "No winner data available";
+            if (elements.state) elements.state.textContent = "";
+            if (elements.voteCount) elements.voteCount.textContent = "0";
+            if (elements.reviews) elements.reviews.textContent = "0 reviews";
+        }
     }
-  } catch (error) {
+      
+ catch (error) {
     console.error("Error in updateWinnerProfile:", error);
     console.error("Error name:", error.name);
     console.error("Error message:", error.message);
