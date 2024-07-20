@@ -55,29 +55,29 @@
         <!-- Left Column -->
         <div class="left-column w-full md:w-2/5 p-3 pl-4 pr-4 pt-4 pb-4 mb-4 md:mb-0 md:mr-4">
             <!-- Winner Profile -->
-            <div class="max-w-sm rounded overflow-hidden border border-gray-700 rounded-lg shadow-lg">
+            <div class="max-w-md rounded overflow-hidden border border-gray-700 rounded-lg shadow-lg">
                 <!-- Winner Profile Header -->
                 <div class="bg-gray-800 px-6 py-4">
-                    <div class="flex flex-col items-center pt-4">
-                        <img class="w-24 h-24 mb-3 rounded-full shadow-lg border border-gray-200" src="/docs/images/people/profile-picture-3.jpg" alt="prev image winner"/>
-                        <h5 class="mb-1 text-xl font-medium text-white">prev-governor-winner</h5>
-                        <span class="text-sm text-gray-300">prev-state-winner</span>
-                        <div class="flex items-center mt-4 md:mt-6">
-                            <div class="flex items-center">
-                                <svg class="w-4 h-4 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                                </svg>
-                                <p class="ms-2 text-sm font-bold text-white">prev-vote-count</p>
-                                <span class="w-1 h-1 mx-1.5 bg-gray-300 rounded-full"></span>
-                                <a href="#" class="text-sm font-medium text-white underline hover:no-underline">prev-no-reviews</a>
-                            </div>
-                        </div>
-                    </div>
+<div id="winner-profile" class="flex flex-col items-center pt-4">
+    <img id="winner-avatar" class="w-24 h-24 mb-3 rounded-full shadow-lg border border-gray-200" src="" alt="Winner image"/>
+    <h5 id="winner-name" class="mb-1 text-xl font-medium text-white">Winner Name</h5>
+    <span id="winner-state" class="text-sm text-gray-300">Winner State</span>
+    <div class="flex items-center mt-4 md:mt-6">
+        <div class="flex items-center">
+            <svg class="w-4 h-4 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+            </svg>
+            <p id="winner-votes" class="ms-2 text-sm font-bold text-white">0</p>
+            <span class="w-1 h-1 mx-1.5 bg-gray-300 rounded-full"></span>
+            <a id="winner-totalVotes" href="#" class="text-sm font-medium text-white underline hover:no-underline">0 reviews</a>
+        </div>
+    </div>
+</div>
                 </div>
                 <!-- Winner Profile Footer -->
                 <div class="bg-gray-700 px-6 py-4">
                     <p class="text-gray-400 text-sm">
-                        Congratulations! Based on our weekly online Governor polls, our voters have ranked you first.
+                        Congratulations! Based on our weekly online Governor polls from last week, our voters have ranked you first.
                         <br><br>
                         Note that we are not afflicted with the Independent National Electoral Commission (INEC).
                     </p>
@@ -214,4 +214,4 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
     <script type="module" src="script.js"></script>
 </body>
-                          </html>
+            </html>
