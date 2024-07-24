@@ -21,40 +21,60 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // Governor class definition
-class Governor { constructor(id, rank, name, image, state, infrastructure, security, education, healthcare, jobs, weekStartDate, totalVotes, engagement) {
-        this.id = id;
-        this.rank = rank;
-        this.name = name;
-        this.image = image;
-        this.state = state;
-        this.weekStartDate = weekStartDate;
-        this.totalVotes = totalVotes || 0; 
-        this.engagement = engagement || 0; 
-        this.categories = { 
-          infrastructure: { votes: parseInt(infrastructure) || 0, userVote: null }, 
-          security: { votes: parseInt(security) || 0, userVote: null }, 
-          education: { votes: parseInt(education) || 0, userVote: null }, 
-          healthcare: { votes: parseInt(healthcare) || 0, userVote: null }, 
-          jobs: { votes: parseInt(jobs) || 0, userVote: null }, 
-        }; 
-     }
-     
-     async vote(category, type) {
+class Governor {
+  constructor(id, rank, name, image, state, infrastructure, security, education, healthcare, jobs, weekStartDate, totalVotes, engagement) {
+    this.id = id;
+    this.rank = rank;
+    this.name = name;
+    this.image = image;
+    this.state = state;
+    this.weekStartDate = weekStartDate;
+    this.totalVotes = totalVotes || 0;
+    this.engagement = engagement || 0;
+    
+    // Initialize categories with their vote counts
+    this.categories = {
+      infrastructure: { votes: parseInt(infrastructure) || 0, userVote: null },
+      security: { votes: parseInt(security) || 0, userVote: null },
+      education: { votes: parseInt(education) || 0, userVote: null },
+      healthcare: { votes: parseInt(healthcare) || 0, userVote: null },
+      jobs: { votes: parseInt(jobs) || 0, userVote: null },
+    };
+    
+    // Load user interactions from local storage
+    this.userInteractions = this.loadUserInteractions();
+  }
+
+  // Load user interactions from local storage
+  loadUserInteractions() {
+    const storedInteractions = localStorage.getItem(`userInteractions_${this.id}`);
+    return storedInteractions ? JSON.parse(storedInteractions) : {};
+  }
+
+  // Save user interactions to local storage
+  saveUserInteractions() {
+    localStorage.setItem(`userInteractions_${this.id}`, JSON.stringify(this.userInteractions));
+  }
+
+  async vote(category, type) {
     const categoryData = this.categories[category];
     let voteChange = 0;
 
     if (type === 'upvote') {
       if (categoryData.userVote === 'upvoted') {
+        // If already upvoted, remove the upvote
         categoryData.votes -= 1;
         categoryData.userVote = null;
         this.totalVotes -= 1;
         voteChange = -1;
       } else {
         if (categoryData.userVote === 'downvoted') {
+          // If previously downvoted, remove downvote and add upvote
           categoryData.votes += 2;
           this.totalVotes += 2;
           voteChange = 2;
         } else {
+          // If not voted before, add upvote
           categoryData.votes += 1;
           this.totalVotes += 1;
           voteChange = 1;
@@ -63,16 +83,19 @@ class Governor { constructor(id, rank, name, image, state, infrastructure, secur
       }
     } else if (type === 'downvote') {
       if (categoryData.userVote === 'downvoted') {
+        // If already downvoted, remove the downvote
         categoryData.votes += 1;
         categoryData.userVote = null;
         this.totalVotes += 1;
         voteChange = 1;
       } else {
         if (categoryData.userVote === 'upvoted') {
+          // If previously upvoted, remove upvote and add downvote
           categoryData.votes -= 2;
           this.totalVotes -= 2;
           voteChange = -2;
         } else {
+          // If not voted before, add downvote
           categoryData.votes -= 1;
           this.totalVotes -= 1;
           voteChange = -1;
@@ -81,9 +104,16 @@ class Governor { constructor(id, rank, name, image, state, infrastructure, secur
       }
     }
 
-    this.engagement += 1; // Increment engagement for every vote action
+    // Update engagement only if it's the first interaction with this category
+    if (!this.userInteractions[category]) {
+      this.engagement += 1;
+      this.userInteractions[category] = true;
+      this.saveUserInteractions();
+    }
+
     this.updateVotesDisplay(category);
 
+    // Update the database with new values
     const governorRef = doc(db, 'governors', this.id);
     await updateDoc(governorRef, {
       [category]: categoryData.votes,
@@ -91,37 +121,70 @@ class Governor { constructor(id, rank, name, image, state, infrastructure, secur
       engagement: this.engagement,
       weekStartDate: this.weekStartDate
     });
+
+    debouncedUpdateWeeklyReport();
+  }
+
+  updateVotesDisplay(category) {
+    const categoryData = this.categories[category];
     
-      debouncedUpdateWeeklyReport();
-    }
+    // Update vote count display
+    document.querySelector(`#votes-${category}-${this.rank}`).textContent = categoryData.votes;
 
-    updateVotesDisplay(category) {
-        const categoryData = this.categories[category];
-        document.querySelector(`#votes-${category}-${this.rank}`).textContent = categoryData.votes;
-        const upvoteBtn = document.querySelector(`#upvote-${category}-${this.rank}`);
-        const downvoteBtn = document.querySelector(`#downvote-${category}-${this.rank}`);
-        upvoteBtn.style.color = categoryData.userVote === 'upvoted' ? 'blue' : '';
-        downvoteBtn.style.color = categoryData.userVote === 'downvoted' ? 'red' : '';
-        document.querySelector(`#total-votes-${this.rank}`).textContent = this.totalVotes; 
-        document.querySelector(`#engagement-${this.rank}`).textContent = this.engagement;
-    }
+    // Get upvote and downvote buttons
+    const upvoteBtn = document.querySelector(`#upvote-${category}-${this.rank}`);
+    const downvoteBtn = document.querySelector(`#downvote-${category}-${this.rank}`);
 
-    render() {
-        const createVoteSection = (category) => `
-            <td class="px-6 py-4">
-                <div class="flex items-center">
-                    <button id="downvote-${category}-${this.rank}" class="vote-btn downvote-btn p-1 me-3" data-id="${this.rank}" data-category="${category}" type="button">
-                        <i class="bi bi-dash-circle-fill text-2xl"></i>
-                    </button>
-                    <span id="votes-${category}-${this.rank}" class="votes-count">${this.categories[category].votes}</span>
-                    <button id="upvote-${category}-${this.rank}" class="vote-btn upvote-btn p-1 ms-3" data-id="${this.rank}" data-category="${category}" type="button">
-                        <i class="bi bi-plus-circle-fill text-2xl"></i>
-                    </button>
-                </div>
-            </td>
-        `;
+    // Update button colors based on user's vote
+    upvoteBtn.style.color = categoryData.userVote === 'upvoted' ? 'blue' : '';
+    downvoteBtn.style.color = categoryData.userVote === 'downvoted' ? 'red' : '';
 
-         return ` <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-700"> <td class="p-4">${this.rank}</td> <th scope="row" class="flex items-center px-6 py-4 text-white whitespace-nowrap"> <img class="w-10 h-10 rounded-full" src="${this.image}" alt="${this.name}"> <div class="pl-3"> <div class="text-base font-semibold">${this.name}</div> <div class="font-normal text-gray-400">${this.state}</div> </div> </th> ${createVoteSection('infrastructure')} ${createVoteSection('security')} ${createVoteSection('education')} ${createVoteSection('healthcare')} ${createVoteSection('jobs')} <td class="px-6 py-4"> <span id="total-votes-${this.rank}">${this.totalVotes}</span> </td> <td class="px-6 py-4"> <span id="engagement-${this.rank}">${this.engagement}</span> </td> </tr> `; }
+    // Update total votes and engagement display
+    document.querySelector(`#total-votes-${this.rank}`).textContent = this.totalVotes;
+    document.querySelector(`#engagement-${this.rank}`).textContent = this.engagement;
+  }
+
+  render() {
+    // Create vote section for each category
+    const createVoteSection = (category) => `
+      <td class="px-6 py-4">
+        <div class="flex items-center">
+          <button id="downvote-${category}-${this.rank}" class="vote-btn downvote-btn p-1 me-3" data-id="${this.rank}" data-category="${category}" type="button">
+            <i class="bi bi-dash-circle-fill text-2xl"></i>
+          </button>
+          <span id="votes-${category}-${this.rank}" class="votes-count">${this.categories[category].votes}</span>
+          <button id="upvote-${category}-${this.rank}" class="vote-btn upvote-btn p-1 ms-3" data-id="${this.rank}" data-category="${category}" type="button">
+            <i class="bi bi-plus-circle-fill text-2xl"></i>
+          </button>
+        </div>
+      </td>
+    `;
+
+    // Return the full HTML for the governor row
+    return `
+      <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-700">
+        <td class="p-4">${this.rank}</td>
+        <th scope="row" class="flex items-center px-6 py-4 text-white whitespace-nowrap">
+          <img class="w-10 h-10 rounded-full" src="${this.image}" alt="${this.name}">
+          <div class="pl-3">
+            <div class="text-base font-semibold">${this.name}</div>
+            <div class="font-normal text-gray-400">${this.state}</div>
+          </div>
+        </th>
+        ${createVoteSection('infrastructure')}
+        ${createVoteSection('security')}
+        ${createVoteSection('education')}
+        ${createVoteSection('healthcare')}
+        ${createVoteSection('jobs')}
+        <td class="px-6 py-4">
+          <span id="total-votes-${this.rank}">${this.totalVotes}</span>
+        </td>
+        <td class="px-6 py-4">
+          <span id="engagement-${this.rank}">${this.engagement}</span>
+        </td>
+      </tr>
+    `;
+  }
 }
 
 // Array to store governor objects
@@ -143,50 +206,95 @@ function getPreviousWeekRange(today) {
   const diffToMonday = (dayOfWeek === 0 ? 6 : dayOfWeek - 1) + 7; // Days since last Monday
   const lastMonday = new Date(currentDate);
   lastMonday.setDate(currentDate.getDate() - diffToMonday);
-
   const previousWeekStart = new Date(lastMonday); // Previous Monday
   return previousWeekStart;
 }
 
+
 // Function to render governors
-const renderGovernors = async (selectedDate) => { const governorsRef = collection(db, 'governors'); const governorRows = document.getElementById('governor-rows'); try { let q; if (selectedDate) { const weekStart = new Date(selectedDate); weekStart.setHours(0, 0, 0, 0); weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1); // Set to Monday of the week 
-const weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate() + 6); // Set to Sunday of the week 
-weekEnd.setHours(23, 59, 59, 999); q = query(governorsRef, where("weekStartDate", ">=", weekStart), where("weekStartDate", "<=", weekEnd) ); } else { q = query(governorsRef); } const snapshot = await getDocs(q); governors = []; 
-   
-   snapshot.forEach(doc => { const data = doc.data(); const governor = new Governor( 
-   doc.id, 
-   data.rank, 
-   data.name, 
-   data.avatar, 
-   data.state, 
-   data.infrastructure, 
-   data.security, 
-   data.education, 
-   data.healthcare, 
-   data.jobs, 
-   data.weekStartDate?.toDate(), 
-   data.totalVotes, 
-   data.engagement || 0 ); 
-   governors.push(governor); 
-     
-   });
+const renderGovernors = async (selectedDate) => {
+  const governorsRef = collection(db, 'governors');
+  const governorRows = document.getElementById('governor-rows');
 
-        sortGovernors(selectedDate || new Date());
+  try {
+    let q;
+    if (selectedDate) {
+      // If a date is selected, query for governors from that week
+      const weekStart = new Date(selectedDate);
+      weekStart.setHours(0, 0, 0, 0);
+      weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1); // Set to Monday of the week
 
-        governorRows.innerHTML = '';
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekEnd.getDate() + 6); // Set to Sunday of the week
+      weekEnd.setHours(23, 59, 59, 999);
 
-        governors.forEach((governor, index) => {
-            governor.rank = index + 1;
-            governorRows.innerHTML += governor.render();
-        });
-
-        document.querySelectorAll('.vote-btn').forEach(button => { button.addEventListener('click', async () => { const rank = button.dataset.id; const category = button.dataset.category; const type = button.classList.contains('upvote-btn') ? 'upvote' : 'downvote'; const governor = governors.find(g => g.rank == rank); await governor.vote(category, type); const currentDay = new Date().getDay(); if (currentDay >= 3 || currentDay === 0) { sortGovernors(new Date()); renderGovernors(selectedDate); 
-          
-        } }); }); 
-        updateWeeklyReport();
-    } catch (error) {
-        console.error("Error fetching governors:", error);
+      q = query(governorsRef, 
+        where("weekStartDate", ">=", weekStart),
+        where("weekStartDate", "<=", weekEnd)
+      );
+    } else {
+      // If no date selected, get all governors
+      q = query(governorsRef);
     }
+
+    const snapshot = await getDocs(q);
+    governors = [];
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const governor = new Governor(
+        doc.id,
+        data.rank,
+        data.name,
+        data.avatar,
+        data.state,
+        data.infrastructure,
+        data.security,
+        data.education,
+        data.healthcare,
+        data.jobs,
+        data.weekStartDate?.toDate(),
+        data.totalVotes,
+        data.engagement || 0
+      );
+      governors.push(governor);
+    });
+
+    // Sort governors based on the day of the week
+    sortGovernors(selectedDate || new Date());
+
+    // Clear existing rows
+    governorRows.innerHTML = '';
+
+    // Render each governor
+    governors.forEach((governor, index) => {
+      governor.rank = index + 1; // Update rank based on current order
+      governorRows.innerHTML += governor.render();
+    });
+
+    // Add event listeners to vote buttons
+    document.querySelectorAll('.vote-btn').forEach(button => {
+      button.addEventListener('click', async () => {
+        const rank = button.dataset.id;
+        const category = button.dataset.category;
+        const type = button.classList.contains('upvote-btn') ? 'upvote' : 'downvote';
+        const governor = governors.find(g => g.rank == rank);
+        await governor.vote(category, type);
+
+        // Re-sort and re-render if it's Wednesday or later
+        const currentDay = new Date().getDay();
+        if (currentDay >= 3 || currentDay === 0) {
+          sortGovernors(new Date());
+          renderGovernors(selectedDate);
+        }
+      });
+    });
+
+    updateWeeklyReport();
+
+  } catch (error) {
+    console.error("Error fetching governors:", error);
+  }
 };
 
 // Function to sort governors
@@ -201,23 +309,23 @@ const sortGovernors = (date) => {
 
 // Function to update input value with formatted date range
 function updateInputValue(start, end) {
-    const formatDate = (date) => {
-        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        return `${days[date.getDay()]} ${date.getDate()}${getOrdinalSuffix(date.getDate())}, ${months[date.getMonth()]}`;
-    };
+  const formatDate = (date) => {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return `${days[date.getDay()]} ${date.getDate()}${getOrdinalSuffix(date.getDate())}, ${months[date.getMonth()]}`;
+  };
 
-    const getOrdinalSuffix = (day) => {
-        if (day > 3 && day < 21) return 'th';
-        switch (day % 10) {
-            case 1:  return "st";
-            case 2:  return "nd";
-            case 3:  return "rd";
-            default: return "th";
-        }
-    };
+  const getOrdinalSuffix = (day) => {
+    if (day > 3 && day < 21) return 'th';
+    switch (day % 10) {
+      case 1: return "st";
+      case 2: return "nd";
+      case 3: return "rd";
+      default: return "th";
+    }
+  };
 
-    document.getElementById('weekReveal').value = `${formatDate(start)} - ${formatDate(end)}`;
+  document.getElementById('weekReveal').value = `${formatDate(start)} - ${formatDate(end)}`;
 }
 
 // Function to store weekly results
