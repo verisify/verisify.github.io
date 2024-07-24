@@ -448,9 +448,14 @@ const debouncedUpdateWeeklyReport = debounce(updateWeeklyReport, 2000);
 async function getPreviousWeekWinner() {
   try {
     const today = new Date();
+    const currentDay = today.getDay(); // 0 (Sunday) to 6 (Saturday)
+    const daysToLastMonday = currentDay === 0 ? 7 : currentDay + 6;
     const lastMonday = new Date(today);
-    lastMonday.setDate(today.getDate() - (today.getDay() + 6) % 7 - 7);
+    lastMonday.setDate(today.getDate() - daysToLastMonday);
+    lastMonday.setHours(0, 0, 0, 0); // Set to midnight
+
     const docId = lastMonday.toISOString().split('T')[0]; // "YYYY-MM-DD"
+
     console.log("Fetching previous week winner with document ID:", docId);
 
     const weeklyResultRef = doc(db, 'weeklyResults', docId);
@@ -459,18 +464,8 @@ async function getPreviousWeekWinner() {
     if (weeklyResultDoc.exists()) {
       const data = weeklyResultDoc.data();
       console.log("Weekly result document data:", data);
-      
-      // Find the governor with the highest total votes
-      let winner = null;
-      let highestVotes = -Infinity;
-      
-      data.results.forEach((governor, index) => {
-        if (governor.totalVotes > highestVotes) {
-          highestVotes = governor.totalVotes;
-          winner = governor;
-        }
-      });
 
+      const winner = data.winner;
       console.log("Winner found:", winner);
       return winner;
     } else {
@@ -596,5 +591,5 @@ document.addEventListener('DOMContentLoaded', async function() {
   });
 });
 
-// Export functions that might be needed elsewhere.
+// Export functions that might be needed elsewhere
 export { renderGovernors, updateWinnerProfile, resetVotes };
