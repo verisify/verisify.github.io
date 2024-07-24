@@ -596,5 +596,5 @@ document.addEventListener('DOMContentLoaded', async function() {
   });
 });
 
-// Export functions that might be needed elsewhere
+// Export functions that might be needed elsewhere.
 export { renderGovernors, updateWinnerProfile, resetVotes };
