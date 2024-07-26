@@ -425,15 +425,7 @@ const resetVotes = async () => {
 };
 
 // Debounce function to limit the frequency of function calls
-function debounce(func, delay) {
-    let debounceTimer;
-    return function() {
-        const context = this;
-        const args = arguments;
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => func.apply(context, args), delay);
-    }
-}
+function debounce(func, delay) { let timeoutId; return function (...args) { clearTimeout(timeoutId); timeoutId = setTimeout(() => func.apply(this, args), delay); }; }
 
 // Function to update weekly report
 const updateWeeklyReport = () => {
@@ -568,29 +560,32 @@ async function updateWinnerProfile() {
 
 // Function to initialize date picker and week reveal
 const initializeDatePicker = () => {
-  const datePicker = document.getElementById('datePicker');
-  const weekReveal = document.getElementById('weekReveal');
-  const today = new Date();
+    const datePicker = document.getElementById('datePicker');
+    const weekReveal = document.getElementById('weekReveal');
 
-  // Set the max date to today
-  datePicker.max = today.toISOString().split('T')[0];
+    if (!datePicker || !weekReveal) {
+        console.error('Datepicker or WeekReveal element not found');
+        return;
+    }
 
-  // Set initial value to current Monday
-  const currentMonday = getPreviousMonday(today);
-  datePicker.valueAsDate = currentMonday;
+    const today = new Date();
+    datePicker.max = today.toISOString().split('T')[0];
 
-  const [start, end] = getWeekRange(currentMonday);
-  updateInputValue(start, end);
+    const currentMonday = getPreviousMonday(today);
+    datePicker.valueAsDate = currentMonday;
 
-  // Fetch and display initial results
-  fetchWeeklyResults(currentMonday);
-
-  datePicker.addEventListener('change', (event) => {
-    const selectedDate = event.target.valueAsDate;
-    const [start, end] = getWeekRange(selectedDate);
+    const [start, end] = getWeekRange(currentMonday);
     updateInputValue(start, end);
-    fetchWeeklyResults(selectedDate);
-  });
+
+    fetchWeeklyResults(currentMonday);
+
+    datePicker.addEventListener('change', (event) => {
+        const selectedDate = event.target.valueAsDate;
+        console.log('Selected date:', selectedDate);
+        const [start, end] = getWeekRange(selectedDate);
+        updateInputValue(start, end);
+        fetchWeeklyResults(selectedDate);
+    });
 };
 
 // Function to get the previous Monday
@@ -605,16 +600,13 @@ async function fetchWeeklyResults(selectedDate) {
     try {
         const mondayOfWeek = getPreviousMonday(selectedDate);
         const docId = mondayOfWeek.toISOString().split('T')[0]; // "YYYY-MM-DD"
-
         console.log("Fetching results for week starting:", docId);
 
-        // Check if the selected week is the current week
-        const currentMonday = getPreviousMonday(new Date());
-        const isCurrentWeek = docId === currentMonday.toISOString().split('T')[0];
+        const isCurrentWeek = isDateInCurrentWeek(selectedDate);
+        console.log("Is current week:", isCurrentWeek);
 
         if (isCurrentWeek) {
             console.log("Fetching current week data from 'governors' collection");
-            // Fetch data from 'governors' collection for the current week
             const governorsRef = collection(db, 'governors');
             const snapshot = await getDocs(governorsRef);
             const results = snapshot.docs.map(doc => {
@@ -628,10 +620,8 @@ async function fetchWeeklyResults(selectedDate) {
             displayWeeklyResults(results, true);
         } else {
             console.log("Fetching past week data from 'weeklyResults' collection");
-            // Fetch data from 'weeklyResults' collection for past weeks
             const weeklyResultRef = doc(db, 'weeklyResults', docId);
             const weeklyResultDoc = await getDoc(weeklyResultRef);
-            
             if (weeklyResultDoc.exists()) {
                 const data = weeklyResultDoc.data();
                 console.log("Weekly result found:", data);
@@ -652,36 +642,48 @@ function displayWeeklyResults(results, isCurrentWeek) {
     const governorRows = document.getElementById('governor-rows');
     governorRows.innerHTML = ''; // Clear existing rows
 
-    // Sort results by totalVotes in descending order
     results.sort((a, b) => b.totalVotes - a.totalVotes);
 
-    results.forEach((governor, index) => {
-        const rank = index + 1;
-        const row = `
-            <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-700">
-                <td class="p-4">${rank}</td>
-                <th scope="row" class="flex items-center px-6 py-4 text-white whitespace-nowrap">
-                    <img class="w-10 h-10 rounded-full" src="${governor.avatar || governor.image}" alt="${governor.name}">
-                    <div class="pl-3">
-                        <div class="text-base font-semibold">${governor.name}</div>
-                        <div class="font-normal text-gray-400">${governor.state}</div>
-                    </div>
-                </th>
-                ${createVoteCell('infrastructure', governor, isCurrentWeek)}
-                ${createVoteCell('security', governor, isCurrentWeek)}
-                ${createVoteCell('education', governor, isCurrentWeek)}
-                ${createVoteCell('healthcare', governor, isCurrentWeek)}
-                ${createVoteCell('jobs', governor, isCurrentWeek)}
-                <td class="px-6 py-4">${governor.totalVotes}</td>
-                <td class="px-6 py-4">${governor.engagement || 0}</td>
-            </tr>
-        `;
-        governorRows.innerHTML += row;
-    });
+    const fragment = document.createDocumentFragment();
+    const displayBatch = (start) => {
+        const end = Math.min(start + 20, results.length);
+        for (let i = start; i < end; i++) {
+            const governor = results[i];
+            const rank = i + 1;
+            const row = createGovernorRow(governor, rank, isCurrentWeek);
+            fragment.appendChild(row);
+        }
+        governorRows.appendChild(fragment);
+        if (end < results.length) {
+            setTimeout(() => displayBatch(end), 0);
+        } else if (isCurrentWeek) {
+            addVotingEventListeners();
+        }
+    };
+    displayBatch(0);
+}
 
-    if (isCurrentWeek) {
-        addVotingEventListeners();
-    }
+function createGovernorRow(governor, rank, isCurrentWeek) {
+    const row = document.createElement('tr');
+    row.className = "bg-gray-800 border-b border-gray-700 hover:bg-gray-700";
+    row.innerHTML = `
+        <td class="p-4">${rank}</td>
+        <th scope="row" class="flex items-center px-6 py-4 text-white whitespace-nowrap">
+            <img class="w-10 h-10 rounded-full" src="${governor.avatar || governor.image}" alt="${governor.name}">
+            <div class="pl-3">
+                <div class="text-base font-semibold">${governor.name}</div>
+                <div class="font-normal text-gray-400">${governor.state}</div>
+            </div>
+        </th>
+        ${createVoteCell('infrastructure', governor, isCurrentWeek)}
+        ${createVoteCell('security', governor, isCurrentWeek)}
+        ${createVoteCell('education', governor, isCurrentWeek)}
+        ${createVoteCell('healthcare', governor, isCurrentWeek)}
+        ${createVoteCell('jobs', governor, isCurrentWeek)}
+        <td class="px-6 py-4">${governor.totalVotes}</td>
+        <td class="px-6 py-4">${governor.engagement || 0}</td>
+    `;
+    return row;
 }
 
 function createVoteCell(category, governor, isCurrentWeek) {
@@ -752,21 +754,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   await updateWinnerProfile();
 
   // Add search functionality
-  const searchInput = document.getElementById('table-search');
-  searchInput.addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase();
-    const rows = document.querySelectorAll('#governor-rows tr');
-    rows.forEach(row => {
-      const name = row.querySelector('th div.text-base').textContent.toLowerCase();
-      const state = row.querySelector('th div.font-normal').textContent.toLowerCase();
-      if (name.includes(searchTerm) || state.includes(searchTerm)) {
-        row.style.display = '';
-      } else {
-        row.style.display = 'none';
-      }
-    });
-  });
-});
+  const searchInput = document.getElementById('table-search'); const debouncedSearch = debounce(function() { const searchTerm = this.value.toLowerCase(); const rows = document.querySelectorAll('#governor-rows tr'); rows.forEach(row => { const name = row.querySelector('th div.text-base').textContent.toLowerCase(); const state = row.querySelector('th div.font-normal').textContent.toLowerCase(); row.style.display = (name.includes(searchTerm) || state.includes(searchTerm)) ? '' : 'none'; }); }, 300); searchInput.addEventListener('input', debouncedSearch); });
 
 // Export functions that might be needed elsewhere
 export { renderGovernors, updateWinnerProfile, resetVotes };
