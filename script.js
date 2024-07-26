@@ -2,7 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
 import { 
   getFirestore, collection, getDocs, doc, updateDoc, query, where, orderBy, 
-  limit, addDoc, getDoc,setDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+  limit, addDoc, getDoc,setDoc, Timestamp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
   
   
 // Firebase configuration
@@ -193,9 +193,13 @@ let governors = [];
 // Function to get week range (Monday to Sunday)
 function getWeekRange(date) {
   const start = new Date(date);
-  start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
+  start.setDate(start.getDate() - ((start.getDay() + 6) % 7)); // Set to Monday
+  start.setHours(0, 0, 0, 0);
+
   const end = new Date(start);
-  end.setDate(end.getDate() + 6);
+  end.setDate(end.getDate() + 6); // Set to Sunday
+  end.setHours(23, 59, 59, 999);
+
   return [start, end];
 }
 
@@ -549,22 +553,128 @@ async function updateWinnerProfile() {
 
 // Function to initialize date picker and week reveal
 const initializeDatePicker = () => {
-    const datePicker = document.getElementById('datePicker');
-    const weekReveal = document.getElementById('weekReveal');
+  const datePicker = document.getElementById('datePicker');
+  const weekReveal = document.getElementById('weekReveal');
+  const today = new Date();
 
-    const today = new Date();
-    datePicker.valueAsDate = today;
+  // Set the max date to today
+  datePicker.max = today.toISOString().split('T')[0];
 
-    const [start, end] = getWeekRange(today);
+  // Set initial value to current Monday
+  const currentMonday = getPreviousMonday(today);
+  datePicker.valueAsDate = currentMonday;
+
+  const [start, end] = getWeekRange(currentMonday);
+  updateInputValue(start, end);
+
+  // Fetch and display initial results
+  fetchWeeklyResults(currentMonday);
+
+  datePicker.addEventListener('change', (event) => {
+    const selectedDate = event.target.valueAsDate;
+    const [start, end] = getWeekRange(selectedDate);
     updateInputValue(start, end);
-
-    datePicker.addEventListener('change', (event) => {
-        const selectedDate = event.target.valueAsDate;
-        const [start, end] = getWeekRange(selectedDate);
-        updateInputValue(start, end);
-        renderGovernors(selectedDate);
-    });
+    fetchWeeklyResults(selectedDate);
+  });
 };
+
+// Function to get the previous Monday
+function getPreviousMonday(date) {
+  const prevMonday = new Date(date);
+  prevMonday.setDate(prevMonday.getDate() - (prevMonday.getDay() + 6) % 7);
+  return prevMonday;
+}
+
+// Function to fetch weekly results
+async function fetchWeeklyResults(selectedDate) {
+  try {
+    const mondayOfWeek = getPreviousMonday(selectedDate);
+    const docId = mondayOfWeek.toISOString().split('T')[0]; // "YYYY-MM-DD"
+    
+    // Check if the selected week is the current week
+    const currentMonday = getPreviousMonday(new Date());
+    const isCurrentWeek = docId === currentMonday.toISOString().split('T')[0];
+
+    if (isCurrentWeek) {
+      // Fetch data from 'governors' collection for the current week
+      const governorsRef = collection(db, 'governors');
+      const snapshot = await getDocs(governorsRef);
+      const results = snapshot.docs.map(doc => doc.data());
+      displayWeeklyResults(results);
+    } else {
+      // Fetch data from 'weeklyResults' collection for past weeks
+      const weeklyResultRef = doc(db, 'weeklyResults', docId);
+      const weeklyResultDoc = await getDoc(weeklyResultRef);
+
+      if (weeklyResultDoc.exists()) {
+        const data = weeklyResultDoc.data();
+        displayWeeklyResults(data.results);
+      } else {
+        console.log("No weekly result found for date:", docId);
+        displayNoResultsMessage();
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching weekly results:", error);
+    displayErrorMessage();
+  }
+}
+
+// Function to display weekly results in the table
+function displayWeeklyResults(results) {
+  const governorRows = document.getElementById('governor-rows');
+  governorRows.innerHTML = ''; // Clear existing rows
+
+  results.forEach((governor, index) => {
+    const row = `
+      <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-700">
+        <td class="p-4">${index + 1}</td>
+        <th scope="row" class="flex items-center px-6 py-4 text-white whitespace-nowrap">
+          <img class="w-10 h-10 rounded-full" src="${governor.avatar || governor.image}" alt="${governor.name}">
+          <div class="pl-3">
+            <div class="text-base font-semibold">${governor.name}</div>
+            <div class="font-normal text-gray-400">${governor.state}</div>
+          </div>
+        </th>
+        <td class="px-6 py-4">${governor.infrastructure}</td>
+        <td class="px-6 py-4">${governor.security}</td>
+        <td class="px-6 py-4">${governor.education}</td>
+        <td class="px-6 py-4">${governor.healthcare}</td>
+        <td class="px-6 py-4">${governor.jobs}</td>
+        <td class="px-6 py-4">${governor.totalVotes}</td>
+        <td class="px-6 py-4">${governor.engagement || 0}</td>
+      </tr>
+    `;
+    governorRows.innerHTML += row;
+  });
+}
+
+function displayNoResultsMessage() {
+  const governorRows = document.getElementById('governor-rows');
+  governorRows.innerHTML = `
+    <tr class="bg-gray-800 border-b border-gray-700">
+      <td colspan="9" class="px-6 py-4 text-center text-gray-400">No results found for this week.</td>
+    </tr>
+  `;
+}
+
+function displayErrorMessage() {
+  const governorRows = document.getElementById('governor-rows');
+  governorRows.innerHTML = `
+    <tr class="bg-gray-800 border-b border-gray-700">
+      <td colspan="9" class="px-6 py-4 text-center text-gray-400">An error occurred while fetching results. Please try again later.</td>
+    </tr>
+  `;
+}
+
+function isDateInCurrentWeek(date) {
+  const today = new Date();
+  const currentMonday = getPreviousMonday(today);
+  const nextMonday = new Date(currentMonday);
+  nextMonday.setDate(nextMonday.getDate() + 7);
+
+  return date >= currentMonday && date < nextMonday;
+}
 
 // Main function to run when DOM is loaded
 document.addEventListener('DOMContentLoaded', async function() {
