@@ -214,7 +214,6 @@ function getPreviousWeekRange(today) {
   return previousWeekStart;
 }
 
-
 // Function to render governors
 const renderGovernors = async (selectedDate) => {
   const governorsRef = collection(db, 'governors');
@@ -333,42 +332,58 @@ function updateInputValue(start, end) {
 }
 
 // Function to store weekly results
-async function storeWeeklyResults(weekStart, weekEnd) {
-  const governorsRef = collection(db, 'governors');
-  const weeklyResultsRef = collection(db, 'weeklyResults');
+async function storeWeeklyResults() {
+    const today = new Date();
+    const currentDay = today.getDay();
+    const currentHour = today.getHours();
 
-  const snapshot = await getDocs(governorsRef);
+    // Check if it's Sunday (day 0) and it's 23:59
+    if (currentDay === 0 && currentHour === 23) {
+        const weekStart = getPreviousMonday(today);
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekEnd.getDate() + 6);
 
-  const weeklyResults = snapshot.docs.map(doc => {
-    const data = doc.data();
-    return {
-      id: doc.id,
-      name: data.name,
-      state: data.state,
-      avatar: data.avatar,
-      totalVotes: data.totalVotes || 0,
-      infrastructure: data.infrastructure || 0,
-      security: data.security || 0,
-      education: data.education || 0,
-      healthcare: data.healthcare || 0,
-      jobs: data.jobs || 0
-    };
-  });
+        const governorsRef = collection(db, 'governors');
+        const snapshot = await getDocs(governorsRef);
 
-  weeklyResults.sort((a, b) => b.totalVotes - a.totalVotes);
-  const winner = weeklyResults[0];
+        const weeklyResults = snapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                id: doc.id,
+                name: data.name,
+                state: data.state,
+                avatar: data.avatar,
+                totalVotes: data.totalVotes || 0,
+                infrastructure: data.infrastructure || 0,
+                security: data.security || 0,
+                education: data.education || 0,
+                healthcare: data.healthcare || 0,
+                jobs: data.jobs || 0,
+                engagement: data.engagement || 0
+            };
+        });
 
-  const docId = weekStart.toISOString().split('T')[0]; // "YYYY-MM-DD"
+        weeklyResults.sort((a, b) => b.totalVotes - a.totalVotes);
+        const winner = weeklyResults[0];
 
-  await setDoc(doc(weeklyResultsRef, docId), {
-    weekStart: weekStart,
-    weekEnd: weekEnd,
-    results: weeklyResults,
-    winner: winner
-  });
+        const docId = weekStart.toISOString().split('T')[0]; // "YYYY-MM-DD"
 
-  console.log("Weekly results stored with ID:", docId);
+        await setDoc(doc(db, 'weeklyResults', docId), {
+            weekStart: weekStart,
+            weekEnd: weekEnd,
+            results: weeklyResults,
+            winner: winner
+        });
+
+        console.log("Weekly results stored with ID:", docId);
+
+        // Reset votes for the new week
+        await resetVotes();
+    }
 }
+
+// Call this function every hour
+setInterval(storeWeeklyResults, 3600000); // 3600000 ms = 1 hour
 
 // Function to reset votes at the start of each week (Monday)
 const resetVotes = async () => {
@@ -587,66 +602,118 @@ function getPreviousMonday(date) {
 
 // Function to fetch weekly results
 async function fetchWeeklyResults(selectedDate) {
-  try {
-    const mondayOfWeek = getPreviousMonday(selectedDate);
-    const docId = mondayOfWeek.toISOString().split('T')[0]; // "YYYY-MM-DD"
-    
-    // Check if the selected week is the current week
-    const currentMonday = getPreviousMonday(new Date());
-    const isCurrentWeek = docId === currentMonday.toISOString().split('T')[0];
+    try {
+        const mondayOfWeek = getPreviousMonday(selectedDate);
+        const docId = mondayOfWeek.toISOString().split('T')[0]; // "YYYY-MM-DD"
 
-    if (isCurrentWeek) {
-      // Fetch data from 'governors' collection for the current week
-      const governorsRef = collection(db, 'governors');
-      const snapshot = await getDocs(governorsRef);
-      const results = snapshot.docs.map(doc => doc.data());
-      displayWeeklyResults(results);
-    } else {
-      // Fetch data from 'weeklyResults' collection for past weeks
-      const weeklyResultRef = doc(db, 'weeklyResults', docId);
-      const weeklyResultDoc = await getDoc(weeklyResultRef);
+        console.log("Fetching results for week starting:", docId);
 
-      if (weeklyResultDoc.exists()) {
-        const data = weeklyResultDoc.data();
-        displayWeeklyResults(data.results);
-      } else {
-        console.log("No weekly result found for date:", docId);
-        displayNoResultsMessage();
-      }
+        // Check if the selected week is the current week
+        const currentMonday = getPreviousMonday(new Date());
+        const isCurrentWeek = docId === currentMonday.toISOString().split('T')[0];
+
+        if (isCurrentWeek) {
+            console.log("Fetching current week data from 'governors' collection");
+            // Fetch data from 'governors' collection for the current week
+            const governorsRef = collection(db, 'governors');
+            const snapshot = await getDocs(governorsRef);
+            const results = snapshot.docs.map(doc => {
+                const data = doc.data();
+                return {
+                    id: doc.id,
+                    ...data,
+                    showVoteButtons: true
+                };
+            });
+            displayWeeklyResults(results, true);
+        } else {
+            console.log("Fetching past week data from 'weeklyResults' collection");
+            // Fetch data from 'weeklyResults' collection for past weeks
+            const weeklyResultRef = doc(db, 'weeklyResults', docId);
+            const weeklyResultDoc = await getDoc(weeklyResultRef);
+            
+            if (weeklyResultDoc.exists()) {
+                const data = weeklyResultDoc.data();
+                console.log("Weekly result found:", data);
+                displayWeeklyResults(data.results, false);
+            } else {
+                console.log("No weekly result found for date:", docId);
+                displayNoResultsMessage();
+            }
+        }
+    } catch (error) {
+        console.error("Error fetching weekly results:", error);
+        displayErrorMessage();
     }
-  } catch (error) {
-    console.error("Error fetching weekly results:", error);
-    displayErrorMessage();
-  }
 }
 
 // Function to display weekly results in the table
-function displayWeeklyResults(results) {
-  const governorRows = document.getElementById('governor-rows');
-  governorRows.innerHTML = ''; // Clear existing rows
+function displayWeeklyResults(results, isCurrentWeek) {
+    const governorRows = document.getElementById('governor-rows');
+    governorRows.innerHTML = ''; // Clear existing rows
 
-  results.forEach((governor, index) => {
-    const row = `
-      <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-700">
-        <td class="p-4">${index + 1}</td>
-        <th scope="row" class="flex items-center px-6 py-4 text-white whitespace-nowrap">
-          <img class="w-10 h-10 rounded-full" src="${governor.avatar || governor.image}" alt="${governor.name}">
-          <div class="pl-3">
-            <div class="text-base font-semibold">${governor.name}</div>
-            <div class="font-normal text-gray-400">${governor.state}</div>
-          </div>
-        </th>
-        <td class="px-6 py-4">${governor.infrastructure}</td>
-        <td class="px-6 py-4">${governor.security}</td>
-        <td class="px-6 py-4">${governor.education}</td>
-        <td class="px-6 py-4">${governor.healthcare}</td>
-        <td class="px-6 py-4">${governor.jobs}</td>
-        <td class="px-6 py-4">${governor.totalVotes}</td>
-        <td class="px-6 py-4">${governor.engagement || 0}</td>
-      </tr>
-    `;
-    governorRows.innerHTML += row;
-  });
+    // Sort results by totalVotes in descending order
+    results.sort((a, b) => b.totalVotes - a.totalVotes);
+
+    results.forEach((governor, index) => {
+        const rank = index + 1;
+        const row = `
+            <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-700">
+                <td class="p-4">${rank}</td>
+                <th scope="row" class="flex items-center px-6 py-4 text-white whitespace-nowrap">
+                    <img class="w-10 h-10 rounded-full" src="${governor.avatar || governor.image}" alt="${governor.name}">
+                    <div class="pl-3">
+                        <div class="text-base font-semibold">${governor.name}</div>
+                        <div class="font-normal text-gray-400">${governor.state}</div>
+                    </div>
+                </th>
+                ${createVoteCell('infrastructure', governor, isCurrentWeek)}
+                ${createVoteCell('security', governor, isCurrentWeek)}
+                ${createVoteCell('education', governor, isCurrentWeek)}
+                ${createVoteCell('healthcare', governor, isCurrentWeek)}
+                ${createVoteCell('jobs', governor, isCurrentWeek)}
+                <td class="px-6 py-4">${governor.totalVotes}</td>
+                <td class="px-6 py-4">${governor.engagement || 0}</td>
+            </tr>
+        `;
+        governorRows.innerHTML += row;
+    });
+
+    if (isCurrentWeek) {
+        addVotingEventListeners();
+    }
+}
+
+function createVoteCell(category, governor, isCurrentWeek) {
+    if (isCurrentWeek) {
+        return `
+            <td class="px-6 py-4">
+                <div class="flex items-center">
+                    <button class="vote-btn downvote-btn p-1 me-3" data-id="${governor.id}" data-category="${category}" type="button">
+                        <i class="bi bi-dash-circle-fill text-2xl"></i>
+                    </button>
+                    <span class="votes-count">${governor[category]}</span>
+                    <button class="vote-btn upvote-btn p-1 ms-3" data-id="${governor.id}" data-category="${category}" type="button">
+                        <i class="bi bi-plus-circle-fill text-2xl"></i>
+                    </button>
+                </div>
+            </td>
+        `;
+    } else {
+        return `<td class="px-6 py-4">${governor[category]}</td>`;
+    }
+}
+
+function addVotingEventListeners() {
+    document.querySelectorAll('.vote-btn').forEach(button => {
+        button.addEventListener('click', async () => {
+            const id = button.dataset.id;
+            const category = button.dataset.category;
+            const type = button.classList.contains('upvote-btn') ? 'upvote' : 'downvote';
+            const governor = governors.find(g => g.id == id);
+            await governor.vote(category, type);
+        });
+    });
 }
 
 function displayNoResultsMessage() {
