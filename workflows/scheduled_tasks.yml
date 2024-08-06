@@ -1,0 +1,31 @@
+# .github/workflows/scheduled_tasks.yml
+name: Scheduled Tasks
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'  # Runs every Monday at midnight
+    - cron: '59 23 * * 0'  # Runs every Sunday at 11:59 PM
+
+jobs:
+  run-scheduled-tasks:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flask firebase-admin apscheduler
+
+    - name: Run scheduled tasks
+      env:
+        FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      run: |
+        python app.py
