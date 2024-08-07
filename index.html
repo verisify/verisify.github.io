@@ -1,218 +1,309 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RateGov - Governor Leaderboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/3.4.4/tailwind.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
-    <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-        }
-        @media (min-width: 768px) {
-            .left-column {
-                width: 40%;
-            }
-            .right-column {
-                width: 60%;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RateGov - Governor Leaderboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/3.4.4/tailwind.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+    }
+    @media (min-width: 768px) {
+      .left-column {
+        width: 40%;
+      }
+      .right-column {
+        width: 60%;
+      }
+    }
+  </style>
 </head>
 <body class="bg-gray-900 text-white">
-    <!-- Navigation Bar -->
-    <nav class="bg-gray-900 border-gray-700 flex justify-between items-center p-4 w-full border-b border-gray-600">
-        <div class="flex items-center space-x-3 rtl:space-x-reverse">
-            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">RateGov</span>
-        </div>
-        <div class="flex items-center space-x-4">
-            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">About us</a>
-            <button id="sign-in" class="bg-blue-500 text-white px-4 py-2 rounded">Sign In</button>
-            <button id="user-menu-button" class="flex text-sm bg-gray-800 rounded-full hidden" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
-                <span class="sr-only">Open user menu</span>
-                <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="user photo">
-            </button>
-        </div>
-        <!-- User Dropdown Menu -->
-        <div class="z-50 hidden my-4 text-base list-none bg-gray-700 divide-y divide-gray-600 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
-            <div class="px-4 py-3">
-                <span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
+  <!-- Navigation Bar -->
+  <nav class="bg-gray-900 border-gray-700 flex justify-between items-center p-4 w-full border-b border-gray-600">
+    <div class="flex items-center space-x-3 rtl:space-x-reverse">
+      <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">RateGov</span>
+    </div>
+    <div class="flex items-center space-x-4">
+      <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">About us</a>
+      <button id="sign-in" class="bg-blue-500 text-white px-4 py-2 rounded">Sign In</button>
+      <button id="user-menu-button" class="flex text-sm bg-gray-800 rounded-full hidden" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+        <span class="sr-only">Open user menu</span>
+        <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="user photo">
+      </button>
+    </div>
+    <!-- User Dropdown Menu -->
+    <div class="z-50 hidden my-4 text-base list-none bg-gray-700 divide-y divide-gray-600 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
+      <div class="px-4 py-3">
+        <span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
+      </div>
+      <ul class="py-2" aria-labelledby="user-menu-button">
+        <li>
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Deactivate Account</a>
+        </li>
+        <li>
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="body-container flex flex-col md:flex-row">
+    <!-- Left Column -->
+    <div class="left-column w-full md:w-2/5 p-3 pl-4 pr-4 pt-4 pb-4 mb-4 md:mb-0 md:mr-4">
+      <!-- Winner Profile -->
+      <div class="max-w-md rounded overflow-hidden border border-gray-700 rounded-lg shadow-lg">
+        <!-- Winner Profile Header -->
+        <div class="bg-gray-800 px-6 py-4">
+          <div id="winner-profile" class="flex flex-col items-center pt-4">
+            <!-- Skeleton for avatar -->
+            <div id="winnerAvatarSkeleton" class="w-24 h-24 mb-3 rounded-full bg-gray-700 animate-pulse"></div>
+            <img id="winnerAvatar" class="w-24 h-24 mb-3 rounded-full shadow-lg border border-gray-200 hidden" src="" alt="Winner image"/>
+            <!-- Skeleton for name -->
+            <div id="winnerNameSkeleton" class="h-6 bg-gray-700 rounded w-48 mb-1 animate-pulse"></div>
+            <h5 id="winnerName" class="mb-1 text-xl font-medium text-white hidden">Winner Name</h5>
+            <!-- Skeleton for state -->
+            <div id="winnerStateSkeleton" class="h-4 bg-gray-700 rounded w-32 animate-pulse"></div>
+            <span id="winnerState" class="text-sm text-gray-300 hidden">Winner State</span>
+            <!-- Skeleton for total votes -->
+            <div class="flex items-center mt-4 md:mt-6">
+              <div id="winnerTotalVotesSkeleton" class="h-4 bg-gray-700 rounded w-16 animate-pulse"></div>
+              <p id="winnerTotalVotes" class="ms-2 text-sm font-bold text-white hidden">0</p>
+              <span class="w-1 h-1 mx-1.5 bg-gray-300 rounded-full"></span>
+              <a href="#" class="text-sm font-medium text-white underline hover:no-underline">Total Votes</a>
             </div>
-            <ul class="py-2" aria-labelledby="user-menu-button">
-                <li>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Deactivate Account</a>
-                </li>
-                <li>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
-                </li>
-            </ul>
+          </div>
         </div>
-    </nav>
-
-    <div class="body-container flex flex-col md:flex-row">
-        <!-- Left Column -->
-        <div class="left-column w-full md:w-2/5 p-3 pl-4 pr-4 pt-4 pb-4 mb-4 md:mb-0 md:mr-4">
-            <!-- Winner Profile -->
-            <div class="max-w-md rounded overflow-hidden border border-gray-700 rounded-lg shadow-lg">
-                <!-- Winner Profile Header -->
-                <div class="bg-gray-800 px-6 py-4">
-<div id="winner-profile" class="flex flex-col items-center pt-4">
-    <img id="winner-avatar" class="w-24 h-24 mb-3 rounded-full shadow-lg border border-gray-200" src="" alt="Winner image"/>
-    <h5 id="winner-name" class="mb-1 text-xl font-medium text-white">Winner Name</h5>
-    <span id="winner-state" class="text-sm text-gray-300">Winner State</span>
-    <div class="flex items-center mt-4 md:mt-6">
-        <div class="flex items-center">
-            <svg class="w-4 h-4 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+        <!-- Winner Profile Footer -->
+        <div class="bg-gray-700 px-6 py-4">
+          <p class="text-gray-400 text-sm"> Congratulations! Based on our weekly online Governor polls, our voters have ranked you first. <br><br> Note that we are not affiliated with the Independent National Electoral Commission (INEC). </p>
+          <div class="mt-4">
+            <!-- Skeleton for category votes -->
+            <div id="winnerCategoriesSkeleton">
+              <div class="h-4 bg-gray-600 rounded w-3/4 mb-2 animate-pulse"></div>
+              <div class="h-4 bg-gray-600 rounded w-3/4 mb-2 animate-pulse"></div>
+              <div class="h-4 bg-gray-600 rounded w-3/4 mb-2 animate-pulse"></div>
+              <div class="h-4 bg-gray-600 rounded w-3/4 mb-2 animate-pulse"></div>
+              <div class="h-4 bg-gray-600 rounded w-3/4 mb-2 animate-pulse"></div>
+            </div>
+            <div id="winnerCategories" class="hidden">
+              <p class="text-sm text-gray-300">Infrastructure: <span id="winnerInfrastructure">0</span></p>
+              <p class="text-sm text-gray-300">Security: <span id="winnerSecurity">0</span></p>
+              <p class="text-sm text-gray-300">Education: <span id="winnerEducation">0</span></p>
+              <p class="text-sm text-gray-300">Healthcare: <span id="winnerHealthcare">0</span></p>
+              <p class="text-sm text-gray-300">Jobs: <span id="winnerJobs">0</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Weekly Report -->
+      <div class="max-w-md p-4 bg-gray-800 border border-gray-700 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-300 mt-4 p-4 pl-5 pr-5 pt-5 pb-1">
+        <div class="flex items-center justify-between mb-4">
+          <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Weekly Report</h5>
+          <a href="#" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">Rating Info</a>
+        </div>
+        <div class="flow-root">
+          <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
+            <!-- Highest Engaged Governor -->
+            <li class="py-3 sm:py-4">
+              <div class="flex items-center">
+                <div id="highestEngagedImgSkeleton" class="w-8 h-8 rounded-full bg-gray-700 animate-pulse"></div>
+                <img id="highest-engaged-img" class="w-8 h-8 rounded-full hidden" src="" alt="Highest Engaged Governor">
+                <div class="flex-1 min-w-0 ms-4">
+                  <div id="highestEngagedNameSkeleton" class="h-4 bg-gray-700 rounded w-3/4 mb-2 animate-pulse"></div>
+                  <p id="highest-engaged-name" class="text-sm font-medium text-gray-900 truncate dark:text-white hidden">Name One Governor</p>
+                  <div id="highestEngagedStateSkeleton" class="h-3 bg-gray-700 rounded w-1/2 animate-pulse"></div>
+                  <p id="highest-engaged-state" class="text-sm text-gray-500 truncate dark:text-gray-400 hidden">State One Governor</p>
+                </div>
+                <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                  <h5>Highest<br>Engaged</h5>
+                </div>
+              </div>
+            </li>
+            <!-- Least Engaged Governor -->
+            <li class="py-3 sm:py-4">
+              <div class="flex items-center">
+                <div id="leastEngagedImgSkeleton" class="w-8 h-8 rounded-full bg-gray-700 animate-pulse"></div>
+                <img id="least-engaged-img" class="w-8 h-8 rounded-full hidden" src="" alt="Least Engaged Governor">
+                <div class="flex-1 min-w-0 ms-4">
+                  <div id="leastEngagedNameSkeleton" class="h-4 bg-gray-700 rounded w-3/4 mb-2 animate-pulse"></div>
+                  <p id="least-engaged-name" class="text-sm font-medium text-gray-900 truncate dark:text-white hidden">Name Two Governor</p>
+                  <div id="leastEngagedStateSkeleton" class="h-3 bg-gray-700 rounded w-1/2 animate-pulse"></div>
+                  <p id="least-engaged-state" class="text-sm text-gray-500 truncate dark:text-gray-400 hidden">State Two Governor</p>
+                </div>
+                <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                  <h5>Least<br>Engaged</h5>
+                </div>
+              </div>
+            </li>
+            <!-- Highest Vote Count Governor -->
+            <li class="py-3 sm:py-4">
+              <div class="flex items-center">
+                <div id="highestVoteImgSkeleton" class="w-8 h-8 rounded-full bg-gray-700 animate-pulse"></div>
+                <img id="highest-vote-img" class="w-8 h-8 rounded-full hidden" src="" alt="Highest Vote Count Governor">
+                <div class="flex-1 min-w-0 ms-4">
+                  <div id="highestVoteNameSkeleton" class="h-4 bg-gray-700 rounded w-3/4 mb-2 animate-pulse"></div>
+                  <p id="highest-vote-name" class="text-sm font-medium text-gray-900 truncate dark:text-white hidden">Name Three Governor</p>
+                  <div id="highestVoteStateSkeleton" class="h-3 bg-gray-700 rounded w-1/2 mb-2 animate-pulse"></div>
+                  <p id="highest-vote-state" class="text-sm text-gray-500 truncate dark:text-gray-400 hidden">State Three Governor</p>
+                  <div id="highestVoteCountSkeleton" class="h-3 bg-gray-700 rounded w-1/4 animate-pulse"></div>
+                  <p id="highest-vote-count" class="text-sm text-gray-500 truncate dark:text-gray-400 hidden">Vote Count</p>
+                </div>
+                <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                  <h5>Highest<br>Vote<br>Count</h5>
+                </div>
+              </div>
+            </li>
+            <!-- Least Vote Count Governor -->
+            <li class="py-3 sm:py-4">
+              <div class="flex items-center">
+                <div id="leastVoteImgSkeleton" class="w-8 h-8 rounded-full bg-gray-700 animate-pulse"></div>
+                <img id="least-vote-img" class="w-8 h-8 rounded-full hidden" src="" alt="Least Vote Count Governor">
+                <div class="flex-1 min-w-0 ms-4">
+                  <div id="leastVoteNameSkeleton" class="h-4 bg-gray-700 rounded w-3/4 mb-2 animate-pulse"></div>
+                  <p id="least-vote-name" class="text-sm font-medium text-gray-900 truncate dark:text-white hidden">Name Four Governor</p>
+                  <div id="leastVoteStateSkeleton" class="h-3 bg-gray-700 rounded w-1/2 mb-2 animate-pulse"></div>
+                  <p id="least-vote-state" class="text-sm text-gray-500 truncate dark:text-gray-400 hidden">State Four Governor</p>
+                  <div id="leastVoteCountSkeleton" class="h-3 bg-gray-700 rounded w-1/4 animate-pulse"></div>
+                  <p id="least-vote-count" class="text-sm text-gray-500 truncate dark:text-gray-400 hidden">Vote Count</p>
+                </div>
+                <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                  <h5>Least<br>Vote<br>Count</h5>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Right Column -->
+    <div class="right-column w-full md:w-3/5 p-3 pl-4 pr-4 pt-4 pb-4">
+      <!-- WeekPicker -->
+      <div class="w-full bg-gray-800 p-4 rounded-lg shadow-md mb-4 border border-gray-700">
+        <div class="mb-4">
+          <h1 class="text-2xl font-bold mb-2 text-left">WeekPicker</h1>
+          <p class="text-sm text-gray-400 mb-4 text-left">Note: When you pick a date, the governor table will show votes from the week of that date.</p>
+        </div>
+        <div class="mb-4">
+          <label for="datePicker" class="text-sm text-gray-400"></label>
+        </div>
+        <div class="relative mt-4 mb-4">
+          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
             </svg>
-            <p id="winner-votes" class="ms-2 text-sm font-bold text-white">0</p>
-            <span class="w-1 h-1 mx-1.5 bg-gray-300 rounded-full"></span>
-            <a id="winner-totalVotes" href="#" class="text-sm font-medium text-white underline hover:no-underline">0 reviews</a>
+          </div>
+          <input type="date" id="datePicker" class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-600 rounded-lg w-full bg-gray-700 focus:ring-blue-500 focus:border-blue-500 text-white" value="">
         </div>
+        <div class="mt-4 mb-4">
+          <label for="weekReveal" class="block text-sm font-medium text-gray-400 text-left">Week Reveal</label>
+          <input type="text" id="weekReveal" class="mt-1 block w-full rounded-md border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-700 text-white" readonly>
+        </div>
+      </div>
+      <!-- Search -->
+      <div class="relative mt-4">
+        <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+          <svg class="w-4 h-4 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+          </svg>
+        </div>
+        <input type="text" id="table-search" class="block pt-2 ps-10 text-sm text-white border border-gray-700 rounded-lg w-full bg-gray-700 focus:ring-blue-500 focus:border-blue-500" placeholder="Search for governors or states">
+      </div>
+      <!-- Table -->
+      <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
+        <table id="leaderboard" class="w-full text-sm text-left rtl:text-right text-gray-400">
+          <thead class="text-xs text-gray-400 uppercase bg-gray-700">
+            <tr>
+              <th scope="col" class="p-4">Rank</th>
+              <th scope="col" class="px-6 py-3">Name</th>
+              <th scope="col" class="px-6 py-3">Infrastructure</th>
+              <th scope="col" class="px-6 py-3">Security</th>
+              <th scope="col" class="px-6 py-3">Education</th>
+              <th scope="col" class="px-6 py-3">Healthcare</th>
+              <th scope="col" class="px-6 py-3">Jobs</th>
+              <th scope="col" class="px-6 py-3">Total Votes</th>
+              <th scope="col" class="px-6 py-3">Engagement</th>
+            </tr>
+          </thead>
+          <tbody id="governor-rows" class="bg-gray-800">
+            <!-- Table rows will be inserted here -->
+          </tbody>
+        </table>
+      </div>
     </div>
-</div>
-                </div>
-                <!-- Winner Profile Footer -->
-                <div class="bg-gray-700 px-6 py-4">
-                    <p class="text-gray-400 text-sm">
-                        Congratulations! Based on our weekly online Governor polls, our voters have ranked you first.
-                        <br><br>
-                        Note that we are not afflicted with the Independent National Electoral Commission (INEC).
-                    </p>
-                </div>
-            </div>
-            <!-- Weekly Report -->
-            <div class="max-w-md p-4 bg-gray-800 border border-gray-700 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-300 mt-4 p-4 pl-5 pr-5 pt-5 pb-1">
-                <div class="flex items-center justify-between mb-4">
-                    <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Weekly Report</h5>
-                    <a href="#" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">Rating Info</a>
-                </div>
-                <div class="flow-root">
-                    <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
-                        <li class="py-3 sm:py-4">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0">
-                                    <img id="highest-engaged-img" class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-1.jpg" alt="Highest Engaged Governor">
-                                </div>
-                                <div class="flex-1 min-w-0 ms-4">
-                                    <p id="highest-engaged-name" class="text-sm font-medium text-gray-900 truncate dark:text-white">Name One Governor</p>
-                                    <p id="highest-engaged-state" class="text-sm text-gray-500 truncate dark:text-gray-400">State One Governor</p>
-                                </div>
-                                <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                    <h5>Highest<br>Engaged</h5>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="py-3 sm:py-4">
-                            <div class="flex items-center ">
-                                <div class="flex-shrink-0">
-                                    <img id="least-engaged-img" class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="Least Engaged Governor">
-                                </div>
-                                <div class="flex-1 min-w-0 ms-4">
-                                    <p id="least-engaged-name" class="text-sm font-medium text-gray-900 truncate dark:text-white">Name Two Governor</p>
-                                    <p id="least-engaged-state" class="text-sm text-gray-500 truncate dark:text-gray-400">State Two Governor</p>
-                                </div>
-                                <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                    <h5>Least<br>Engaged</h5>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="py-3 sm:py-4">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0">
-                                    <img id="highest-vote-img" class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-2.jpg" alt="Highest Vote Count Governor">
-                                </div>
-                                <div class="flex-1 min-w-0 ms-4">
-                                    <p id="highest-vote-name" class="text-sm font-medium text-gray-900 truncate dark:text-white">Name Three Governor</p>
-                                    <p id="highest-vote-state" class="text-sm text-gray-500 truncate dark:text-gray-400">State Three Governor</p>
-                                </div>
-                                <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                    <h5>Highest<br>Vote<br>Count</h5>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="py-3 sm:py-4">
-                            <div class="flex items-center ">
-                                <div class="flex-shrink-0">
-                                    <img id="least-vote-img" class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-4.jpg" alt="Least Vote Count Governor">
-                                </div>
-                                <div class="flex-1 min-w-0 ms-4">
-                                    <p id="least-vote-name" class="text-sm font-medium text-gray-900 truncate dark:text-white">Name Four Governor</p>
-                                    <p id="least-vote-state" class="text-sm text-gray-500 truncate dark:text-gray-400">State Four Governor</p>
-                                </div>
-                                <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                    <h5>Least<br>Vote<br>Count</h5>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+  <script type="module" src="script.js"></script>
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyALc7_O7VJzigqOaVLYjcl5yCCysnmyOG0",
+      authDomain: "rateniggov-419a4.firebaseapp.com",
+      projectId: "rateniggov-419a4",
+      storageBucket: "rateniggov-419a4.appspot.com",
+      messagingSenderId: "293215706435",
+      appId: "1:293215706435:web:bbf1190e97208185caa3f6",
+      measurementId: "G-C2KSLESE2D"
+    };
 
-        <!-- Right Column -->
-        <div class="right-column w-full md:w-3/5 p-3 pl-4 pr-4 pt-4 pb-4">
-            <!-- WeekPicker -->
-            <div class="w-full bg-gray-800 p-4 rounded-lg shadow-md mb-4 border border-gray-700">
-                <div class="mb-4">
-                    <h1 class="text-2xl font-bold mb-2 text-left">WeekPicker</h1>
-                    <p class="text-sm text-gray-400 mb-4 text-left">Note: When you pick a date, the governor table will show votes from the week of that date.</p>
-                </div>
-                <div class="mb-4">
-                    <label for="datePicker" class="text-sm text-gray-400"></label>
-                </div>
-                <div class="relative mt-4 mb-4">
-                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                        <svg class="w-4 h-4 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                        </svg>
-                    </div>
-                    <input type="date" id="datePicker" class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-600 rounded-lg w-full bg-gray-700 focus:ring-blue-500 focus:border-blue-500 text-white" value="">
-                </div>
-                <div class="mt-4 mb-4">
-                    <label for="weekReveal" class="block text-sm font-medium text-gray-400 text-left">Week Reveal</label>
-                    <input type="text" id="weekReveal" class="mt-1 block w-full rounded-md border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-700 text-white" readonly>
-                </div>
-            </div>
-            
-            <!-- Search -->
-            <div class="relative mt-4">
-                <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                    <svg class="w-4 h-4 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                    </svg>
-                </div>
-                <input type="text" id="table-search" class="block pt-2 ps-10 text-sm text-white border border-gray-700 rounded-lg w-full bg-gray-700 focus:ring-blue-500 focus:border-blue-500" placeholder="Search for governors or states">
-            </div>
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
 
-            <!-- Table -->
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
-            <table id="leaderboard" class="w-full text-sm text-left rtl:text-right text-gray-400">
-  <thead class="text-xs text-gray-400 uppercase bg-gray-700">
-    <tr>
-      <th scope="col" class="p-4">Rank</th>
-      <th scope="col" class="px-6 py-3">Name</th>
-      <th scope="col" class="px-6 py-3">Infrastructure</th>
-      <th scope="col" class="px-6 py-3">Security</th>
-      <th scope="col" class="px-6 py-3">Education</th>
-      <th scope="col" class="px-6 py-3">Healthcare</th>
-      <th scope="col" class="px-6 py-3">Jobs</th>
-      <th scope="col" class="px-6 py-3">Total Votes</th>
-      <th scope="col" class="px-6 py-3">Engagement</th>
-    </tr>
-  </thead>
-  <tbody id="governor-rows" class="bg-gray-800">
-    <!-- Table rows will be inserted here -->
-  </tbody>
-</table>
-            </div>
-        </div>
-    </div>
+    document.addEventListener('DOMContentLoaded', function() {
+      const signInButton = document.getElementById('sign-in');
+      const userMenuButton = document.getElementById('user-menu-button');
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
-    <script type="module" src="script.js"></script>
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user && user.emailVerified) {
+          // User is signed in and email is verified
+          signInButton.style.display = 'none';
+          userMenuButton.style.display = 'flex';
+
+          // Update user name and initials
+          updateUserInfo(user);
+        } else {
+          // User is signed out or email is not verified
+          signInButton.style.display = 'block';
+          userMenuButton.style.display = 'none';
+        }
+      });
+    });
+
+    function updateUserInfo(user) {
+      const userNameElement = document.querySelector('#user-dropdown .block');
+      const userInitialsElement = document.querySelector('#user-menu-button img');
+
+      if (user.displayName) {
+        userNameElement.textContent = user.displayName;
+        const initials = user.displayName.split(' ').map(name => name[0]).join('');
+        userInitialsElement.alt = initials;
+        userInitialsElement.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=random`;
+      } else {
+        userNameElement.textContent = 'User';
+        userInitialsElement.alt = 'U';
+        userInitialsElement.src = 'https://ui-avatars.com/api/?name=U&background=random';
+      }
+    }
+
+    document.getElementById('sign-in').addEventListener('click', function() {
+      window.location.href = 'signin.html';
+    });
+
+    // Handle sign out
+    document.querySelector('a[href="#"]').addEventListener('click', function(event) {
+      event.preventDefault();
+      firebase.auth().signOut().then(() => {
+        console.log("User signed out successfully");
+        window.location.href = 'signin.html';
+      }).catch((error) => {
+        console.error('Sign Out Error', error);
+      });
+    });
+  </script>
 </body>
-                          </html>
+              </html>
