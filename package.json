@@ -1,0 +1,9 @@
+{
+  "name": "governor-rating-app",
+  "version": "1.0.0",
+  "description": "Governor rating application",
+  "main": "app.py",
+  "scripts": {
+    "start": "python app.py"
+  }
+}
