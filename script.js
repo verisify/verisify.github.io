@@ -274,51 +274,52 @@ function debounce(func, delay) { let timeoutId; return function (...args) { clea
 
 // Function to update weekly report
 const updateWeeklyReport = async () => {
-    try {
-        console.log("Starting updateWeeklyReport function");
-        const currentMonday = getPreviousMonday(new Date());
-        console.log("Current Monday:", currentMonday);
+  try {
+    console.log("Starting updateWeeklyReport function");
 
-        const governorsRef = collection(db, 'governors');
-        const q = query(governorsRef, where('weekStartDate', '>=', currentMonday));
-        console.log("Query created");
+    const currentMonday = getPreviousMonday(new Date());
+    console.log("Current Monday:", currentMonday);
 
-        const snapshot = await getDocs(q);
-        console.log("Snapshot retrieved, document count:", snapshot.size);
+    const governorsRef = collection(db, 'governors');
+    const q = query(governorsRef, where('weekStartDate', '>=', currentMonday));
+    console.log("Query created");
 
-        let highestEngaged = null;
-        let leastEngaged = null;
-        let highestVoteCount = null;
-        let leastVoteCount = null;
+    const snapshot = await getDocs(q);
+    console.log("Snapshot retrieved, document count:", snapshot.size);
 
-        snapshot.forEach(doc => {
-            const governor = doc.data();
-            governor.id = doc.id;
-            console.log("Processing governor:", governor.name);
+    let highestEngaged = null;
+    let leastEngaged = null;
+    let highestVoteCount = null;
+    let leastVoteCount = null;
 
-            if (!highestEngaged || governor.engagement > highestEngaged.engagement) {
-                highestEngaged = governor;
-            }
-            if (!leastEngaged || governor.engagement < leastEngaged.engagement) {
-                leastEngaged = governor;
-            }
-            if (!highestVoteCount || governor.totalVotes > highestVoteCount.totalVotes) {
-                highestVoteCount = governor;
-            }
-            if (!leastVoteCount || governor.totalVotes < leastVoteCount.totalVotes) {
-                leastVoteCount = governor;
-            }
-        });
+    snapshot.forEach(doc => {
+      const governor = doc.data();
+      governor.id = doc.id;
+      console.log("Processing governor:", governor.name);
 
-        updateGovernorInfo('highest-engaged', highestEngaged);
-        updateGovernorInfo('least-engaged', leastEngaged);
-        updateGovernorInfo('highest-vote', highestVoteCount);
-        updateGovernorInfo('least-vote', leastVoteCount);
+      if (!highestEngaged || governor.engagement > highestEngaged.engagement) {
+        highestEngaged = governor;
+      }
+      if (!leastEngaged || governor.engagement < leastEngaged.engagement) {
+        leastEngaged = governor;
+      }
+      if (!highestVoteCount || governor.totalVotes > highestVoteCount.totalVotes) {
+        highestVoteCount = governor;
+      }
+      if (!leastVoteCount || governor.totalVotes < leastVoteCount.totalVotes) {
+        leastVoteCount = governor;
+      }
+    });
 
-        console.log("Weekly report updated successfully");
-    } catch (error) {
-        console.error("Error updating weekly report:", error);
-    }
+    updateGovernorInfo('highest-engaged', highestEngaged);
+    updateGovernorInfo('least-engaged', leastEngaged);
+    updateGovernorInfo('highest-vote', highestVoteCount);
+    updateGovernorInfo('least-vote', leastVoteCount);
+
+    console.log("Weekly report updated successfully");
+  } catch (error) {
+    console.error("Error updating weekly report:", error);
+  }
 };
 
 function showSkeleton() {
@@ -467,32 +468,32 @@ function setDefaultWinnerProfile() {
 
 // Function to initialize date picker and week reveal
 const initializeDatePicker = () => {
-    const datePicker = document.getElementById('datePicker');
-    const weekReveal = document.getElementById('weekReveal');
+  const datePicker = document.getElementById('datePicker');
+  const weekReveal = document.getElementById('weekReveal');
 
-    if (!datePicker || !weekReveal) {
-        console.error('Datepicker or WeekReveal element not found');
-        return;
-    }
+  if (!datePicker || !weekReveal) {
+    console.error('Datepicker or WeekReveal element not found');
+    return;
+  }
 
-    const today = new Date();
-    datePicker.max = today.toISOString().split('T')[0];
+  const today = new Date();
+  datePicker.max = today.toISOString().split('T')[0];
+  
+  // Set the datepicker to today's date
+  datePicker.valueAsDate = today;
 
-    const currentMonday = getPreviousMonday(today);
-    datePicker.valueAsDate = currentMonday;
+  const [start, end] = getWeekRange(today);
+  updateInputValue(start, end);
 
-    const [start, end] = getWeekRange(currentMonday);
+  fetchWeeklyResults(today);
+
+  datePicker.addEventListener('change', (event) => {
+    const selectedDate = event.target.valueAsDate;
+    console.log('Selected date:', selectedDate);
+    const [start, end] = getWeekRange(selectedDate);
     updateInputValue(start, end);
-
-    fetchWeeklyResults(currentMonday);
-
-    datePicker.addEventListener('change', (event) => {
-        const selectedDate = event.target.valueAsDate;
-        console.log('Selected date:', selectedDate);
-        const [start, end] = getWeekRange(selectedDate);
-        updateInputValue(start, end);
-        fetchWeeklyResults(selectedDate);
-    });
+    fetchWeeklyResults(selectedDate);
+  });
 };
 
 // Function to get the previous Monday
@@ -505,43 +506,51 @@ function getPreviousMonday(date) {
 
 // Function to fetch weekly results
 async function fetchWeeklyResults(selectedDate) {
-    try {
-        const mondayOfWeek = getPreviousMonday(selectedDate);
-        const governorsRef = collection(db, 'governors');
-        const q = query(governorsRef, where('weekStartDate', '>=', mondayOfWeek));
-        const snapshot = await getDocs(q);
+  try {
+    const mondayOfWeek = getPreviousMonday(selectedDate);
+    const nextMonday = new Date(mondayOfWeek);
+    nextMonday.setDate(nextMonday.getDate() + 7);
 
-        const results = snapshot.docs.map(doc => {
-            const data = doc.data();
-            return new Governor(
-                doc.id,
-                0, // rank will be set later
-                data.name,
-                data.avatar,
-                data.state,
-                data.infrastructure,
-                data.security,
-                data.education,
-                data.healthcare,
-                data.jobs,
-                data.weekStartDate?.toDate(),
-                data.totalVotes,
-                data.engagement || 0
-            );
-        });
+    const governorsRef = collection(db, 'governors');
+    const q = query(
+      governorsRef, 
+      where('weekStartDate', '>=', mondayOfWeek),
+      where('weekStartDate', '<', nextMonday)
+    );
 
-        // Sort results and assign ranks
-        results.sort((a, b) => b.totalVotes - a.totalVotes);
-        results.forEach((governor, index) => {
-            governor.rank = index + 1;
-        });
+    const snapshot = await getDocs(q);
 
-        displayWeeklyResults(results, true);
-        governors = results; // Store the Governor objects globally
-    } catch (error) {
-        console.error("Error fetching weekly results:", error);
-        displayErrorMessage();
-    }
+    const results = snapshot.docs.map(doc => {
+      const data = doc.data();
+      return new Governor(
+        doc.id,
+        0, // rank will be set later
+        data.name,
+        data.avatar,
+        data.state,
+        data.infrastructure,
+        data.security,
+        data.education,
+        data.healthcare,
+        data.jobs,
+        data.weekStartDate?.toDate(),
+        data.totalVotes,
+        data.engagement || 0
+      );
+    });
+
+    // Sort results and assign ranks
+    results.sort((a, b) => b.totalVotes - a.totalVotes);
+    results.forEach((governor, index) => {
+      governor.rank = index + 1;
+    });
+
+    displayWeeklyResults(results, true);
+    governors = results; // Store the Governor objects globally
+  } catch (error) {
+    console.error("Error fetching weekly results:", error);
+    displayErrorMessage();
+  }
 }
 
 function displayWeeklyResults(results, isCurrentWeek) {
