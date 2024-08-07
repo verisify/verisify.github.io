@@ -274,61 +274,20 @@ function debounce(func, delay) { let timeoutId; return function (...args) { clea
 
 // Function to update weekly report
 const updateWeeklyReport = async () => {
-  try {
-    console.log("Starting updateWeeklyReport function");
-    const currentMonday = getPreviousMonday(new Date());
-    console.log("Current Monday:", currentMonday);
-    
-    const governorsRef = collection(db, 'governors');
-    const q = query(governorsRef, where('weekStartDate', '>=', currentMonday));
-    console.log("Query created");
-    
-    const snapshot = await getDocs(q);
-    console.log("Snapshot retrieved, document count:", snapshot.size);
-    
-    let highestEngaged = null;
-    let leastEngaged = null;
-    let highestVoteCount = null;
-    let leastVoteCount = null;
-    
-    snapshot.forEach(doc => {
-      const governor = doc.data();
-      governor.id = doc.id;
-      console.log("Processing governor:", governor.name);
-      
-      if (!highestEngaged || governor.engagement > highestEngaged.engagement) {
-        highestEngaged = governor;
-      }
-      if (!leastEngaged || governor.engagement < leastEngaged.engagement) {
-        leastEngaged = governor;
-      }
-      if (!highestVoteCount || governor.totalVotes > highestVoteCount.totalVotes) {
-        highestVoteCount = governor;
-      }
-      if (!leastVoteCount || governor.totalVotes < leastVoteCount.totalVotes) {
-        leastVoteCount = governor;
-      }
-    });
-    
-    updateGovernorInfo('highest-engaged', highestEngaged);
-    updateGovernorInfo('least-engaged', leastEngaged);
-    updateGovernorInfo('highest-vote', highestVoteCount);
-    updateGovernorInfo('least-vote', leastVoteCount);
-    
-    const highestVoteCountElement = document.getElementById('highest-vote-count');
-    const leastVoteCountElement = document.getElementById('least-vote-count');
-    
-    if (highestVoteCountElement) {
-      highestVoteCountElement.textContent = highestVoteCount ? highestVoteCount.totalVotes : 'N/A';
+    try {
+        const response = await fetch('/run_tasks', { method: 'POST' });
+        if (!response.ok) {
+            throw new Error('Failed to run scheduled tasks');
+        }
+        console.log("Scheduled tasks executed successfully");
+
+        // Fetch and update the UI as before
+        const currentMonday = getPreviousMonday(new Date());
+        await fetchWeeklyResults(currentMonday);
+        updateWinnerProfile();
+    } catch (error) {
+        console.error("Error updating weekly report:", error);
     }
-    if (leastVoteCountElement) {
-      leastVoteCountElement.textContent = leastVoteCount ? leastVoteCount.totalVotes : 'N/A';
-    }
-    
-    console.log("Weekly report updated successfully");
-  } catch (error) {
-    console.error("Error updating weekly report:", error);
-  }
 };
 
 function showSkeleton() {
@@ -484,12 +443,6 @@ async function fetchLatestWeeklyResult() {
     console.log("Winner data:", winner); 
     // Update DOM elements 
     document.getElementById('winnerAvatar').src = winner.avatar; document.getElementById('winnerName').textContent = winner.name; document.getElementById('winnerState').textContent = winner.state; document.getElementById('winnerTotalVotes').textContent = winner.totalVotes; document.getElementById('winnerInfrastructure').textContent = winner.infrastructure; document.getElementById('winnerSecurity').textContent = winner.security; document.getElementById('winnerEducation').textContent = winner.education; document.getElementById('winnerHealthcare').textContent = winner.healthcare; document.getElementById('winnerJobs').textContent = winner.jobs; }
-  
-  
-  
-  
-  
-  
 
 function setDefaultWinnerProfile() {
   document.getElementById('winner-avatar').src = '';
