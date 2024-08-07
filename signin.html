@@ -1,63 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.0/flowbite.min.css" rel="stylesheet">
-    <title>Sign In</title>
-    <style>
-        .custom-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.0/flowbite.min.css" rel="stylesheet">
+  <title>RateGov Sign In</title>
+  <style>
+    .custom-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.0/flowbite.min.js"></script>
 </head>
 <body class="bg-gray-900 text-white flex items-center justify-center h-screen">
-    <div class="w-full max-w-sm p-6 bg-gray-800 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-semibold mb-6">Welcome back</h2>
-        <div class="space-y-4">
-            <button class="custom-button w-full py-2 px-4 text-sm font-semibold text-gray-300 bg-gray-700 border border-gray-600 rounded-md shadow hover:bg-gray-600">
-                <img src="https://www.svgart.org/wp-content/uploads/2022/06/vector-google-01.svg" alt="Google Logo" class="w-5 h-5">
-                Sign in with Google
-            </button>
-            <button class="custom-button w-full py-2 px-4 text-sm font-semibold text-gray-300 bg-gray-700 border border-gray-600 rounded-md shadow hover:bg-gray-600">
-                <svg class="w-5 h-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M22.46 6c-.77.35-1.61.6-2.49.71a4.6 4.6 0 002.03-2.54 9.03 9.03 0 01-2.89 1.11 4.55 4.55 0 00-7.76 4.15A12.88 12.88 0 013 4.56a4.55 4.55 0 001.4 6.08 4.46 4.46 0 01-2.06-.57v.06c0 2.24 1.59 4.11 3.71 4.53a4.56 4.56 0 01-2.05.08 4.56 4.56 0 004.26 3.17A9.11 9.11 0 012 19.5a12.86 12.86 0 006.98 2.05c8.36 0 12.93-6.93 12.93-12.93 0-.2-.01-.39-.02-.58A9.23 9.23 0 0024 4.59a9.06 9.06 0 01-2.54.7z"/>
-                </svg>
-                Sign in with Twitter
-            </button>
-            <div class="flex items-center justify-center my-4">
-                <span class="w-full border-b border-gray-600"></span>
-                <span class="px-3 text-gray-500">or</span>
-                <span class="w-full border-b border-gray-600"></span>
-            </div>
-            <form>
-                <div class="mb-4">
-                    <label for="email" class="block text-sm font-medium">Email</label>
-                    <input type="email" id="email" name="email" class="w-full px-4 py-2 mt-1 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-blue-500" placeholder="Enter your email">
-                </div>
-                <div class="mb-4">
-                    <label for="password" class="block text-sm font-medium">Password</label>
-                    <input type="password" id="password" name="password" class="w-full px-4 py-2 mt-1 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-blue-500" placeholder="Enter your password">
-                </div>
-                <div class="flex items-center justify-between mb-4">
-                    <label class="inline-flex items-center">
-                        <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600">
-                        <span class="ml-2 text-sm">Remember me</span>
-                    </label>
-                    <a href="#" class="text-sm text-blue-500 hover:underline">Forgot password?</a>
-                </div>
-                <button type="submit" class="w-full py-2 px-4 text-sm font-semibold text-white bg-blue-600 rounded-md shadow hover:bg-blue-700">
-                    Sign in to your account
-                </button>
-            </form>
-        </div>
-        <div class="text-center mt-4">
-            <p class="text-sm text-gray-500">Don't have an account? <a href="#" class="text-blue-500 hover:underline">Sign up</a></p>
-        </div>
+  <div class="w-full max-w-sm p-6 bg-gray-800 rounded-lg shadow-lg">
+    <div class="flex items-center justify-center mb-6">
+      <img src="https://raw.githubusercontent.com/verisify/verisify.github.io/c9da2dda221fa58f7e1962e238fb2241d8a67350/RateGov_stroke_15.svg" class="h-20" alt="RateGov Logo">
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.0/flowbite.min.js"></script>
+    <h2 class="text-2xl font-semibold mb-6 text-center">Welcome back</h2>
+    <div class="space-y-4">
+      <form id="signinForm">
+        <div class="mb-4">
+          <label for="email" class="block text-sm font-medium">Email</label>
+          <input type="email" id="email" name="email" class="w-full px-4 py-2 mt-1 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-blue-500" placeholder="Enter your email" required>
+        </div>
+        <div class="mb-4">
+          <label for="password" class="block text-sm font-medium">Password</label>
+          <input type="password" id="password" name="password" class="w-full px-4 py-2 mt-1 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-blue-500" placeholder="Enter your password" required>
+        </div>
+        <div class="flex items-center justify-between mb-4">
+          <label class="inline-flex items-center">
+            <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600">
+            <span class="ml-2 text-sm">Remember me</span>
+          </label>
+          <a href="#" class="text-sm text-blue-500 hover:underline">Forgot password?</a>
+        </div>
+        <button type="submit" class="w-full py-2 px-4 text-sm font-semibold text-white bg-blue-600 rounded-md shadow hover:bg-blue-700">
+          Sign in to your account
+        </button>
+      </form>
+    </div>
+    <div class="text-center mt-4">
+      <p class="text-sm text-gray-500">Don't have an account? <a href="signup.html" class="text-blue-500 hover:underline">Sign up</a></p>
+    </div>
+  </div>
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyALc7_O7VJzigqOaVLYjcl5yCCysnmyOG0",
+      authDomain: "rateniggov-419a4.firebaseapp.com",
+      projectId: "rateniggov-419a4",
+      storageBucket: "rateniggov-419a4.appspot.com",
+      messagingSenderId: "293215706435",
+      appId: "1:293215706435:web:bbf1190e97208185caa3f6",
+      measurementId: "G-C2KSLESE2D"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    console.log('Firebase initialized successfully.');
+
+    // Get the signin form
+    const signinForm = document.getElementById('signinForm');
+
+    // Add event listener to the signin form
+    signinForm.addEventListener('submit', (e) => {
+      // Prevent the default form submission behavior
+      e.preventDefault();
+
+      // Get the email and password from the form
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      // Sign in to Firebase using the email and password
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          if (user.emailVerified) {
+            // Redirect to the main page
+            window.location.href = 'index.html';
+          } else {
+            alert('Please verify your email before signing in.');
+            // Optionally, offer to resend verification email
+            return user.sendEmailVerification();
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          alert(error.message);
+        });
+    });
+
+    // Add event listener to the sign up link
+    document.querySelector('a[href="signup.html"]').addEventListener('click', function(event) {
+      // Prevent the default link behavior
+      event.preventDefault();
+
+      // Redirect to the sign up page
+      window.location.href = 'signup.html';
+    });
+  </script>
 </body>
-      </html>
+            </html>
