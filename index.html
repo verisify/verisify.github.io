@@ -230,148 +230,20 @@
       </div>
     </div>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
-  <script type="module" src="script.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', async function() {
-      const signInButton = document.getElementById('sign-in');
-      const userMenuButton = document.getElementById('user-menu-button');
-
-      // Fetch weekly results from the server
-      const response = await fetch('/get_weekly_results');
-      const data = await response.json();
-
-      if (response.ok) {
-        updateWeeklyResults(data);
-      } else {
-        console.error(data.error);
-      }
-
-      // Check if the user is signed in
-      const userResponse = await fetch('/check_auth');
-      const userData = await userResponse.json();
-
-      if (userResponse.ok && userData.authenticated) {
-        // User is signed in
-        signInButton.style.display = 'none';
-        userMenuButton.style.display = 'flex';
-
-        // Update user name and initials
-        updateUserInfo(userData.user);
-      } else {
-        // User is signed out
-        signInButton.style.display = 'block';
-        userMenuButton.style.display = 'none';
-      }
+  <!-- ... (existing HTML code) -->
+<script type="module" src="script.js"></script>
+<script>
+  // Fetch data from the server-side API endpoints
+  fetch('/api/governor-data')
+    .then(response => response.json())
+    .then(data => {
+      // Update the UI with the fetched data
+      // ...
+    })
+    .catch(error => {
+      console.error(error);
+      alert('An error occurred while fetching governor data.');
     });
-
-    function updateWeeklyResults(data) {
-      // Update winner profile
-      const winner = data.winner;
-      document.getElementById('winnerAvatar').src = winner.avatar;
-      document.getElementById('winnerAvatar').classList.remove('hidden');
-      document.getElementById('winnerAvatarSkeleton').classList.add('hidden');
-      document.getElementById('winnerName').textContent = winner.name;
-      document.getElementById('winnerName').classList.remove('hidden');
-      document.getElementById('winnerNameSkeleton').classList.add('hidden');
-      document.getElementById('winnerState').textContent = winner.state;
-      document.getElementById('winnerState').classList.remove('hidden');
-      document.getElementById('winnerStateSkeleton').classList.add('hidden');
-      document.getElementById('winnerTotalVotes').textContent = winner.totalVotes;
-      document.getElementById('winnerTotalVotes').classList.remove('hidden');
-      document.getElementById('winnerTotalVotesSkeleton').classList.add('hidden');
-      document.getElementById('winnerInfrastructure').textContent = winner.infrastructure;
-      document.getElementById('winnerSecurity').textContent = winner.security;
-      document.getElementById('winnerEducation').textContent = winner.education;
-      document.getElementById('winnerHealthcare').textContent = winner.healthcare;
-      document.getElementById('winnerJobs').textContent = winner.jobs;
-      document.getElementById('winnerCategories').classList.remove('hidden');
-      document.getElementById('winnerCategoriesSkeleton').classList.add('hidden');
-
-      // Update weekly report
-      const results = data.results;
-      const highestEngaged = results.reduce((prev, current) => (prev.engagement > current.engagement) ? prev : current);
-      const leastEngaged = results.reduce((prev, current) => (prev.engagement < current.engagement) ? prev : current);
-      const highestVote = results.reduce((prev, current) => (prev.totalVotes > current.totalVotes) ? prev : current);
-      const leastVote = results.reduce((prev, current) => (prev.totalVotes < current.totalVotes) ? prev : current);
-
-      document.getElementById('highest-engaged-img').src = highestEngaged.avatar;
-      document.getElementById('highest-engaged-img').classList.remove('hidden');
-      document.getElementById('highestEngagedImgSkeleton').classList.add('hidden');
-      document.getElementById('highest-engaged-name').textContent = highestEngaged.name;
-      document.getElementById('highest-engaged-name').classList.remove('hidden');
-      document.getElementById('highestEngagedNameSkeleton').classList.add('hidden');
-      document.getElementById('highest-engaged-state').textContent = highestEngaged.state;
-      document.getElementById('highest-engaged-state').classList.remove('hidden');
-      document.getElementById('highestEngagedStateSkeleton').classList.add('hidden');
-
-      document.getElementById('least-engaged-img').src = leastEngaged.avatar;
-      document.getElementById('least-engaged-img').classList.remove('hidden');
-      document.getElementById('leastEngagedImgSkeleton').classList.add('hidden');
-      document.getElementById('least-engaged-name').textContent = leastEngaged.name;
-      document.getElementById('least-engaged-name').classList.remove('hidden');
-      document.getElementById('leastEngagedNameSkeleton').classList.add('hidden');
-      document.getElementById('least-engaged-state').textContent = leastEngaged.state;
-      document.getElementById('least-engaged-state').classList.remove('hidden');
-      document.getElementById('leastEngagedStateSkeleton').classList.add('hidden');
-
-      document.getElementById('highest-vote-img').src = highestVote.avatar;
-      document.getElementById('highest-vote-img').classList.remove('hidden');
-      document.getElementById('highestVoteImgSkeleton').classList.add('hidden');
-      document.getElementById('highest-vote-name').textContent = highestVote.name;
-      document.getElementById('highest-vote-name').classList.remove('hidden');
-      document.getElementById('highestVoteNameSkeleton').classList.add('hidden');
-      document.getElementById('highest-vote-state').textContent = highestVote.state;
-      document.getElementById('highest-vote-state').classList.remove('hidden');
-      document.getElementById('highestVoteStateSkeleton').classList.add('hidden');
-
-      document.getElementById('least-vote-img').src = leastVote.avatar;
-      document.getElementById('least-vote-img').classList.remove('hidden');
-      document.getElementById('leastVoteImgSkeleton').classList.add('hidden');
-      document.getElementById('least-vote-name').textContent = leastVote.name;
-      document.getElementById('least-vote-name').classList.remove('hidden');
-      document.getElementById('leastVoteNameSkeleton').classList.add('hidden');
-      document.getElementById('least-vote-state').textContent = leastVote.state;
-      document.getElementById('least-vote-state').classList.remove('hidden');
-      document.getElementById('leastVoteStateSkeleton').classList.add('hidden');
-    }
-
-    function updateUserInfo(user) {
-      const userNameElement = document.querySelector('#user-dropdown .block');
-      const userInitialsElement = document.querySelector('#user-menu-button img');
-
-      if (user.displayName) {
-        userNameElement.textContent = user.displayName;
-        const initials = user.displayName.split(' ').map(name => name[0]).join('');
-        userInitialsElement.alt = initials;
-        userInitialsElement.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=random`;
-      } else {
-        userNameElement.textContent = 'User';
-        userInitialsElement.alt = 'U';
-        userInitialsElement.src = 'https://ui-avatars.com/api/?name=U&background=random';
-      }
-    }
-
-    document.getElementById('sign-in').addEventListener('click', function() {
-      window.location.href = 'signin.html';
-    });
-
-    // Handle sign out
-    document.querySelector('a[href="#"]').addEventListener('click', function(event) {
-      event.preventDefault();
-      fetch('/signout', {
-        method: 'POST'
-      }).then(response => {
-        if (response.ok) {
-          window.location.href = 'signin.html';
-        } else {
-          console.error('Sign Out Error');
-        }
-      }).catch(error => {
-        console.error('Sign Out Error', error);
-      });
-    });
-  </script>
+</script>
 </body>
-</html>
+  </html>
