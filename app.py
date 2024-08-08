@@ -139,7 +139,7 @@ def signin():
 
 @app.route('/api/governor-data')
 def get_governor_data():
-    # Implement the logic to fetch and return governor data
+    print("Fetching governor data...")
     start, end = get_week_start_end()
 
     # Query all governors for the current week
@@ -164,6 +164,7 @@ def get_governor_data():
             'engagement': data.get('engagement', 0)
         })
 
+    print(f"Governor data: {governor_data}")
     return jsonify(governor_data)
 
 if __name__ == '__main__':
