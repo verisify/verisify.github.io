@@ -3,8 +3,8 @@ import json
 from datetime import datetime, timedelta
 import pytz
 import firebase_admin
-from firebase_admin import credentials, firestore, auth
-from flask import Flask, jsonify, request, redirect, url_for
+from firebase_admin import credentials, firestore, auth as firebase_auth
+from flask import Flask, jsonify, request
 from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
@@ -25,6 +25,7 @@ except json.JSONDecodeError as e:
 cred = credentials.Certificate(service_account_info)
 firebase_admin.initialize_app(cred)
 db = firestore.client()
+firebase_auth = firebase_auth.client
 
 # Set the timezone to your local timezone
 local_tz = pytz.timezone('Africa/Lagos')  # Replace with your timezone, e.g., 'America/New_York'
@@ -84,6 +85,7 @@ def store_weekly_results():
 def reset_votes():
     now = datetime.now(local_tz)
     week_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+
     governors_ref = db.collection('governors')
     governors = governors_ref.get()
 
@@ -107,57 +109,62 @@ scheduler.add_job(store_weekly_results, 'cron', day_of_week='sun', hour=23, minu
 scheduler.add_job(reset_votes, 'cron', day_of_week='mon', hour=0, minute=0)
 scheduler.start()
 
-@app.route('/signin', methods=['POST'])
-def signin():
-    email = request.json.get('email')
-    password = request.json.get('password')
-
-    try:
-        user = auth.get_user_by_email(email)
-        if user.email_verified:
-            token = auth.create_custom_token(user.uid)
-            return jsonify({"token": token.decode('utf-8')}), 200
-        else:
-            return jsonify({"error": "Please verify your email before signing in."}), 400
-    except auth.UserNotFoundError:
-        return jsonify({"error": "User not found."}), 404
-    except auth.AuthError as e:
-        return jsonify({"error": str(e)}), 400
-
-@app.route('/signup', methods=['POST'])
+@app.route('/api/signup', methods=['POST'])
 def signup():
-    email = request.json.get('email')
-    password = request.json.get('password')
+    data = request.get_json()
+    email = data['email']
+    password = data['password']
 
     try:
-        user = auth.create_user(email=email, password=password)
-        auth.send_email_verification(user.uid)
-        return jsonify({"message": "User created successfully. Please check your email for verification."}), 201
-    except auth.EmailAlreadyExistsError:
-        return jsonify({"error": "Email already exists."}), 400
-    except auth.AuthError as e:
-        return jsonify({"error": str(e)}), 400
+        user = firebase_auth.create_user_with_email_and_password(email, password)
+        user.send_email_verification()
+        return jsonify({'message': 'Registration successful. Please check your email for a verification link.'}), 200
+    except firebase_auth.AuthError as e:
+        return jsonify({'error': e.error['message']}), 400
 
-@app.route('/run_tasks', methods=['POST'])
-def run_tasks():
-    now = datetime.now(local_tz)
-    if now.weekday() == 6 and now.hour == 23 and now.minute == 59:
-        store_weekly_results()
-    elif now.weekday() == 0 and now.hour == 0 and now.minute == 0:
-        reset_votes()
-    return jsonify({"message": "Tasks executed successfully"}), 200
+@app.route('/api/signin', methods=['POST'])
+def signin():
+    data = request.get_json()
+    email = data['email']
+    password = data['password']
 
-@app.route('/get_weekly_results', methods=['GET'])
-def get_weekly_results():
+    try:
+        user = firebase_auth.sign_in_with_email_and_password(email, password)
+        if user['emailVerified']:
+            return jsonify({'message': 'Sign-in successful'}), 200
+        else:
+            return jsonify({'error': 'Please verify your email before signing in.'}), 401
+    except firebase_auth.AuthError as e:
+        return jsonify({'error': e.error['message']}), 400
+
+@app.route('/api/governor-data')
+def get_governor_data():
+    # Implement the logic to fetch and return governor data
     start, end = get_week_start_end()
-    doc_id = start.strftime("%Y-%m-%d")
-    doc_ref = db.collection('weeklyResults').document(doc_id)
-    doc = doc_ref.get()
 
-    if doc.exists:
-        return jsonify(doc.to_dict()), 200
-    else:
-        return jsonify({"error": "No results found for the current week."}), 404
+    # Query all governors for the current week
+    governors_ref = db.collection('governors')
+    query = governors_ref.where('weekStartDate', '>=', start).where('weekStartDate', '<=', end)
+    governors = query.get()
+
+    governor_data = []
+    for gov in governors:
+        data = gov.to_dict()
+        governor_data.append({
+            'id': gov.id,
+            'name': data.get('name'),
+            'state': data.get('state'),
+            'avatar': data.get('avatar'),
+            'totalVotes': data.get('totalVotes', 0),
+            'infrastructure': data.get('infrastructure', 0),
+            'security': data.get('security', 0),
+            'education': data.get('education', 0),
+            'healthcare': data.get('healthcare', 0),
+            'jobs': data.get('jobs', 0),
+            'engagement': data.get('engagement', 0)
+        })
+
+    return jsonify(governor_data)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
