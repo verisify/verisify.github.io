@@ -98,85 +98,81 @@
           </div>
         </div>
       </div>
-      <!-- Weekly Report -->
-      <div class="max-w-md p-4 bg-gray-800 border border-gray-700 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-300 mt-4 p-4 pl-5 pr-5 pt-5 pb-1">
-        <div class="flex items-center justify-between mb-4">
-          <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Weekly Report</h5>
-          <a href="#" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">Rating Info</a>
+<!-- Weekly Report -->
+<div class="max-w-md p-4 bg-gray-800 border border-gray-700 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-300 mt-4 p-4 pl-5 pr-5 pt-5 pb-1">
+  <div class="flex items-center justify-between mb-4">
+    <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Weekly Report</h5>
+    <a href="#" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">Rating Info</a>
+  </div>
+  <div class="flow-root">
+    <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
+      <!-- Highest Engaged Governor -->
+      <li class="py-3 sm:py-4">
+        <div class="flex items-center">
+          <div id="highestEngagedImgSkeleton" class="w-8 h-8 rounded-full bg-gray-700 animate-pulse"></div>
+          <img id="highest-engaged-img" class="w-8 h-8 rounded-full hidden" src="" alt="Highest Engaged Governor">
+          <div class="flex-1 min-w-0 ms-4">
+            <div id="highestEngagedNameSkeleton" class="h-4 bg-gray-700 rounded w-3/4 mb-2 animate-pulse"></div>
+            <p id="highest-engaged-name" class="text-sm font-medium text-gray-900 truncate dark:text-white hidden">Name One Governor</p>
+            <div id="highestEngagedStateSkeleton" class="h-3 bg-gray-700 rounded w-1/2 animate-pulse"></div>
+            <p id="highest-engaged-state" class="text-sm text-gray-500 truncate dark:text-gray-400 hidden">State One Governor</p>
+          </div>
+          <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+            <h5>Highest<br>Engaged</h5>
+          </div>
         </div>
-        <div class="flow-root">
-          <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
-            <!-- Highest Engaged Governor -->
-            <li class="py-3 sm:py-4">
-              <div class="flex items-center">
-                <div id="highestEngagedImgSkeleton" class="w-8 h-8 rounded-full bg-gray-700 animate-pulse"></div>
-                <img id="highest-engaged-img" class="w-8 h-8 rounded-full hidden" src="" alt="Highest Engaged Governor">
-                <div class="flex-1 min-w-0 ms-4">
-                  <div id="highestEngagedNameSkeleton" class="h-4 bg-gray-700 rounded w-3/4 mb-2 animate-pulse"></div>
-                  <p id="highest-engaged-name" class="text-sm font-medium text-gray-900 truncate dark:text-white hidden">Name One Governor</p>
-                  <div id="highestEngagedStateSkeleton" class="h-3 bg-gray-700 rounded w-1/2 animate-pulse"></div>
-                  <p id="highest-engaged-state" class="text-sm text-gray-500 truncate dark:text-gray-400 hidden">State One Governor</p>
-                </div>
-                <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                  <h5>Highest<br>Engaged</h5>
-                </div>
-              </div>
-            </li>
-            <!-- Least Engaged Governor -->
-            <li class="py-3 sm:py-4">
-              <div class="flex items-center">
-                <div id="leastEngagedImgSkeleton" class="w-8 h-8 rounded-full bg-gray-700 animate-pulse"></div>
-                <img id="least-engaged-img" class="w-8 h-8 rounded-full hidden" src="" alt="Least Engaged Governor">
-                <div class="flex-1 min-w-0 ms-4">
-                  <div id="leastEngagedNameSkeleton" class="h-4 bg-gray-700 rounded w-3/4 mb-2 animate-pulse"></div>
-                  <p id="least-engaged-name" class="text-sm font-medium text-gray-900 truncate dark:text-white hidden">Name Two Governor</p>
-                  <div id="leastEngagedStateSkeleton" class="h-3 bg-gray-700 rounded w-1/2 animate-pulse"></div>
-                  <p id="least-engaged-state" class="text-sm text-gray-500 truncate dark:text-gray-400 hidden">State Two Governor</p>
-                </div>
-                <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                  <h5>Least<br>Engaged</h5>
-                </div>
-              </div>
-            </li>
-            <!-- Highest Vote Count Governor -->
-            <li class="py-3 sm:py-4">
-              <div class="flex items-center">
-                <div id="highestVoteImgSkeleton" class="w-8 h-8 rounded-full bg-gray-700 animate-pulse"></div>
-                <img id="highest-vote-img" class="w-8 h-8 rounded-full hidden" src="" alt="Highest Vote Count Governor">
-                <div class="flex-1 min-w-0 ms-4">
-                  <div id="highestVoteNameSkeleton" class="h-4 bg-gray-700 rounded w-3/4 mb-2 animate-pulse"></div>
-                  <p id="highest-vote-name" class="text-sm font-medium text-gray-900 truncate dark:text-white hidden">Name Three Governor</p>
-                  <div id="highestVoteStateSkeleton" class="h-3 bg-gray-700 rounded w-1/2 mb-2 animate-pulse"></div>
-                  <p id="highest-vote-state" class="text-sm text-gray-500 truncate dark:text-gray-400 hidden">State Three Governor</p>
-                  <div id="highestVoteCountSkeleton" class="h-3 bg-gray-700 rounded w-1/4 animate-pulse"></div>
-                  <p id="highest-vote-count" class="text-sm text-gray-500 truncate dark:text-gray-400 hidden">Vote Count</p>
-                </div>
-                <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                  <h5>Highest<br>Vote<br>Count</h5>
-                </div>
-              </div>
-            </li>
-            <!-- Least Vote Count Governor -->
-            <li class="py-3 sm:py-4">
-              <div class="flex items-center">
-                <div id="leastVoteImgSkeleton" class="w-8 h-8 rounded-full bg-gray-700 animate-pulse"></div>
-                <img id="least-vote-img" class="w-8 h-8 rounded-full hidden" src="" alt="Least Vote Count Governor">
-                <div class="flex-1 min-w-0 ms-4">
-                  <div id="leastVoteNameSkeleton" class="h-4 bg-gray-700 rounded w-3/4 mb-2 animate-pulse"></div>
-                  <p id="least-vote-name" class="text-sm font-medium text-gray-900 truncate dark:text-white hidden">Name Four Governor</p>
-                  <div id="leastVoteStateSkeleton" class="h-3 bg-gray-700 rounded w-1/2 mb-2 animate-pulse"></div>
-                  <p id="least-vote-state" class="text-sm text-gray-500 truncate dark:text-gray-400 hidden">State Four Governor</p>
-                  <div id="leastVoteCountSkeleton" class="h-3 bg-gray-700 rounded w-1/4 animate-pulse"></div>
-                  <p id="least-vote-count" class="text-sm text-gray-500 truncate dark:text-gray-400 hidden">Vote Count</p>
-                </div>
-                <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                  <h5>Least<br>Vote<br>Count</h5>
-                </div>
-              </div>
-            </li>
-          </ul>
+      </li>
+      <!-- Least Engaged Governor -->
+      <li class="py-3 sm:py-4">
+        <div class="flex items-center">
+          <div id="leastEngagedImgSkeleton" class="w-8 h-8 rounded-full bg-gray-700 animate-pulse"></div>
+          <img id="least-engaged-img" class="w-8 h-8 rounded-full hidden" src="" alt="Least Engaged Governor">
+          <div class="flex-1 min-w-0 ms-4">
+            <div id="leastEngagedNameSkeleton" class="h-4 bg-gray-700 rounded w-3/4 mb-2 animate-pulse"></div>
+            <p id="least-engaged-name" class="text-sm font-medium text-gray-900 truncate dark:text-white hidden">Name Two Governor</p>
+            <div id="leastEngagedStateSkeleton" class="h-3 bg-gray-700 rounded w-1/2 animate-pulse"></div>
+            <p id="least-engaged-state" class="text-sm text-gray-500 truncate dark:text-gray-400 hidden">State Two Governor</p>
+          </div>
+          <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+            <h5>Least<br>Engaged</h5>
+          </div>
         </div>
-      </div>
+      </li>
+      <!-- Highest Vote Count Governor -->
+      <li class="py-3 sm:py-4">
+        <div class="flex items-center">
+          <div id="highestVoteImgSkeleton" class="w-8 h-8 rounded-full bg-gray-700 animate-pulse"></div>
+          <img id="highest-vote-img" class="w-8 h-8 rounded-full hidden" src="" alt="Highest Vote Count Governor">
+          <div class="flex-1 min-w-0 ms-4">
+            <div id="highestVoteNameSkeleton" class="h-4 bg-gray-700 rounded w-3/4 mb-2 animate-pulse"></div>
+            <p id="highest-vote-name" class="text-sm font-medium text-gray-900 truncate dark:text-white hidden">Name Three Governor</p>
+            <div id="highestVoteStateSkeleton" class="h-3 bg-gray-700 rounded w-1/2 mb-2 animate-pulse"></div>
+            <p id="highest-vote-state" class="text-sm text-gray-500 truncate dark:text-gray-400 hidden">State Three Governor</p>
+          </div>
+          <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+            <h5>Highest<br>Vote<br>Count</h5>
+          </div>
+        </div>
+      </li>
+      <!-- Least Vote Count Governor -->
+      <li class="py-3 sm:py-4">
+        <div class="flex items-center">
+          <div id="leastVoteImgSkeleton" class="w-8 h-8 rounded-full bg-gray-700 animate-pulse"></div>
+          <img id="least-vote-img" class="w-8 h-8 rounded-full hidden" src="" alt="Least Vote Count Governor">
+          <div class="flex-1 min-w-0 ms-4">
+            <div id="leastVoteNameSkeleton" class="h-4 bg-gray-700 rounded w-3/4 mb-2 animate-pulse"></div>
+            <p id="least-vote-name" class="text-sm font-medium text-gray-900 truncate dark:text-white hidden">Name Four Governor</p>
+            <div id="leastVoteStateSkeleton" class="h-3 bg-gray-700 rounded w-1/2 mb-2 animate-pulse"></div>
+            <p id="least-vote-state" class="text-sm text-gray-500 truncate dark:text-gray-400 hidden">State Four Governor</p>
+          </div>
+          <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+            <h5>Least<br>Vote<br>Count</h5>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
     </div>
     <!-- Right Column -->
     <div class="right-column w-full md:w-3/5 p-3 pl-4 pr-4 pt-4 pb-4">
@@ -234,45 +230,112 @@
       </div>
     </div>
   </div>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
   <script type="module" src="script.js"></script>
   <script>
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyALc7_O7VJzigqOaVLYjcl5yCCysnmyOG0",
-      authDomain: "rateniggov-419a4.firebaseapp.com",
-      projectId: "rateniggov-419a4",
-      storageBucket: "rateniggov-419a4.appspot.com",
-      messagingSenderId: "293215706435",
-      appId: "1:293215706435:web:bbf1190e97208185caa3f6",
-      measurementId: "G-C2KSLESE2D"
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', async function() {
       const signInButton = document.getElementById('sign-in');
       const userMenuButton = document.getElementById('user-menu-button');
 
-      firebase.auth().onAuthStateChanged(function(user) {
-        if (user && user.emailVerified) {
-          // User is signed in and email is verified
-          signInButton.style.display = 'none';
-          userMenuButton.style.display = 'flex';
+      // Fetch weekly results from the server
+      const response = await fetch('/get_weekly_results');
+      const data = await response.json();
 
-          // Update user name and initials
-          updateUserInfo(user);
-        } else {
-          // User is signed out or email is not verified
-          signInButton.style.display = 'block';
-          userMenuButton.style.display = 'none';
-        }
-      });
+      if (response.ok) {
+        updateWeeklyResults(data);
+      } else {
+        console.error(data.error);
+      }
+
+      // Check if the user is signed in
+      const userResponse = await fetch('/check_auth');
+      const userData = await userResponse.json();
+
+      if (userResponse.ok && userData.authenticated) {
+        // User is signed in
+        signInButton.style.display = 'none';
+        userMenuButton.style.display = 'flex';
+
+        // Update user name and initials
+        updateUserInfo(userData.user);
+      } else {
+        // User is signed out
+        signInButton.style.display = 'block';
+        userMenuButton.style.display = 'none';
+      }
     });
+
+    function updateWeeklyResults(data) {
+      // Update winner profile
+      const winner = data.winner;
+      document.getElementById('winnerAvatar').src = winner.avatar;
+      document.getElementById('winnerAvatar').classList.remove('hidden');
+      document.getElementById('winnerAvatarSkeleton').classList.add('hidden');
+      document.getElementById('winnerName').textContent = winner.name;
+      document.getElementById('winnerName').classList.remove('hidden');
+      document.getElementById('winnerNameSkeleton').classList.add('hidden');
+      document.getElementById('winnerState').textContent = winner.state;
+      document.getElementById('winnerState').classList.remove('hidden');
+      document.getElementById('winnerStateSkeleton').classList.add('hidden');
+      document.getElementById('winnerTotalVotes').textContent = winner.totalVotes;
+      document.getElementById('winnerTotalVotes').classList.remove('hidden');
+      document.getElementById('winnerTotalVotesSkeleton').classList.add('hidden');
+      document.getElementById('winnerInfrastructure').textContent = winner.infrastructure;
+      document.getElementById('winnerSecurity').textContent = winner.security;
+      document.getElementById('winnerEducation').textContent = winner.education;
+      document.getElementById('winnerHealthcare').textContent = winner.healthcare;
+      document.getElementById('winnerJobs').textContent = winner.jobs;
+      document.getElementById('winnerCategories').classList.remove('hidden');
+      document.getElementById('winnerCategoriesSkeleton').classList.add('hidden');
+
+      // Update weekly report
+      const results = data.results;
+      const highestEngaged = results.reduce((prev, current) => (prev.engagement > current.engagement) ? prev : current);
+      const leastEngaged = results.reduce((prev, current) => (prev.engagement < current.engagement) ? prev : current);
+      const highestVote = results.reduce((prev, current) => (prev.totalVotes > current.totalVotes) ? prev : current);
+      const leastVote = results.reduce((prev, current) => (prev.totalVotes < current.totalVotes) ? prev : current);
+
+      document.getElementById('highest-engaged-img').src = highestEngaged.avatar;
+      document.getElementById('highest-engaged-img').classList.remove('hidden');
+      document.getElementById('highestEngagedImgSkeleton').classList.add('hidden');
+      document.getElementById('highest-engaged-name').textContent = highestEngaged.name;
+      document.getElementById('highest-engaged-name').classList.remove('hidden');
+      document.getElementById('highestEngagedNameSkeleton').classList.add('hidden');
+      document.getElementById('highest-engaged-state').textContent = highestEngaged.state;
+      document.getElementById('highest-engaged-state').classList.remove('hidden');
+      document.getElementById('highestEngagedStateSkeleton').classList.add('hidden');
+
+      document.getElementById('least-engaged-img').src = leastEngaged.avatar;
+      document.getElementById('least-engaged-img').classList.remove('hidden');
+      document.getElementById('leastEngagedImgSkeleton').classList.add('hidden');
+      document.getElementById('least-engaged-name').textContent = leastEngaged.name;
+      document.getElementById('least-engaged-name').classList.remove('hidden');
+      document.getElementById('leastEngagedNameSkeleton').classList.add('hidden');
+      document.getElementById('least-engaged-state').textContent = leastEngaged.state;
+      document.getElementById('least-engaged-state').classList.remove('hidden');
+      document.getElementById('leastEngagedStateSkeleton').classList.add('hidden');
+
+      document.getElementById('highest-vote-img').src = highestVote.avatar;
+      document.getElementById('highest-vote-img').classList.remove('hidden');
+      document.getElementById('highestVoteImgSkeleton').classList.add('hidden');
+      document.getElementById('highest-vote-name').textContent = highestVote.name;
+      document.getElementById('highest-vote-name').classList.remove('hidden');
+      document.getElementById('highestVoteNameSkeleton').classList.add('hidden');
+      document.getElementById('highest-vote-state').textContent = highestVote.state;
+      document.getElementById('highest-vote-state').classList.remove('hidden');
+      document.getElementById('highestVoteStateSkeleton').classList.add('hidden');
+
+      document.getElementById('least-vote-img').src = leastVote.avatar;
+      document.getElementById('least-vote-img').classList.remove('hidden');
+      document.getElementById('leastVoteImgSkeleton').classList.add('hidden');
+      document.getElementById('least-vote-name').textContent = leastVote.name;
+      document.getElementById('least-vote-name').classList.remove('hidden');
+      document.getElementById('leastVoteNameSkeleton').classList.add('hidden');
+      document.getElementById('least-vote-state').textContent = leastVote.state;
+      document.getElementById('least-vote-state').classList.remove('hidden');
+      document.getElementById('leastVoteStateSkeleton').classList.add('hidden');
+    }
 
     function updateUserInfo(user) {
       const userNameElement = document.querySelector('#user-dropdown .block');
@@ -297,13 +360,18 @@
     // Handle sign out
     document.querySelector('a[href="#"]').addEventListener('click', function(event) {
       event.preventDefault();
-      firebase.auth().signOut().then(() => {
-        console.log("User signed out successfully");
-        window.location.href = 'signin.html';
-      }).catch((error) => {
+      fetch('/signout', {
+        method: 'POST'
+      }).then(response => {
+        if (response.ok) {
+          window.location.href = 'signin.html';
+        } else {
+          console.error('Sign Out Error');
+        }
+      }).catch(error => {
         console.error('Sign Out Error', error);
       });
     });
   </script>
 </body>
-              </html>
+</html>
