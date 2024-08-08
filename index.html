@@ -23,85 +23,89 @@
 </head>
 <body class="bg-gray-900 text-white">
   <!-- Navigation Bar -->
-  <nav class="bg-gray-900 border-gray-700 flex justify-between items-center p-4 w-full border-b border-gray-600">
-    <div class="flex items-center space-x-3 rtl:space-x-reverse">
-      <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">RateGov</span>
+<nav class="bg-gray-900 border-gray-700 flex justify-between items-center p-4 w-full border-b border-gray-600">
+  <div class="flex items-center space-x-3 rtl:space-x-reverse">
+    <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">RateGov</span>
+  </div>
+  <div class="flex items-center space-x-4">
+    <a href="aboutus.html" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">About us</a>
+    <button id="sign-in" class="bg-blue-500 text-white px-4 py-2 rounded">Sign In</button>
+    <button id="user-menu-button" class="flex text-sm bg-gray-800 rounded-full hidden" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+      <span class="sr-only">Open user menu</span>
+      <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="user photo">
+    </button>
+  </div>
+  <!-- User Dropdown Menu -->
+  <div class="z-50 hidden my-4 text-base list-none bg-gray-700 divide-y divide-gray-600 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
+    <div class="px-4 py-3">
+      <span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
     </div>
-    <div class="flex items-center space-x-4">
-      <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">About us</a>
-      <button id="sign-in" class="bg-blue-500 text-white px-4 py-2 rounded">Sign In</button>
-      <button id="user-menu-button" class="flex text-sm bg-gray-800 rounded-full hidden" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
-        <span class="sr-only">Open user menu</span>
-        <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="user photo">
-      </button>
-    </div>
-    <!-- User Dropdown Menu -->
-    <div class="z-50 hidden my-4 text-base list-none bg-gray-700 divide-y divide-gray-600 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
-      <div class="px-4 py-3">
-        <span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
-      </div>
-      <ul class="py-2" aria-labelledby="user-menu-button">
-        <li>
-          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Deactivate Account</a>
-        </li>
-        <li>
-          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
+    <ul class="py-2" aria-labelledby="user-menu-button">
+      <li>
+        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Deactivate Account</a>
+      </li>
+      <li>
+        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+      </li>
+    </ul>
+  </div>
+</nav>
   <div class="body-container flex flex-col md:flex-row">
     <!-- Left Column -->
     <div class="left-column w-full md:w-2/5 p-3 pl-4 pr-4 pt-4 pb-4 mb-4 md:mb-0 md:mr-4">
-      <!-- Winner Profile -->
-      <div class="max-w-md rounded overflow-hidden border border-gray-700 rounded-lg shadow-lg">
-        <!-- Winner Profile Header -->
-        <div class="bg-gray-800 px-6 py-4">
-          <div id="winner-profile" class="flex flex-col items-center pt-4">
-            <!-- Skeleton for avatar -->
-            <div id="winnerAvatarSkeleton" class="w-24 h-24 mb-3 rounded-full bg-gray-700 animate-pulse"></div>
-            <img id="winnerAvatar" class="w-24 h-24 mb-3 rounded-full shadow-lg border border-gray-200 hidden" src="" alt="Winner image"/>
-            <!-- Skeleton for name -->
-            <div id="winnerNameSkeleton" class="h-6 bg-gray-700 rounded w-48 mb-1 animate-pulse"></div>
-            <h5 id="winnerName" class="mb-1 text-xl font-medium text-white hidden">Winner Name</h5>
-            <!-- Skeleton for state -->
-            <div id="winnerStateSkeleton" class="h-4 bg-gray-700 rounded w-32 animate-pulse"></div>
-            <span id="winnerState" class="text-sm text-gray-300 hidden">Winner State</span>
-            <!-- Skeleton for total votes -->
-            <div class="flex items-center mt-4 md:mt-6">
-              <div id="winnerTotalVotesSkeleton" class="h-4 bg-gray-700 rounded w-16 animate-pulse"></div>
-              <p id="winnerTotalVotes" class="ms-2 text-sm font-bold text-white hidden">0</p>
-              <span class="w-1 h-1 mx-1.5 bg-gray-300 rounded-full"></span>
-              <a href="#" class="text-sm font-medium text-white underline hover:no-underline">Total Votes</a>
-            </div>
-          </div>
-        </div>
-        <!-- Winner Profile Footer -->
-        <div class="bg-gray-700 px-6 py-4">
-          <p class="text-gray-400 text-sm"> Congratulations! Based on our weekly online Governor polls, our voters have ranked you first. <br><br> Note that we are not affiliated with the Independent National Electoral Commission (INEC). </p>
-          <div class="mt-4">
-            <!-- Skeleton for category votes -->
-            <div id="winnerCategoriesSkeleton">
-              <div class="h-4 bg-gray-600 rounded w-3/4 mb-2 animate-pulse"></div>
-              <div class="h-4 bg-gray-600 rounded w-3/4 mb-2 animate-pulse"></div>
-              <div class="h-4 bg-gray-600 rounded w-3/4 mb-2 animate-pulse"></div>
-              <div class="h-4 bg-gray-600 rounded w-3/4 mb-2 animate-pulse"></div>
-              <div class="h-4 bg-gray-600 rounded w-3/4 mb-2 animate-pulse"></div>
-            </div>
-            <div id="winnerCategories" class="hidden">
-              <p class="text-sm text-gray-300">Infrastructure: <span id="winnerInfrastructure">0</span></p>
-              <p class="text-sm text-gray-300">Security: <span id="winnerSecurity">0</span></p>
-              <p class="text-sm text-gray-300">Education: <span id="winnerEducation">0</span></p>
-              <p class="text-sm text-gray-300">Healthcare: <span id="winnerHealthcare">0</span></p>
-              <p class="text-sm text-gray-300">Jobs: <span id="winnerJobs">0</span></p>
-            </div>
-          </div>
-        </div>
+<!-- Winner Profile -->
+<div class="max-w-md rounded overflow-hidden border border-gray-700 rounded-lg shadow-lg">
+  <!-- Winner Profile Header -->
+  <div class="bg-gray-800 px-6 py-4">
+    <h1 class="text-2xl font-bold text-white text-center">Last week's winner</h1>
+  </div>
+  <!-- Winner Profile Body -->
+  <div class="bg-gray-900 px-6 py-4">
+    <div id="winner-profile" class="flex flex-col items-center pt-4">
+      <!-- Skeleton for avatar -->
+      <div id="winnerAvatarSkeleton" class="w-24 h-24 mb-3 rounded-full bg-gray-700 animate-pulse"></div>
+      <img id="winnerAvatar" class="w-24 h-24 mb-3 rounded-full shadow-lg border border-gray-200 hidden" src="" alt="Winner image"/>
+      <!-- Skeleton for name -->
+      <div id="winnerNameSkeleton" class="h-6 bg-gray-700 rounded w-48 mb-1 animate-pulse"></div>
+      <h5 id="winnerName" class="mb-1 text-xl font-medium text-white hidden">Winner Name</h5>
+      <!-- Skeleton for state -->
+      <div id="winnerStateSkeleton" class="h-4 bg-gray-700 rounded w-32 animate-pulse"></div>
+      <span id="winnerState" class="text-sm text-gray-300 hidden">Winner State</span>
+      <!-- Skeleton for total votes -->
+      <div class="flex items-center mt-4 md:mt-6">
+        <div id="winnerTotalVotesSkeleton" class="h-4 bg-gray-700 rounded w-16 animate-pulse"></div>
+        <p id="winnerTotalVotes" class="ms-2 text-sm font-bold text-white hidden">0</p>
+        <span class="w-1 h-1 mx-1.5 bg-gray-300 rounded-full"></span>
+        <a href="#" class="text-sm font-medium text-white underline hover:no-underline">Total Votes</a>
       </div>
+    </div>
+  </div>
+  <!-- Winner Profile Footer -->
+  <div class="bg-gray-700 px-6 py-4">
+    <p class="text-gray-400 text-sm"> Congratulations! Based on our weekly online Governor polls, our voters have ranked you first. <br><br> Note that we are not affiliated with the Independent National Electoral Commission (INEC). </p>
+    <div class="mt-4">
+      <!-- Skeleton for category votes -->
+      <div id="winnerCategoriesSkeleton">
+        <div class="h-4 bg-gray-600 rounded w-3/4 mb-2 animate-pulse"></div>
+        <div class="h-4 bg-gray-600 rounded w-3/4 mb-2 animate-pulse"></div>
+        <div class="h-4 bg-gray-600 rounded w-3/4 mb-2 animate-pulse"></div>
+        <div class="h-4 bg-gray-600 rounded w-3/4 mb-2 animate-pulse"></div>
+        <div class="h-4 bg-gray-600 rounded w-3/4 mb-2 animate-pulse"></div>
+      </div>
+      <div id="winnerCategories" class="hidden">
+        <p class="text-sm text-gray-300">Infrastructure: <span id="winnerInfrastructure">0</span></p>
+        <p class="text-sm text-gray-300">Security: <span id="winnerSecurity">0</span></p>
+        <p class="text-sm text-gray-300">Education: <span id="winnerEducation">0</span></p>
+        <p class="text-sm text-gray-300">Healthcare: <span id="winnerHealthcare">0</span></p>
+        <p class="text-sm text-gray-300">Jobs: <span id="winnerJobs">0</span></p>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Weekly Report -->
 <div class="max-w-md p-4 bg-gray-800 border border-gray-700 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-300 mt-4 p-4 pl-5 pr-5 pt-5 pb-1">
   <div class="flex items-center justify-between mb-4">
-    <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Weekly Report</h5>
+    <h1 class="text-2xl font-bold leading-none text-gray-900 dark:text-white">Weekly Report</h1>
     <a href="#" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">Rating Info</a>
   </div>
   <div class="flow-root">
@@ -230,20 +234,76 @@
       </div>
     </div>
   </div>
-  <!-- ... (existing HTML code) -->
-<script type="module" src="script.js"></script>
-<script>
-  // Fetch data from the server-side API endpoints
-  fetch('/api/governor-data')
-    .then(response => response.json())
-    .then(data => {
-      // Update the UI with the fetched data
-      // ...
-    })
-    .catch(error => {
-      console.error(error);
-      alert('An error occurred while fetching governor data.');
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+  <script type="module" src="script.js"></script>
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyALc7_O7VJzigqOaVLYjcl5yCCysnmyOG0",
+      authDomain: "rateniggov-419a4.firebaseapp.com",
+      projectId: "rateniggov-419a4",
+      storageBucket: "rateniggov-419a4.appspot.com",
+      messagingSenderId: "293215706435",
+      appId: "1:293215706435:web:bbf1190e97208185caa3f6",
+      measurementId: "G-C2KSLESE2D"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const signInButton = document.getElementById('sign-in');
+      const userMenuButton = document.getElementById('user-menu-button');
+
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user && user.emailVerified) {
+          // User is signed in and email is verified
+          signInButton.style.display = 'none';
+          userMenuButton.style.display = 'flex';
+
+          // Update user name and initials
+          updateUserInfo(user);
+        } else {
+          // User is signed out or email is not verified
+          signInButton.style.display = 'block';
+          userMenuButton.style.display = 'none';
+        }
+      });
     });
-</script>
+
+    function updateUserInfo(user) {
+      const userNameElement = document.querySelector('#user-dropdown .block');
+      const userInitialsElement = document.querySelector('#user-menu-button img');
+
+      if (user.displayName) {
+        userNameElement.textContent = user.displayName;
+        const initials = user.displayName.split(' ').map(name => name[0]).join('');
+        userInitialsElement.alt = initials;
+        userInitialsElement.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=random`;
+      } else {
+        userNameElement.textContent = 'User';
+        userInitialsElement.alt = 'U';
+        userInitialsElement.src = 'https://ui-avatars.com/api/?name=U&background=random';
+      }
+    }
+
+    document.getElementById('sign-in').addEventListener('click', function() {
+      window.location.href = 'signin.html';
+    });
+
+    // Handle sign out
+    document.querySelector('a[href="#"]').addEventListener('click', function(event) {
+      event.preventDefault();
+      firebase.auth().signOut().then(() => {
+        console.log("User signed out successfully");
+        window.location.href = 'signin.html';
+      }).catch((error) => {
+        console.error('Sign Out Error', error);
+      });
+    });
+  </script>
 </body>
-  </html>
+    </html>
