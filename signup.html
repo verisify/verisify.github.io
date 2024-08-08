@@ -50,37 +50,30 @@
         </div>
     </div>
   </div>
-  <script>
-    // Get the signup form
-    const signupForm = document.getElementById('signupForm');
+<script>
+  document.querySelector('form').addEventListener('submit', function(event) {
+    event.preventDefault();
 
-    // Add event listener to the signup form
-    signupForm.addEventListener('submit', async (e) => {
-      // Prevent the default form submission behavior
-      e.preventDefault();
+    const fullName = document.getElementById('fullName').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
 
-      // Get the email and password from the form
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
+    if (password !== confirmPassword) {
+      alert("Passwords don't match!");
+      return;
+    }
 
-      if (password !== confirmPassword) {
-        alert("Passwords don't match!");
-        return;
-      }
-
-      // Make a POST request to the server for signup
-      const response = await fetch('/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
+    fetch('/api/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.message) {
         // Show registration modal
         const modal = document.getElementById('registration-modal');
         modal.classList.remove('hidden');
@@ -88,16 +81,17 @@
       } else {
         alert(data.error);
       }
+    })
+    .catch(error => {
+      console.error(error);
+      alert('An error occurred during registration.');
     });
+  });
 
-    // Add event listener to the sign in link
-    document.querySelector('a[href="signin.html"]').addEventListener('click', function(event) {
-      // Prevent the default link behavior
-      event.preventDefault();
-
-      // Redirect to the sign in page
-      window.location.href = 'signin.html';
-    });
-  </script>
+  document.querySelector('a[href="signin.html"]').addEventListener('click', function(event) {
+    event.preventDefault();
+    window.location.href = 'signin.html';
+  });
+</script>
 </body>
-</html>
+                  </html>
