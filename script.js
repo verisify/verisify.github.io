@@ -277,14 +277,8 @@ const updateWeeklyReport = async () => {
   try {
     console.log("Starting updateWeeklyReport function");
 
-    const currentMonday = getPreviousMonday(new Date());
-    console.log("Current Monday:", currentMonday);
-
     const governorsRef = collection(db, 'governors');
-    const q = query(governorsRef, where('weekStartDate', '>=', currentMonday));
-    console.log("Query created");
-
-    const snapshot = await getDocs(q);
+    const snapshot = await getDocs(governorsRef);
     console.log("Snapshot retrieved, document count:", snapshot.size);
 
     let highestEngaged = null;
@@ -508,17 +502,19 @@ function getPreviousMonday(date) {
 async function fetchWeeklyResults(selectedDate) {
   try {
     const mondayOfWeek = getPreviousMonday(selectedDate);
-    const nextMonday = new Date(mondayOfWeek);
-    nextMonday.setDate(nextMonday.getDate() + 7);
+    console.log("Fetching results for week starting:", mondayOfWeek);
 
     const governorsRef = collection(db, 'governors');
-    const q = query(
-      governorsRef, 
-      where('weekStartDate', '>=', mondayOfWeek),
-      where('weekStartDate', '<', nextMonday)
-    );
+    const q = query(governorsRef);  // Remove the where clause to fetch all governors
 
     const snapshot = await getDocs(q);
+    console.log("Fetched documents:", snapshot.size);
+
+    if (snapshot.empty) {
+      console.log('No matching documents.');
+      displayNoResultsMessage();
+      return;
+    }
 
     const results = snapshot.docs.map(doc => {
       const data = doc.data();
@@ -533,8 +529,8 @@ async function fetchWeeklyResults(selectedDate) {
         data.education,
         data.healthcare,
         data.jobs,
-        data.weekStartDate?.toDate(),
-        data.totalVotes,
+        data.weekStartDate?.toDate() || new Date(),  // Use current date if weekStartDate is not set
+        data.totalVotes || 0,
         data.engagement || 0
       );
     });
@@ -544,6 +540,8 @@ async function fetchWeeklyResults(selectedDate) {
     results.forEach((governor, index) => {
       governor.rank = index + 1;
     });
+
+    console.log("Processed results:", results);
 
     displayWeeklyResults(results, true);
     governors = results; // Store the Governor objects globally
@@ -689,18 +687,15 @@ document.addEventListener('DOMContentLoaded', async function() {
   await fetchWeeklyResults(new Date());
     
     // Add search functionality
-    const searchInput = document.getElementById('table-search');
-    const debouncedSearch = debounce(function() {
-        const searchTerm = this.value.toLowerCase();
-        const rows = document.querySelectorAll('#governor-rows tr');
-        rows.forEach(row => {
-            const name = row.querySelector('th div.text-base').textContent.toLowerCase();
-            const state = row.querySelector('th div.font-normal').textContent.toLowerCase();
-            row.style.display = (name.includes(searchTerm) || state.includes(searchTerm)) ? '' : 'none';
-        });
-    }, 300);
-    searchInput.addEventListener('input', debouncedSearch);
-});
+    const searchInput = document.getElementById('table-search'); 
+    const debouncedSearch = debounce(function() { 
+      const searchTerm = this.value.toLowerCase(); 
+      const rows = document.querySelectorAll('#governor-rows tr'); 
+      rows.forEach(row => { 
+        const name = row.querySelector('th div.text-base').textContent.toLowerCase(); 
+        const state = row.querySelector('th div.font-normal').textContent.toLowerCase(); 
+        row.style.display = (name.includes(searchTerm) || state.includes(searchTerm)) ? '' : 'none'; }); }, 300); 
+        searchInput.addEventListener('input', debouncedSearch); });
 
 // Export functions that might be needed elsewhere
 export { renderGovernors, updateWinnerProfile };
